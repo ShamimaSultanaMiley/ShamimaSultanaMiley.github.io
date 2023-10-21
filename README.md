@@ -4,9 +4,9 @@ Seeking a Software Quality Assurance Engineer role in a dynamic software firm to
 Bachelor’s degree in Computer Science and Engineering Sep 2018 - Jan 2023
 East West University
 ### WORK EXPERIENCE
-Trainee Software Engineer (Artificial Intelligence), ADN Diginet May 2023 - July 2023
-– Completed learning face and projects based on Machine learning
-– Projects: Cattle Weight Prediction System, Product Recommendation System, Chatbot for HealthCare
+Trainee Software Engineer (Artificial Intelligence), ADN Diginet (May 2023 - July 2023)
+- Completed learning face and projects based on Machine learning
+- Projects: Cattle Weight Prediction System, Product Recommendation System, Chatbot for HealthCare
 System, etc.
 ### PROJECTS
 Manual Testing Project (Daraz) (View) Sept 2023 - Oct 2023
