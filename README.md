@@ -9,19 +9,19 @@ Trainee Software Engineer (Artificial Intelligence), ADN Diginet (May 2023 - Jul
 - Projects: Cattle Weight Prediction System, Product Recommendation System, Chatbot for HealthCare
 System, etc.
 ### PROJECTS
-Manual Testing Project (Daraz) 
+# Manual Testing Project (Daraz) 
 - Test Plan,Mind Map,Test scenario,Test Cases,Bug Report,Report,Test Metrics, Recommendation
-Cattle Weight Prediction System (View) Jun 2023 - Jul 2023
+# Cattle Weight Prediction System 
 - Using pre-trained model and regressors
-Stock Exchange Information App (View) Nov 2021 - Jan 2022
+# Stock Exchange Information App 
 - An android mobile app with sign up and login features
 - Displays stock quotes from CSV files, shows trending stock news, and provides an email feature
 - Update user profile, and currency conversion feature
-Sentiment Analysis of Twitter Tweets (View) Aug 2021 - Sep 2021
+# Sentiment Analysis of Twitter Tweets (View) Aug 2021 - Sep 2021
 - Perform Natural Language Processing operations such as Tokening, Stemming, and Tf-idf Vectorizer
 -Decision Tree, Random Forest, Naive Bayes, and SVM implemented utilizing Python sci-kit learn
 - Dataset of eighty thousand Twitter tweets was collected from Kaggle
-Inventory Management System (View) Jun 2022 - Sep 2022
+# Inventory Management System 
 - An android mobile app with sign up and login features
 - Developed using HTML, CSS, Bootstrap, PHP , JavaScript, jQuery using MySQLi
 -for managing and maintaining inventory, and for adding, updating, and deleting records from the system
@@ -44,17 +44,17 @@ In 2022 2nd International Conference on Intelligent Technologies (CONIT) (pp. 1-
 - Source and Version Control: Git
 - Others: Competitive Programming,Latex
 ### TRAINING
-• SQA and Cyber Security (IT Training BD)
+- SQA and Cyber Security (IT Training BD)
 ### CERTIFICATIONS
-• Agile with Atlassian Jira (Coursera)
-• Automate tasks and processes with Jira (Coursera)
-• Python (Kaggle)
-• IEEE CS BDC Summer Symposium 2022 IEEE Computer Society Bangladesh
+- Agile with Atlassian Jira (Coursera)
+- Automate tasks and processes with Jira (Coursera)
+- Python (Kaggle)
+- IEEE CS BDC Summer Symposium 2022 (IEEE Computer Society Bangladesh)
 ### PARTICIPATION
-• Ada Lovelace National Girls’ Programming Contest 2021,2022
-• National Girls programming contest 2019,2022
-• Inter University girls programming contest season-2 (NSU)
+- Ada Lovelace National Girls’ Programming Contest 2021,2022
+- National Girls programming contest 2019,2022
+- Inter University girls programming contest season-2 (NSU)
 ### EXTRA-CURRICULAR
-• Bangladesh Red Crescent Society(Volunteer)
-• Volunteer for Bangladesh(Volunteer)
-• National Debate Federation Bangladesh(member)
+- Bangladesh Red Crescent Society(Volunteer)
+- Volunteer for Bangladesh(Volunteer)
+- National Debate Federation Bangladesh(member)
