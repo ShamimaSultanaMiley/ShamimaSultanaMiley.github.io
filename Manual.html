@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440">
+<title>Manual Testing — Basic to Advanced</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap">
+<style>html,body{margin:0;background:#F4F1EA;font-family:'IBM Plex Sans',system-ui,sans-serif} #app > div{margin:0 auto}</style>
+</head>
+<body>
+
+<style>
+.snav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:16px 40px;background:#16181D;color:#F4F1EA;font-family:'IBM Plex Sans',sans-serif;flex-wrap:wrap;gap:12px}
+.snav a{color:#F4F1EA;text-decoration:none}
+.snav .brand{display:flex;align-items:center;gap:10px;font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:18px}
+.snav .brand span.logo{width:34px;height:34px;border-radius:9px;background:#7EE2A8;color:#16181D;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:14px}
+.snav ul{list-style:none;display:flex;gap:6px;margin:0;padding:0;align-items:center;flex-wrap:wrap}
+.snav > ul > li{position:relative}
+.snav > ul > li > a,.snav > ul > li > span{display:block;padding:9px 14px;border-radius:9px;font-size:15px;font-weight:500;cursor:pointer;white-space:nowrap}
+.snav > ul > li:hover > a,.snav > ul > li:hover > span,.snav .cur{background:#2A2D35}
+.snav .caret{font-size:11px;opacity:.7;margin-left:4px}
+.snav .drop{position:absolute;top:100%;left:0;min-width:220px;background:#1E2129;border:1px solid #2E323C;border-radius:12px;padding:8px;display:none;flex-direction:column;gap:2px;box-shadow:0 18px 40px -16px rgba(0,0,0,.6)}
+.snav > ul > li:hover .drop{display:flex}
+.snav .drop a{padding:9px 12px;border-radius:8px;font-size:14px;color:#D8DAE0}
+.snav .drop a:hover{background:#2A2D35;color:#fff}
+.snav .drop .grp{font-family:'JetBrains Mono',monospace;font-size:11px;color:#8A8F9C;text-transform:uppercase;letter-spacing:.06em;padding:8px 12px 2px}
+.snav .cta{padding:9px 18px;border-radius:999px;background:#1F7A52;color:#fff;font-weight:600}
+.snav .menubtn{display:none;background:none;border:1.5px solid #3A3E48;color:#F4F1EA;border-radius:9px;padding:8px 12px;font-size:15px;cursor:pointer}
+@media(max-width:1100px){
+  .snav .menubtn{display:block}
+  .snav > ul{display:none;flex-direction:column;align-items:stretch;width:100%;order:3}
+  .snav.open > ul{display:flex}
+  .snav .drop{position:static;display:flex;border:none;box-shadow:none;background:transparent;padding:0 0 6px 14px}
+  .snav > ul > li:hover .drop{display:flex}
+}
+</style>
+<nav class="snav" id="snav">
+<a class="brand" href="index.html"><span class="logo">S✓</span>Shamima Sultana</a>
+<button class="menubtn" onclick="document.getElementById('snav').classList.toggle('open')">Menu ☰</button>
+<ul>
+<li><a href="index.html" class="">Home</a></li>
+<li><span class="">About <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="about.html">Intro &amp; journey</a>
+    <a href="skills.html">Skills</a>
+    <a href="certifications.html">Certifications</a>
+    <a href="research.html">Research</a>
+    <a href="achievements.html">Achievements</a>
+  </div></li>
+<li><span class="">Work <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="projects.html">Projects</a>
+  </div></li>
+<li><span class="cur">Learn <span class="caret">▾</span></span>
+  <div class="drop">
+    <span class="grp">Automation</span>
+    <a href="PWHub.html">Playwright path</a>
+    <a href="Selenium.html">Selenium with Java</a>
+    <a href="MobileTest.html">Mobile testing</a>
+    <span class="grp">Performance</span>
+    <a href="K6Hub.html">k6</a>
+    <a href="JMeter.html">JMeter</a>
+    <span class="grp">Data &amp; APIs</span>
+    <a href="SQLHub.html">SQL</a>
+    <a href="API.html">API testing</a>
+    <span class="grp">Core &amp; specialised</span>
+    <a href="Manual.html">Manual testing</a>
+    <a href="AITest.html">AI / LLM testing</a>
+    <a href="DevTools.html">DevTools</a>
+    <a href="Git.html">Git &amp; GitHub</a>
+    <a href="A11y.html">Accessibility</a>
+    <a href="Security.html">Security</a>
+  </div></li>
+<li><span class="">Writing <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="K6Hub.html">Tutorials &amp; articles</a>
+  </div></li>
+<li><span class="">More <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="News.html">News</a>
+    <a href="Interview.html">Interview prep</a>
+    <a href="ISTQB.html">ISTQB prep</a>
+  </div></li>
+<li><a class="cta" href="mailto:shamimasultanamiley605@gmail.com">Contact</a></li>
+</ul>
+</nav>
+
+<div id="app"></div>
+<script>/* Minimal renderer: replaces Claude's canvas engine so pages run anywhere. */
+(function(){
+  function resolve(scopes, path){
+    path=path.trim();
+    var parts=path.split('.'), head=parts[0], base, found=false;
+    for(var i=scopes.length-1;i>=0;i--){ if(scopes[i] && Object.prototype.hasOwnProperty.call(scopes[i],head)){ base=scopes[i][head]; found=true; break; } }
+    if(!found) return undefined;
+    for(var j=1;j<parts.length;j++){ if(base==null) return undefined; base=base[parts[j]]; }
+    return base;
+  }
+  function subst(str, scopes){
+    return str.replace(/\{\{([^}]+)\}\}/g, function(_,e){ var v=resolve(scopes,e); return v==null?'':String(v); });
+  }
+  function firstExpr(str){ var m=str.match(/\{\{([^}]+)\}\}/); return m?m[1].trim():null; }
+  function processNode(node, scopes, out){
+    if(node.nodeType===3){ // text
+      var t=node.nodeValue;
+      if(t.indexOf('{{')>=0) out.push(document.createTextNode(subst(t,scopes)));
+      else out.push(document.createTextNode(t));
+      return;
+    }
+    if(node.nodeType!==1){ return; }
+    var tag=node.tagName.toLowerCase();
+    if(tag==='sc-for'){
+      var listExpr=firstExpr(node.getAttribute('list')||'');
+      var as=node.getAttribute('as');
+      var arr=listExpr?resolve(scopes,listExpr):null;
+      if(Array.isArray(arr)){
+        for(var k=0;k<arr.length;k++){
+          var sc=scopes.concat([{__k:as, [as]:arr[k]}]);
+          for(var c=0;c<node.childNodes.length;c++) processNode(node.childNodes[c], sc, out);
+        }
+      }
+      return;
+    }
+    if(tag==='sc-if'){
+      var valExpr=firstExpr(node.getAttribute('value')||'');
+      var cond=valExpr?resolve(scopes,valExpr):false;
+      if(cond){ for(var c2=0;c2<node.childNodes.length;c2++) processNode(node.childNodes[c2], scopes, out); }
+      return;
+    }
+    var el=document.createElement(tag);
+    for(var a=0;a<node.attributes.length;a++){
+      var at=node.attributes[a], name=at.name, val=at.value;
+      if(name.indexOf('hint-')===0) continue;
+      if(name==='onclick'){ var h=firstExpr(val); (function(expr){ el.addEventListener('click', function(ev){ var fn=resolve(scopes,expr); if(typeof fn==='function') fn(ev); }); })(h); continue; }
+      if(name==='onchange'){ var h2=firstExpr(val); (function(expr){ el.addEventListener('input', function(ev){ var fn=resolve(scopes,expr); if(typeof fn==='function') fn(ev); }); })(h2); continue; }
+      var sv=val.indexOf('{{')>=0?subst(val,scopes):val;
+      if(name==='value' && (tag==='input'||tag==='textarea')){ el.value=sv; el.setAttribute('value',sv); }
+      else el.setAttribute(name, sv);
+    }
+    var kids=[];
+    for(var cc=0;cc<node.childNodes.length;cc++) processNode(node.childNodes[cc], scopes, kids);
+    for(var ki=0;ki<kids.length;ki++) el.appendChild(kids[ki]);
+    out.push(el);
+  }
+  window.__mountDC=function(templateHTML, ComponentClass){
+    var tplRoot=document.createElement('div'); tplRoot.innerHTML=templateHTML;
+    var mount=document.getElementById('app');
+    var comp=new ComponentClass({});
+    function doRender(){
+      var vals;
+      try{ vals=comp.renderVals(); }catch(e){ console.error('render error',e); return; }
+      var frag=document.createDocumentFragment();
+      var buf=[];
+      for(var i=0;i<tplRoot.childNodes.length;i++) processNode(tplRoot.childNodes[i], [vals], buf);
+      for(var b=0;b<buf.length;b++) frag.appendChild(buf[b]);
+      // preserve focus in search/textarea across re-render
+      var active=document.activeElement, sel=null, id=null;
+      mount.innerHTML=''; mount.appendChild(frag);
+    }
+    comp.setState=function(s){ Object.assign(comp.state, s); doRender(); };
+    doRender();
+  };
+  window.DCLogic=function(){};
+})();
+</script>
+<script>
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { m: 0, l: 0, mode: 'split', f: 0, done: {} };
+  }
+  renderVals() {
+    const st = this.state;
+    const MODS = [{"num": "01", "title": "Testing foundations", "blurb": "What testing is, why it matters, and the vocabulary every tester needs.", "lessons": [{"title": "What software testing is", "body": "Testing is checking that software does what it should, and finding where it doesn't, before users do. It gives the team information to decide whether a release is ready.", "code": "Example: ShopLite checkout\n\nRequirement: \"A logged-in customer can pay with\ncard and receives an order confirmation email.\"\n\nTesting asks:\n  Does payment work with a valid card?\n  What happens with an expired card?\n  Is the email sent, with the right order number?\n  What if the customer refreshes during payment?", "out": "Testing gives information, not guarantees.\nYou can show bugs exist; you can never prove there are none.", "tip": "Think of yourself as the first real user, with a checklist and a curious mind.", "mistake": "Thinking testing only means 'clicking around'. Good testing is planned, repeatable and evidence-based.", "viz": ""}, {"title": "QA, QC and testing", "body": "Three words people mix up. Quality Assurance improves the process, Quality Control checks the product, and testing is the main activity inside QC.", "code": "QA  (process)   Prevent defects\n                 e.g. code reviews, clear requirements,\n                 a definition of done\nQC  (product)   Find defects\n                 e.g. testing the built feature\nTesting         The activities that find them\n                 e.g. executing test cases", "out": "In an interview:\n\"QA is proactive and process-focused;\n QC and testing are reactive and product-focused.\"", "tip": "Your job title may say QA, but most daily work is QC and testing, plus helping improve the process.", "mistake": "Saying QA and testing are exactly the same thing.", "viz": ""}, {"title": "Error, defect, failure", "body": "A person makes an error, which puts a defect (bug) in the code, which may cause a failure when the code runs.", "code": "Error    A developer types > instead of >=\nDefect   Code: if (qty > 10) applyBulkDiscount()\nFailure  A customer buying exactly 10 items\n         doesn't get the bulk discount", "out": "Not every defect causes a failure: this one\nonly shows when qty is exactly 10.\nThat's why boundary testing (module 04) matters.", "tip": "Report failures with the exact input that triggers them.", "mistake": "Calling every unexpected behaviour a bug before checking the requirement. Sometimes it's working as designed.", "viz": ""}, {"title": "The seven testing principles", "body": "Seven ideas from ISTQB that explain how testing really works. Interviewers ask about them often.", "code": "1. Testing shows defects are present, not absent\n2. Exhaustive testing is impossible\n3. Early testing saves time and money\n4. Defects cluster together\n5. Beware the pesticide paradox\n   (the same tests stop finding new bugs)\n6. Testing is context dependent\n7. Absence-of-errors is a fallacy\n   (bug-free but useless is still a failure)", "out": "Example of principle 4: if the payment module\nhad 12 bugs last release, test it harder this release.", "tip": "Learn one real example for each principle, not just the list.", "mistake": "Reciting the list without being able to apply it.", "viz": ""}, {"title": "SDLC and STLC", "body": "The SDLC is how software is built. The STLC is the testing process that runs alongside it.", "code": "STLC phases\n1. Requirement analysis   what can be tested?\n2. Test planning          scope, approach, schedule\n3. Test case design       scenarios, cases, data\n4. Environment setup      servers, accounts, data\n5. Test execution         run, log results, report bugs\n6. Test closure           summary report, lessons learned", "out": "In Agile, all six phases happen inside every sprint,\nin smaller pieces, instead of once per project.", "tip": "Start at phase 1: questions asked while reading requirements are the cheapest bugs you'll ever find.", "mistake": "Waiting for the build before thinking about testing.", "viz": ""}, {"title": "Verification and validation", "body": "Verification: are we building the product right (does it match the spec)? Validation: are we building the right product (does it meet the user's real need)?", "code": "Verification  (static, no running code)\n  Reviewing requirements, designs, test cases\n  \"Does the spec say the password needs 8 characters?\"\n\nValidation    (dynamic, running the software)\n  Executing tests, UAT\n  \"Can a real customer actually register easily?\"", "out": "Both matter. A feature can match the spec perfectly\nand still confuse every real user.", "tip": "Review documents early: that's verification, and it's testing too.", "mistake": "Thinking you only test once there's something to click.", "viz": ""}]}, {"num": "02", "title": "Levels & types of testing", "blurb": "Where testing happens, and the many kinds of testing you'll be asked about.", "lessons": [{"title": "Test levels", "body": "Software is tested at four levels, from small pieces to the whole system in real use.", "code": "Unit         one function or class      (usually developers)\nIntegration  pieces working together     (API + database)\nSystem       the whole application       (QA team)\nAcceptance   ready for the business?     (users, UAT)", "out": "ShopLite example\nUnit        calculateTotal() adds tax correctly\nIntegration checkout API saves the order in the DB\nSystem      a customer can buy end to end\nUAT         the shop owner confirms it fits their process", "tip": "Most manual testers work at system level and support UAT.", "mistake": "Skipping integration thinking: many real bugs live between two systems.", "viz": ""}, {"title": "Functional and non-functional", "body": "Functional testing checks what the system does. Non-functional testing checks how well it does it.", "code": "Functional        Login, search, checkout, reports\nNon-functional\n  Performance     Is checkout fast with 500 users?  (k6)\n  Usability       Can new users find the cart?\n  Security        Can I see another user's order?\n  Compatibility   Does it work in Safari and on phones?\n  Accessibility   Can it be used with a keyboard?", "out": "Non-functional requirements are often missing from specs.\nAsk for them: \"How fast is fast enough?\"", "tip": "A feature that works but takes 20 seconds is still a failure for users.", "mistake": "Only testing the happy path of each function.", "viz": ""}, {"title": "Smoke and sanity testing", "body": "Smoke testing checks a new build is stable enough to test at all. Sanity testing checks one specific fix or change works.", "code": "Smoke  (wide and shallow, on every new build)\n  App opens? Login works? Main pages load?\n  Can create an order?\n  → if any fail, reject the build\n\nSanity (narrow and deep, after a small change)\n  Bug fix: \"discount not applied at qty 10\"\n  → check the discount at 9, 10, 11 only", "out": "Smoke = \"Is this build worth testing?\"\nSanity = \"Did this change do what it should?\"", "tip": "Keep a short written smoke checklist and run it the moment a build arrives.", "mistake": "Spending a day testing a build that fails smoke in five minutes.", "viz": ""}, {"title": "Retesting and regression testing", "body": "Retesting checks that a reported bug is really fixed. Regression testing checks that the fix (or any change) didn't break something that used to work.", "code": "Bug #214 fixed: coupon not applied on mobile\n\nRetest      Apply coupon on mobile → works ✓\nRegression  Coupons on desktop still work?\n            Checkout total still correct?\n            Order email shows the discount?", "out": "Retesting targets the failed case.\nRegression protects everything around it.", "tip": "Ask developers which areas a fix touched; that's where regression starts.", "mistake": "Closing a bug after retesting only, without any regression around it.", "viz": ""}, {"title": "Black-box, white-box, grey-box", "body": "How much you know about the inside of the system while testing it.", "code": "Black-box   Only inputs and outputs, no code\n            Most manual testing\nWhite-box   Based on the code: paths, branches\n            Mostly developers, unit tests\nGrey-box    Some inside knowledge\n            e.g. checking the database after a UI action (SQL path)", "out": "Grey-box is a tester superpower: knowing the DB and API\nlets you find bugs the UI hides.", "tip": "Learning SQL and API testing turns you from black-box into grey-box.", "mistake": "Thinking manual testers never need technical knowledge.", "viz": ""}, {"title": "Exploratory testing", "body": "Designing and running tests at the same time, learning the product as you go. Structured with a charter and a time box.", "code": "Charter: Explore checkout with unusual carts\n         to discover calculation errors.\nTime box: 60 minutes\n\nIdeas: 0 items, 999 items, remove all then add,\n       change quantity during payment, two tabs,\n       apply coupon then remove the item it needs", "out": "Session notes: what you tried, bugs found,\nquestions raised, areas still untested.", "tip": "Exploratory testing finds the bugs scripted cases never imagined. Take notes as you go.", "mistake": "Treating it as random clicking without a goal or notes.", "viz": ""}]}, {"num": "03", "title": "Requirements & planning", "blurb": "Understand what to test before testing it, and plan the work.", "lessons": [{"title": "Analysing requirements", "body": "Read every requirement looking for what's missing, vague or contradictory. Each question you ask is a potential bug prevented.", "code": "Requirement:\n\"Users can reset their password by email.\"\n\nQuestions to ask:\n  How long is the reset link valid?\n  Can it be used twice?\n  What if the email isn't registered?\n  Password rules for the new password?\n  Are other sessions logged out after reset?", "out": "Five questions, five test ideas,\nand possibly five gaps in the spec.", "tip": "Write questions down and get written answers. They become your expected results.", "mistake": "Assuming the unclear parts and testing your assumption.", "viz": ""}, {"title": "Test scenarios", "body": "A test scenario is a one-line description of something to test. Scenarios come before detailed test cases and help check coverage quickly.", "code": "Feature: password reset\nTS-01 Reset with a registered email\nTS-02 Reset with an unregistered email\nTS-03 Use an expired reset link\nTS-04 Use a reset link twice\nTS-05 New password breaks the rules\nTS-06 Login with old password after reset", "out": "Scenarios are quick to review with the BA or developer\nbefore you invest time in detailed cases.", "tip": "Review scenarios with the team first; it's the cheapest place to catch missing coverage.", "mistake": "Jumping straight to 50 detailed test cases for a feature nobody reviewed.", "viz": ""}, {"title": "The Requirement Traceability Matrix", "body": "An RTM links each requirement to the test cases that cover it and their results. It proves nothing was forgotten.", "code": "Req ID  Requirement           Test cases        Status\nREQ-01  Register with email   TC-01, TC-02      Pass\nREQ-02  Password reset        TC-03 … TC-08     1 Fail\nREQ-03  Order confirmation    TC-09, TC-10      Pass\nREQ-04  Cancel order          (none yet)        ⚠ gap", "out": "The empty row is the point: REQ-04 has no tests.\nFind gaps before release, not after.", "tip": "Keep the RTM in your test management tool (Jira + Zephyr, TestRail, a spreadsheet).", "mistake": "Building an RTM once and never updating it.", "viz": ""}, {"title": "The test plan", "body": "A test plan describes what will be tested, how, by whom, when, and what 'done' means.", "code": "Test plan: ShopLite release 2.4\nScope        Checkout, coupons, order emails\nOut of scope Admin reports (no changes)\nApproach     Manual functional + regression,\n             API checks, one k6 smoke test\nEnvironments QA server, Chrome, Firefox, Android\nSchedule     Test: 3–7 Nov, regression: 8 Nov\nEntry        Build deployed, smoke passed\nExit         No open critical/high bugs,\n             95% of cases executed\nRisks        Payment sandbox may be unstable", "out": "Test strategy = the organisation-wide approach.\nTest plan = the specific plan for this release.", "tip": "Keep it short. A clear two-page plan is read; a 40-page one isn't.", "mistake": "Leaving out 'out of scope', then being blamed for not testing it.", "viz": ""}, {"title": "Estimation", "body": "Estimating how long testing takes, so the plan is realistic.", "code": "Simple method (work breakdown):\n  60 test cases × 10 min        = 10 h\n  Bug reporting and retesting   = +30%\n  Regression                    = 6 h\n  Environment issues buffer     = +15%\n  ≈ 23 hours ≈ 3 days for one tester", "out": "Other methods: three-point estimate\n(optimistic + 4×likely + pessimistic) ÷ 6", "tip": "Base estimates on how long similar work took last time.", "mistake": "Forgetting time for retesting and blocked environments.", "viz": ""}]}, {"num": "04", "title": "Test design techniques", "blurb": "Get maximum coverage from the fewest test cases.", "lessons": [{"title": "Equivalence partitioning", "body": "Split inputs into groups that the system should treat the same way, then test one value from each group.", "code": "Field: Age (valid 18 to 60)\n\nPartitions\n  Invalid low    < 18      test 10\n  Valid          18 – 60   test 35\n  Invalid high   > 60      test 70\n  Invalid type   letters   test \"abc\"\n  Empty          blank     test (nothing)", "out": "5 test cases instead of hundreds,\neach representing a whole group.", "tip": "Don't forget invalid partitions: wrong type, empty, special characters.", "mistake": "Testing 20, 25, 30, 35 — four values from the same partition.", "viz": ""}, {"title": "Boundary value analysis", "body": "Bugs love edges. Test the values right on and right around each boundary.", "code": "Field: Quantity (valid 1 to 10)\n\nBoundaries      0 | 1  2 … 9  10 | 11\nTest values\n  0   just below min   → error\n  1   min              → accepted\n  2   just above min   → accepted\n  9   just below max   → accepted\n  10  max              → accepted\n  11  just above max   → error", "out": "Remember the bug in module 01 (qty > 10 vs >= 10)?\nBVA catches exactly that kind of mistake.", "tip": "Combine EP and BVA: partitions pick the groups, BVA picks the edges.", "mistake": "Testing only the middle of the valid range.", "viz": ""}, {"title": "Decision table testing", "body": "When several conditions combine to decide an outcome, list every combination in a table.", "code": "Free shipping rule: member AND order ≥ 2000 BDT,\nor any order during a promo\n\nMember | ≥2000 | Promo | Free shipping?\n  Y    |   Y   |   N   |   Yes\n  Y    |   N   |   N   |   No\n  N    |   Y   |   N   |   No\n  N    |   N   |   Y   |   Yes\n  N    |   N   |   N   |   No\n  ...  (8 combinations in total)", "out": "Each row is a test case.\nThe table also exposes rules the spec forgot.", "tip": "Ask the BA to confirm the table; unclear rows are unclear requirements.", "mistake": "Testing only the combinations that come to mind.", "viz": ""}, {"title": "State transition testing", "body": "Some things move through states. Test valid moves, and try invalid ones.", "code": "Order states\nPending → Paid → Shipped → Delivered\nPending → Cancelled\nPaid    → Refunded\n\nValid:   Pending → Paid\nInvalid: Delivered → Pending    (should be blocked)\nInvalid: Cancelled → Shipped    (should be blocked)", "out": "Draw the diagram first. Every arrow is a test,\nand every missing arrow is a negative test.", "tip": "Status flows are where many serious bugs live, like shipping a cancelled order.", "mistake": "Testing only the forward happy path.", "viz": ""}, {"title": "Use case and scenario testing", "body": "Test complete user journeys, including alternative and error paths.", "code": "Use case: Customer buys a product\nMain flow   search → add to cart → checkout → pay → confirm\nAlt flow    apply a coupon before paying\nAlt flow    pay with cash on delivery\nError flow  card declined → retry with another card\nError flow  item goes out of stock during checkout", "out": "Journeys catch integration bugs that single-field\ntests miss: the parts work, the journey doesn't.", "tip": "Write journeys from the user's point of view, in their language.", "mistake": "Only testing screens one by one.", "viz": ""}, {"title": "Error guessing and pairwise testing", "body": "Error guessing uses experience to target likely bugs. Pairwise testing covers combinations efficiently when there are too many.", "code": "Error guessing checklist\n  Spaces before/after text   \" ayesha@example.com \"\n  Very long input            300-character name\n  Special characters         O'Brien, émilie, বাংলা\n  Double-click submit\n  Back button after payment\n  Two tabs, same cart\n\nPairwise: 3 browsers × 3 OS × 2 languages = 18 combos\n          pairwise covers every pair in ~9 runs", "out": "Pairwise tools: PICT (free, Microsoft), online generators.", "tip": "Keep your own error-guessing checklist and grow it with every bug you find.", "mistake": "Treating error guessing as luck. It's experience, written down.", "viz": ""}]}, {"num": "05", "title": "Writing test cases", "blurb": "Clear, reusable test cases anyone on the team can run.", "lessons": [{"title": "Anatomy of a test case", "body": "A good test case can be run by someone who has never seen the feature, and gives the same result every time.", "code": "ID            TC-CHK-012\nTitle         Verify that a valid coupon reduces the order total\nPrecondition  Logged in as a customer; cart has\n              1 item worth 2,000 BDT; coupon SAVE10 is active\nSteps         1. Open the cart\n              2. Enter SAVE10 in the coupon field\n              3. Click Apply\nExpected      Discount of 200 BDT is shown;\n              total changes from 2,000 to 1,800 BDT\nPriority      High", "out": "Title starts with \"Verify that…\" and states one behaviour.\nExpected result is specific: numbers, messages, states.", "tip": "One test case, one behaviour. Split anything with 'and' in the expected result.", "mistake": "Expected result: 'It should work.'", "viz": ""}, {"title": "Positive and negative test cases", "body": "Positive cases check valid input works. Negative cases check invalid input is handled gracefully.", "code": "Positive\n  Verify that login succeeds with a valid email and password\n\nNegative\n  Verify that login fails with a wrong password\n  Verify that an error shows for an empty email\n  Verify that the account locks after 5 failed attempts\n  Verify that SQL-like input ' OR '1'='1 is rejected safely", "out": "Real users make mistakes constantly.\nNegative cases usually outnumber positive ones.", "tip": "For every field, ask: empty? too long? wrong type? wrong format?", "mistake": "A suite that is 90% happy path.", "viz": ""}, {"title": "Test data", "body": "The data you prepare decides what your test can find. Plan it like the steps.", "code": "For coupon tests you need:\n  Active coupon        SAVE10\n  Expired coupon       OLD5    (expired yesterday)\n  Coupon with minimum  MIN2000 (orders ≥ 2000 only)\n  Used-up coupon       ONCE    (single use, already used)\n  Customer accounts    new, returning, blocked", "out": "Write test data in the precondition,\nor keep a shared test-data sheet referenced by ID.", "tip": "Create data through SQL or the API to save time (see the SQL and API paths).", "mistake": "Reusing one account for every test, so tests affect each other.", "viz": ""}, {"title": "Good vs bad test cases", "body": "Compare a weak test case with a strong one.", "code": "Bad\n  Title:    Check coupon\n  Steps:    Apply coupon and check\n  Expected: Works\n\nGood\n  Title:    Verify that an expired coupon shows an error\n  Pre:      Coupon OLD5 expired yesterday; cart 1,500 BDT\n  Steps:    1. Open cart  2. Enter OLD5  3. Click Apply\n  Expected: Message \"This coupon has expired\";\n            total stays 1,500 BDT", "out": "The good version is repeatable, specific,\nand anyone could run it and agree on pass/fail.", "tip": "Read your case as if you were new to the team. Could you run it?", "mistake": "Steps that say 'enter valid data' without saying which data.", "viz": ""}, {"title": "Reviewing and maintaining test cases", "body": "Test cases go stale as the product changes. Review them like code.", "code": "Review checklist\n  □ Title says what is verified\n  □ Preconditions and data are clear\n  □ Steps are plain, direct sentences\n  □ One expected result per behaviour\n  □ Linked to a requirement (RTM)\n  □ Priority set\n  □ Still matches the current UI", "out": "After each release: update changed cases,\nretire obsolete ones, add cases for escaped bugs.", "tip": "Every bug found in production should become a new test case.", "mistake": "Letting the suite grow forever with duplicate and dead cases.", "viz": ""}]}, {"num": "06", "title": "Defects & bug reports", "blurb": "Find, report and track bugs so they get fixed fast.", "lessons": [{"title": "Anatomy of a bug report", "body": "A bug report must let a developer reproduce the problem without asking you anything.", "code": "Title       Coupon discount not applied when cart has exactly 10 items\nEnvironment QA · build 2.4.1 · Chrome 141 · Windows 11\nPrecondition Logged in; coupon BULK10 active\nSteps       1. Add 10 units of Wireless Mouse to the cart\n            2. Apply coupon BULK10\nExpected    10% discount applied (total 7,650 BDT)\nActual      No discount; total stays 8,500 BDT\nEvidence    screenshot, screen recording, console log\nNotes       Works with 11 items. Fails only at exactly 10.", "out": "The Notes line is gold: it points the developer\nstraight at the boundary (> vs >=).", "tip": "Write the title as 'what is wrong + where + when'.", "mistake": "Titles like 'Coupon not working' or 'Bug in cart'.", "viz": ""}, {"title": "Severity vs priority", "body": "Severity is how badly the bug affects the system. Priority is how soon it should be fixed. They're set by different people for different reasons.", "code": "High severity, high priority\n  Checkout crashes for every customer\nHigh severity, low priority\n  Crash in a report used once a year\nLow severity, high priority\n  Company name misspelled on the home page\nLow severity, low priority\n  Icon 2px out of line on a settings page", "out": "Testers usually set severity.\nProduct owners usually set priority.", "tip": "Give one example of each combination in interviews.", "mistake": "Marking everything Critical, so nothing is.", "viz": ""}, {"title": "The bug life cycle", "body": "Every bug moves through states from report to closure. Step through the diagram below.", "code": "New → Assigned → Open → Fixed → Retest\n  → Verified → Closed\nSide paths\n  Retest fails        → Reopened\n  Not a bug           → Rejected\n  Valid, fix later    → Deferred\n  Already reported    → Duplicate", "out": "Your tool (Jira, Azure DevOps) may use different names,\nbut the idea is the same.", "tip": "Only close a bug yourself after verifying it in the right build.", "mistake": "Reopening without saying what exactly still fails.", "viz": "flow"}, {"title": "Reproducing and isolating bugs", "body": "A bug you can't reproduce is hard to fix. Narrow it down before reporting.", "code": "Found: 'order total wrong sometimes'\n\nIsolate step by step:\n  Only with coupons?         yes\n  Any coupon?                no, only percentage coupons\n  Any cart?                  no, only with 10+ items\n  Any browser?               yes, all browsers\n→ Percentage coupons fail on carts with exactly 10 items", "out": "From a vague 'sometimes' to an exact rule.\nThe developer can now fix it in minutes.", "tip": "Change one thing at a time: data, browser, user, order of steps.", "mistake": "Reporting 'sometimes wrong' after seeing it once.", "viz": ""}, {"title": "Evidence and communication", "body": "Good evidence and a calm, factual tone get bugs fixed faster.", "code": "Evidence\n  Screenshot with the problem highlighted\n  Short screen recording for flows\n  Browser console errors (F12 → Console)\n  Network tab: failing request + response\n  Database row, if relevant (SQL path)\n\nTone\n  ✗ \"You broke the checkout again\"\n  ✓ \"Checkout total is wrong when… steps below\"", "out": "Report the behaviour, not the person.\nDevelopers and testers are on the same team.", "tip": "The browser Network tab often shows the real error behind a vague UI message.", "mistake": "Arguing in comments instead of adding evidence.", "viz": ""}]}, {"num": "07", "title": "Execution & reporting", "blurb": "Run test cycles, track progress, and report quality clearly.", "lessons": [{"title": "Test execution and statuses", "body": "Running tests in a cycle and recording results honestly.", "code": "Statuses\n  Pass       works as expected\n  Fail       doesn't; bug linked\n  Blocked    can't run (environment down, other bug)\n  Not run    not yet executed\n  Skipped    deliberately not run this cycle (with reason)\n\nAlways record: build, environment, date, tester", "out": "Blocked is not Fail. It tells the manager the\nreal risk: we don't know yet.", "tip": "Log results as you go, not at the end of the day from memory.", "mistake": "Marking tests Pass that weren't actually run.", "viz": ""}, {"title": "Choosing a regression suite", "body": "You rarely have time to run everything. Pick regression tests by risk.", "code": "Always include\n  Smoke tests\n  Areas changed in this release\n  Areas connected to the changes\n  Business-critical flows (checkout, payment)\n  Areas with recent bugs\n\nCan often skip\n  Stable, unchanged, low-risk areas", "out": "A good regression suite is the first thing\nworth automating (Playwright path).", "tip": "Tag test cases (smoke, regression, critical) so you can filter them quickly.", "mistake": "Running the same full suite every time regardless of what changed.", "viz": ""}, {"title": "Test metrics", "body": "Numbers that describe testing progress and quality. Use a few meaningful ones.", "code": "Execution progress  executed ÷ planned      = 180 / 200 = 90%\nPass rate           passed ÷ executed       = 171 / 180 = 95%\nDefect density      bugs ÷ size (per module)\nDefect leakage      bugs found in prod ÷ total bugs\nReopen rate         reopened ÷ fixed", "out": "Metrics start conversations; they don't replace judgement.\n95% pass with one open critical bug is not ready.", "tip": "Always pair a number with what it means for the release.", "mistake": "Chasing a 100% pass rate by not running hard tests.", "viz": ""}, {"title": "The test summary report", "body": "At the end of a cycle, summarise what was tested, what was found, and your recommendation.", "code": "Release 2.4 — test summary\nScope       Checkout, coupons, emails\nExecuted    198 of 200 (2 blocked: SMS gateway down)\nResults     190 pass · 8 fail\nBugs        14 found · 11 fixed · 3 open (1 high, 2 low)\nRisks       SMS confirmations untested\nRecommendation  Go, if the high bug (#231) is fixed\n                or accepted by the product owner", "out": "Lead with the recommendation and the risks.\nManagers read the first three lines.", "tip": "Be honest about what was not tested. It protects you and the users.", "mistake": "A report full of numbers with no recommendation.", "viz": ""}]}, {"num": "08", "title": "Advanced manual testing", "blurb": "The skills that separate a senior tester from a checklist runner.", "lessons": [{"title": "Risk-based testing", "body": "Spend the most effort where failure would hurt most and is most likely.", "code": "Risk = likelihood × impact\n\nArea              Likelihood  Impact  Priority\nPayment           Medium      High    Test first, deepest\nCoupons (changed) High        Medium  Test deeply\nProfile photo     Low         Low     Quick check\nAdmin reports     Low         Medium  Regression only", "out": "When time is short, risk tells you what to cut\nand lets you explain why.", "tip": "Agree the risk table with the product owner; it makes the trade-offs shared.", "mistake": "Giving every area equal time.", "viz": ""}, {"title": "Session-based exploratory testing", "body": "Structured exploration: charter, time box, notes, and a debrief.", "code": "Session sheet\nCharter    Explore order cancellation with partial\n           refunds to find money errors\nDuration   90 min\nTester     ...\nNotes      Tried: cancel 1 of 3 items, cancel after\n           shipping, cancel twice quickly\nBugs       #240 double refund on fast double-click\nQuestions  Should shipping fee be refunded?\nCoverage   Not covered: gift-card payments", "out": "Debrief with your lead in 10 minutes:\nwhat you found, what worries you, what's left.", "tip": "Heuristics help you explore: SFDPOT (Structure, Function, Data, Platform, Operations, Time).", "mistake": "Exploring with no notes, so nobody can see what was covered.", "viz": ""}, {"title": "Usability and accessibility basics", "body": "Can people use it easily, including people with disabilities?", "code": "Quick accessibility checks anyone can do\n  Use the whole flow with only the keyboard (Tab, Enter)\n  Can you see where focus is?\n  Do images have alt text?\n  Do form fields have labels?\n  Is text readable at 200% zoom?\n  Is colour the only way information is shown?\n\nTools: browser Lighthouse, axe DevTools extension", "out": "Accessibility bugs are real bugs, and in many\ncountries a legal requirement.", "tip": "Try one full journey with keyboard only. It finds bugs every time.", "mistake": "Treating accessibility as optional polish.", "viz": ""}, {"title": "Compatibility and localization", "body": "Different browsers, devices, languages and regions break things in different ways.", "code": "Compatibility\n  Browsers: Chrome, Firefox, Safari, Edge\n  Devices: small phone, tablet, laptop\n  Network: slow 3G (DevTools throttling)\n\nLocalization (e.g. English + Bangla)\n  Text doesn't overflow buttons in either language\n  Bangla characters display and save correctly\n  Dates: 03/11/2026 is 3 Nov or 11 Mar?\n  Currency: ৳ 1,500 vs BDT 1,500\n  Sorting and search work with non-English text", "out": "Save special-character test data (Bangla, accents,\nemoji) and reuse it everywhere.", "tip": "Build a small device and browser matrix from real usage analytics.", "mistake": "Testing only on your own laptop and browser.", "viz": ""}, {"title": "Security basics for manual testers", "body": "You don't need to be a hacker to catch common security bugs.", "code": "Checks anyone can do (on systems you're authorised to test)\n  Change an ID in the URL: /orders/1043 → /orders/1044\n    Can I see someone else's order?   (IDOR)\n  Log out, press Back: still see private pages?\n  Use a normal user's session on an admin URL\n  Passwords shown in plain text anywhere?\n  Error pages showing stack traces or SQL?", "out": "The ID-in-URL check alone finds serious bugs\nin many real systems.", "tip": "Report security findings privately to the team, never in public channels.", "mistake": "Testing security on systems you're not authorised to test.", "viz": ""}, {"title": "Testing in Agile and BDD", "body": "In Agile, testers work inside the sprint from day one, not at the end.", "code": "Three amigos: BA + developer + tester discuss a story\nbefore it's built.\n\nAcceptance criteria in Gherkin (BDD):\n  Scenario: Expired coupon is rejected\n    Given a cart worth 1,500 BDT\n    And coupon OLD5 expired yesterday\n    When the customer applies OLD5\n    Then the message \"This coupon has expired\" is shown\n    And the total stays 1,500 BDT", "out": "Gherkin scenarios are test cases the whole team\nagrees on before coding starts (shift-left).", "tip": "Ask 'how will we test this?' in refinement meetings.", "mistake": "Waiting until the last two days of the sprint to start testing.", "viz": ""}]}, {"num": "09", "title": "Interview & career", "blurb": "Answer manual testing interview questions with confidence.", "lessons": [{"title": "Most-asked concept questions", "body": "Short answers to questions you'll almost certainly hear.", "code": "Q Smoke vs sanity?\nA Smoke: wide check that a build is testable.\n  Sanity: narrow check that a change works.\nQ Retesting vs regression?\nA Retest the fixed bug; regression checks nothing else broke.\nQ Severity vs priority?\nA Impact on the system vs urgency to fix.\nQ Verification vs validation?\nA Built right (matches spec) vs right thing (meets need).\nQ What is a test plan?\nA Scope, approach, resources, schedule, entry/exit criteria.", "out": "Practise saying each answer in two sentences,\nthen add one example from your experience.", "tip": "Examples from your own domain (without naming confidential clients) make answers memorable.", "mistake": "Textbook definitions with no example.", "viz": ""}, {"title": "Scenario questions", "body": "Interviewers give you an object or feature and watch how you think.", "code": "Q How would you test a login page?\nA Structure your answer:\n  Functional   valid login, wrong password, empty fields,\n               locked account, remember me, logout\n  Boundaries   password length limits\n  Security     password masked, SQL-like input, lockout\n  Usability    Enter key submits, focus, error messages\n  Compatibility browsers, mobile\n  Performance  login time under load", "out": "The structure matters more than the number of cases.\nIt shows you think in categories.", "tip": "Start by asking questions: 'What are the password rules? Is there 2FA?'", "mistake": "Listing 30 random cases with no structure.", "viz": ""}, {"title": "Showing your experience", "body": "Turn your daily work into strong interview stories using STAR.", "code": "STAR\nSituation  A procurement workflow with multi-step approvals\nTask       Test the approval chain before release\nAction     Drew the state diagram, found an invalid\n           transition, wrote negative cases, verified in DB\nResult     Found a bug that let rejected requests move\n           to the next approver; fixed before release", "out": "Talk about the domain and the technique,\nnever confidential client or project names.", "tip": "Prepare three STAR stories: a bug you're proud of, a conflict you handled, a process you improved.", "mistake": "Revealing confidential project details to sound impressive.", "viz": ""}]}];
+    const FLOW = [{"name": "New", "desc": "The tester reports the bug with steps, expected vs actual, and evidence.", "next": "Next: a lead reviews it and assigns it.", "code": "Status: New\nReporter: tester\nSeverity: High\nSteps / Expected / Actual / Evidence attached"}, {"name": "Assigned", "desc": "A lead or product owner checks it's valid and assigns it to a developer. Priority is set here.", "next": "Or it may be Rejected, Duplicate or Deferred.", "code": "Status: Assigned\nAssignee: developer\nPriority: P1"}, {"name": "Open", "desc": "The developer starts analysing and fixing it.", "next": "Next: the fix is made and deployed to QA.", "code": "Status: Open / In progress"}, {"name": "Fixed", "desc": "The developer has fixed the code and the fix is in a build the tester can use.", "next": "Next: the tester retests.", "code": "Status: Fixed\nFixed in build: 2.4.2"}, {"name": "Retest", "desc": "The tester repeats the original steps in the new build, plus regression around the fix.", "next": "Pass → Verified. Fail → Reopened.", "code": "Retest in build 2.4.2\n  original steps → pass?\n  regression around the fix → pass?"}, {"name": "Reopened", "desc": "Still failing. The tester explains exactly what still fails, and the bug goes back to the developer.", "next": "Back to Open.", "code": "Status: Reopened\nComment: Still fails at qty 10 on mobile.\nBuild 2.4.2, video attached."}, {"name": "Verified", "desc": "The fix works and nothing around it broke.", "next": "Next: closed.", "code": "Status: Verified\nVerified by: tester, build 2.4.2"}, {"name": "Closed", "desc": "The bug is done. Consider adding a test case so it never returns.", "next": "Side states: Rejected (not a bug), Duplicate, Deferred (fix later).", "code": "Status: Closed\nNew regression case: TC-CHK-031"}];
+    const A = '#B83280', AD = '#F4A6CF';
+    const mod = MODS[st.m];
+    const cur = mod.lessons[st.l] || mod.lessons[0];
+    const key = (m, l) => m + '-' + l;
+    let total = 0, doneN = 0;
+    MODS.forEach((mm, i) => mm.lessons.forEach((_, j) => { total++; if (st.done[key(i, j)]) doneN++; }));
+    const modTabs = MODS.map((mm, i) => {
+      const on = i === st.m;
+      const d = mm.lessons.filter((_, j) => st.done[key(i, j)]).length;
+      return { num: mm.num + (d === mm.lessons.length ? ' ✓' : ''), title: mm.title, pick: () => this.setState({ m: i, l: 0 }),
+        style: 'display:flex;flex-direction:column;align-items:flex-start;gap:4px;min-height:64px;padding:10px 12px;border:none;border-radius:14px 14px 0 0;cursor:pointer;text-align:left;font:600 13px IBM Plex Sans,sans-serif;flex:1;' + (on ? 'background:#F4F1EA;color:#16181D;' : 'background:rgba(0,0,0,0.06);color:#4A0D2E;') };
+    });
+    const lessonNav = mod.lessons.map((ls, j) => {
+      const on = j === st.l, dn = !!st.done[key(st.m, j)];
+      return { title: ls.title, num: dn ? '✓' : String(j + 1).padStart(2, '0'), pick: () => this.setState({ l: j }),
+        style: 'display:flex;align-items:center;gap:12px;min-height:44px;padding:8px 12px;border-radius:10px;border:none;cursor:pointer;text-align:left;font:' + (on ? '600' : '400') + ' 15px IBM Plex Sans,sans-serif;' + (on ? 'background:#16181D;color:#F4F1EA;' : 'background:transparent;color:#16181D;'),
+        numStyle: 'flex-shrink:0;font:600 12px JetBrains Mono,monospace;width:28px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;' + (on ? 'background:' + A + ';color:#fff;' : dn ? 'background:#DCEFE3;color:#1F7A52;' : 'background:#EAE5DA;color:#6A6E77;') };
+    });
+    const modeDefs = [['split', 'Side by side'], ['code', 'Example'], ['out', 'Explained']];
+    const modes = modeDefs.map(([id, label]) => ({ label, pick: () => this.setState({ mode: id }),
+      style: 'min-height:40px;padding:8px 14px;border-radius:8px;border:none;cursor:pointer;font:600 14px IBM Plex Sans,sans-serif;' + (st.mode === id ? 'background:#FFFFFF;color:#16181D;box-shadow:0 1px 3px rgba(0,0,0,.12);' : 'background:transparent;color:#5C606A;') }));
+    const isFirst = st.m === 0 && st.l === 0;
+    const isLast = st.m === MODS.length - 1 && st.l === mod.lessons.length - 1;
+    const go = (dir) => {
+      let m = st.m, l = st.l + dir;
+      if (l < 0) { if (m === 0) return; m -= 1; l = MODS[m].lessons.length - 1; }
+      if (l >= MODS[m].lessons.length) { if (m === MODS.length - 1) return; m += 1; l = 0; }
+      this.setState({ m, l });
+    };
+    const k = key(st.m, st.l); const isDone = !!st.done[k];
+    const pct = Math.round((doneN / total) * 100);
+    const fi = Math.min(st.f, FLOW.length - 1);
+    const fSteps = FLOW.map((s, i) => ({ num: String(i + 1), name: s.name, pick: () => this.setState({ f: i }),
+      style: 'display:flex;flex-direction:column;align-items:flex-start;gap:2px;min-height:52px;padding:8px 14px;border-radius:12px;cursor:pointer;font:600 14px IBM Plex Sans,sans-serif;text-align:left;' + (i === fi ? 'background:' + AD + ';color:#16181D;border:1.5px solid ' + AD + ';' : i < fi ? 'background:#2A2D35;color:#F4F1EA;border:1.5px solid #3A3E48;' : 'background:transparent;color:#A9AEBA;border:1.5px solid #3A3E48;') }));
+    return {
+      mod, cur, modTabs, lessonNav, modes,
+      lessonNum: String(st.l + 1), lessonTotal: String(mod.lessons.length),
+      showA: st.mode !== 'out', showB: st.mode !== 'code',
+      gridStyle: st.mode === 'split' ? 'display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;' : 'display:grid;grid-template-columns:repeat(1,minmax(0,1fr));gap:16px;',
+      prev: () => go(-1), next: () => go(1),
+      prevLabel: isFirst ? 'Start' : 'Previous', nextLabel: isLast ? 'Finished' : 'Next lesson',
+      markDone: () => this.setState({ done: { ...st.done, [k]: !isDone } }),
+      doneLabel: isDone ? '✓ Done' : 'Mark as done',
+      doneBtnStyle: 'min-height:48px;padding:12px 22px;border-radius:12px;cursor:pointer;font:600 15px IBM Plex Sans,sans-serif;' + (isDone ? 'background:#DCEFE3;color:#1F7A52;border:1.5px solid #7FC8A0;' : 'background:#FFFFFF;color:#16181D;border:1.5px solid #DDD7CB;'),
+      overallLabel: doneN + ' / ' + total + ' lessons',
+      overallStyle: 'height:100%;border-radius:999px;background:' + A + ';transition:width .3s;width:' + pct + '%;',
+      vizFlow: cur.viz === 'flow', fSteps, fCur: FLOW[fi], fLabel: (fi + 1) + ' / ' + FLOW.length,
+      fPrev: () => this.setState({ f: Math.max(0, fi - 1) }), fNext: () => this.setState({ f: Math.min(FLOW.length - 1, fi + 1) })
+    };
+  }
+}
+
+var __TPL=`<div style="width: 1440px; height: 2900px; box-sizing: border-box; display: flex; flex-direction: column; background: #F4F1EA; font-family: 'IBM Plex Sans', system-ui, sans-serif; color: #16181D;">
+
+<section style="background: #F9E1EE; padding: 48px 80px 0; display: flex; flex-direction: column; gap: 26px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 40px;">
+<div style="display: flex; flex-direction: column; gap: 14px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #7A2C55;">manual testing · module {{mod.num}}</span>
+<h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 56px; line-height: 1; letter-spacing: -0.03em; color: #4A0D2E;">{{mod.title}}</h1>
+<p style="margin: 0; font-size: 18px; line-height: 1.6; color: #7A2C55; max-width: 760px;">{{mod.blurb}}</p>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px; min-width: 300px;">
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 22px; font-weight: 800; color: #4A0D2E;">Manual testing: basic → advanced</span>
+<div style="display: flex; justify-content: space-between; font-size: 14px; color: #4A0D2E;"><span>Course progress</span><span style="font-family: 'JetBrains Mono', monospace;">{{overallLabel}}</span></div>
+<div style="height: 8px; border-radius: 999px; background: rgba(0,0,0,0.1); overflow: hidden;"><div style="{{overallStyle}}"></div></div>
+<span style="font-size: 13px; color: #7A2C55;">Examples use ShopLite, a made-up online store.</span>
+</div>
+</div>
+<div style="display: flex; gap: 6px;">
+<sc-for list="{{modTabs}}" as="t" hint-placeholder-count="9">
+<button onClick="{{t.pick}}" style="{{t.style}}"><span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; opacity: 0.8;">{{t.num}}</span><span>{{t.title}}</span></button>
+</sc-for>
+</div>
+</section>
+
+<section style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 40px; padding: 56px 80px 48px;">
+<aside style="grid-column: span 3; display: flex; flex-direction: column; gap: 6px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #6A6E77; text-transform: uppercase; letter-spacing: 0.08em; padding: 0 12px 10px;">module {{mod.num}} · lessons</span>
+<sc-for list="{{lessonNav}}" as="l" hint-placeholder-count="7">
+<button onClick="{{l.pick}}" style="{{l.style}}"><span style="{{l.numStyle}}">{{l.num}}</span><span>{{l.title}}</span></button>
+</sc-for>
+</aside>
+<div style="grid-column: span 9; display: flex; flex-direction: column; gap: 22px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 20px;">
+<div style="display: flex; flex-direction: column; gap: 10px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #B83280;">module {{mod.num}} · lesson {{lessonNum}} of {{lessonTotal}}</span>
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 44px; letter-spacing: -0.02em; line-height: 1.05;">{{cur.title}}</h2>
+</div>
+<div style="display: flex; gap: 6px; background: #EAE5DA; padding: 5px; border-radius: 12px;">
+<sc-for list="{{modes}}" as="m" hint-placeholder-count="3"><button onClick="{{m.pick}}" style="{{m.style}}">{{m.label}}</button></sc-for>
+</div>
+</div>
+<p style="margin: 0; font-size: 18px; line-height: 1.7; color: #34373F; max-width: 840px;">{{cur.body}}</p>
+<div style="{{gridStyle}}">
+<sc-if value="{{showA}}" hint-placeholder-val="{{ true }}">
+<div style="background: #16181D; border-radius: 16px; overflow: hidden;">
+<div style="padding: 12px 18px; border-bottom: 1px solid #2A2D35; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #F4A6CF;">example</div>
+<pre style="margin: 0; padding: 20px; font-family: 'JetBrains Mono', monospace; font-size: 13.5px; line-height: 1.7; color: #D8DAE0; white-space: pre-wrap;">{{cur.code}}</pre>
+</div>
+</sc-if>
+<sc-if value="{{showB}}" hint-placeholder-val="{{ true }}">
+<div style="background: #FFFFFF; border: 1px solid #DDD7CB; border-radius: 16px; overflow: hidden;">
+<div style="padding: 12px 18px; border-bottom: 1px solid #DDD7CB; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #B83280;">what it means</div>
+<pre style="margin: 0; padding: 20px; font-family: 'JetBrains Mono', monospace; font-size: 13.5px; line-height: 1.7; color: #16181D; white-space: pre-wrap;">{{cur.out}}</pre>
+</div>
+</sc-if>
+</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px;">
+<div style="display: flex; gap: 14px; background: #DCEFE3; border-radius: 16px; padding: 20px 22px; align-items: flex-start;">
+<span style="flex-shrink: 0; width: 32px; height: 32px; border-radius: 9px; background: #1F7A52; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 700;">✓</span>
+<div style="display: flex; flex-direction: column; gap: 4px;"><span style="font-weight: 600; color: #174F37;">Remember</span><span style="font-size: 15px; line-height: 1.6; color: #174F37;">{{cur.tip}}</span></div>
+</div>
+<div style="display: flex; gap: 14px; background: #FCE7DD; border-radius: 16px; padding: 20px 22px; align-items: flex-start;">
+<span style="flex-shrink: 0; width: 32px; height: 32px; border-radius: 9px; background: #C4502A; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 700;">!</span>
+<div style="display: flex; flex-direction: column; gap: 4px;"><span style="font-weight: 600; color: #7A2E14;">Common mistake</span><span style="font-size: 15px; line-height: 1.6; color: #7A2E14;">{{cur.mistake}}</span></div>
+</div>
+</div>
+<div style="display: flex; justify-content: space-between; align-items: center;">
+<button onClick="{{prev}}" style="min-height: 48px; padding: 12px 22px; border-radius: 12px; border: 1.5px solid #16181D; background: transparent; cursor: pointer; font: 600 15px 'IBM Plex Sans', sans-serif; color: #16181D;">← {{prevLabel}}</button>
+<button onClick="{{markDone}}" style="{{doneBtnStyle}}">{{doneLabel}}</button>
+<button onClick="{{next}}" style="min-height: 48px; padding: 12px 22px; border-radius: 12px; border: none; background: #B83280; color: #FFFFFF; cursor: pointer; font: 600 15px 'IBM Plex Sans', sans-serif;">{{nextLabel}} →</button>
+</div>
+</div>
+</section>
+
+<sc-if value="{{vizFlow}}" hint-placeholder-val="{{ false }}">
+<section style="margin: 0 80px 64px; background: #16181D; color: #F4F1EA; border-radius: 28px; padding: 44px; display: flex; flex-direction: column; gap: 26px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 30px;">
+<div style="display: flex; flex-direction: column; gap: 10px;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #F4A6CF;">visualize · the bug life cycle</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 36px; font-weight: 800;">Follow one bug from report to closed</span></div>
+<div style="display: flex; gap: 10px; align-items: center;">
+<button onClick="{{fPrev}}" aria-label="Previous step" style="width: 48px; height: 48px; border-radius: 12px; border: 1.5px solid #3A3E48; background: transparent; color: #F4F1EA; cursor: pointer; font-size: 18px;">←</button>
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; min-width: 60px; text-align: center;">{{fLabel}}</span>
+<button onClick="{{fNext}}" aria-label="Next step" style="width: 48px; height: 48px; border-radius: 12px; border: none; background: #F4A6CF; color: #16181D; cursor: pointer; font-size: 18px;">→</button>
+</div>
+</div>
+<div style="display: flex; gap: 8px; flex-wrap: wrap;">
+<sc-for list="{{fSteps}}" as="fs" hint-placeholder-count="7"><button onClick="{{fs.pick}}" style="{{fs.style}}"><span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; opacity: 0.75;">{{fs.num}}</span><span>{{fs.name}}</span></button></sc-for>
+</div>
+<div style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 24px;">
+<div style="grid-column: span 6; background: #F4A6CF; color: #16181D; border-radius: 20px; padding: 26px; display: flex; flex-direction: column; gap: 10px;">
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 28px; font-weight: 800;">{{fCur.name}}</span>
+<span style="font-size: 16px; line-height: 1.6;">{{fCur.desc}}</span>
+<span style="font-size: 14px; font-weight: 600;">{{fCur.next}}</span>
+</div>
+<pre style="grid-column: span 6; margin: 0; background: #1E2129; border: 1px solid #2E323C; border-radius: 20px; padding: 22px; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #D8DAE0; white-space: pre-wrap;">{{fCur.code}}</pre>
+</div>
+</section>
+</sc-if>
+
+<div style="flex-grow: 1;"></div>
+<section style="padding: 0 80px 64px; display: flex; justify-content: space-between; align-items: center; gap: 30px;">
+<div style="display: flex; flex-direction: column; gap: 8px;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #6A6E77;">next skill</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 30px; font-weight: 800;">API testing: test the logic behind the screen</span></div>
+<a href="API.html" style="text-decoration: none; padding: 16px 26px; border-radius: 12px; background: #16181D; color: #F4A6CF; font-weight: 600;">Start API testing →</a>
+</section>
+</div>`;
+window.__mountDC(__TPL, Component);
+</script>
+</body>
+</html>

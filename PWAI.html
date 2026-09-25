@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440">
+<title>Playwright + AI — MCP & Test Agents</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap">
+<style>html,body{margin:0;background:#F4F1EA;font-family:'IBM Plex Sans',system-ui,sans-serif} #app > div{margin:0 auto}</style>
+</head>
+<body>
+
+<style>
+.snav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:16px 40px;background:#16181D;color:#F4F1EA;font-family:'IBM Plex Sans',sans-serif;flex-wrap:wrap;gap:12px}
+.snav a{color:#F4F1EA;text-decoration:none}
+.snav .brand{display:flex;align-items:center;gap:10px;font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:18px}
+.snav .brand span.logo{width:34px;height:34px;border-radius:9px;background:#7EE2A8;color:#16181D;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:14px}
+.snav ul{list-style:none;display:flex;gap:6px;margin:0;padding:0;align-items:center;flex-wrap:wrap}
+.snav > ul > li{position:relative}
+.snav > ul > li > a,.snav > ul > li > span{display:block;padding:9px 14px;border-radius:9px;font-size:15px;font-weight:500;cursor:pointer;white-space:nowrap}
+.snav > ul > li:hover > a,.snav > ul > li:hover > span,.snav .cur{background:#2A2D35}
+.snav .caret{font-size:11px;opacity:.7;margin-left:4px}
+.snav .drop{position:absolute;top:100%;left:0;min-width:220px;background:#1E2129;border:1px solid #2E323C;border-radius:12px;padding:8px;display:none;flex-direction:column;gap:2px;box-shadow:0 18px 40px -16px rgba(0,0,0,.6)}
+.snav > ul > li:hover .drop{display:flex}
+.snav .drop a{padding:9px 12px;border-radius:8px;font-size:14px;color:#D8DAE0}
+.snav .drop a:hover{background:#2A2D35;color:#fff}
+.snav .drop .grp{font-family:'JetBrains Mono',monospace;font-size:11px;color:#8A8F9C;text-transform:uppercase;letter-spacing:.06em;padding:8px 12px 2px}
+.snav .cta{padding:9px 18px;border-radius:999px;background:#1F7A52;color:#fff;font-weight:600}
+.snav .menubtn{display:none;background:none;border:1.5px solid #3A3E48;color:#F4F1EA;border-radius:9px;padding:8px 12px;font-size:15px;cursor:pointer}
+@media(max-width:1100px){
+  .snav .menubtn{display:block}
+  .snav > ul{display:none;flex-direction:column;align-items:stretch;width:100%;order:3}
+  .snav.open > ul{display:flex}
+  .snav .drop{position:static;display:flex;border:none;box-shadow:none;background:transparent;padding:0 0 6px 14px}
+  .snav > ul > li:hover .drop{display:flex}
+}
+</style>
+<nav class="snav" id="snav">
+<a class="brand" href="index.html"><span class="logo">S✓</span>Shamima Sultana</a>
+<button class="menubtn" onclick="document.getElementById('snav').classList.toggle('open')">Menu ☰</button>
+<ul>
+<li><a href="index.html" class="">Home</a></li>
+<li><span class="">About <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="about.html">Intro &amp; journey</a>
+    <a href="skills.html">Skills</a>
+    <a href="certifications.html">Certifications</a>
+    <a href="research.html">Research</a>
+    <a href="achievements.html">Achievements</a>
+  </div></li>
+<li><span class="">Work <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="projects.html">Projects</a>
+  </div></li>
+<li><span class="cur">Learn <span class="caret">▾</span></span>
+  <div class="drop">
+    <span class="grp">Automation</span>
+    <a href="PWHub.html">Playwright path</a>
+    <a href="Selenium.html">Selenium with Java</a>
+    <a href="MobileTest.html">Mobile testing</a>
+    <span class="grp">Performance</span>
+    <a href="K6Hub.html">k6</a>
+    <a href="JMeter.html">JMeter</a>
+    <span class="grp">Data &amp; APIs</span>
+    <a href="SQLHub.html">SQL</a>
+    <a href="API.html">API testing</a>
+    <span class="grp">Core &amp; specialised</span>
+    <a href="Manual.html">Manual testing</a>
+    <a href="AITest.html">AI / LLM testing</a>
+    <a href="DevTools.html">DevTools</a>
+    <a href="Git.html">Git &amp; GitHub</a>
+    <a href="A11y.html">Accessibility</a>
+    <a href="Security.html">Security</a>
+  </div></li>
+<li><span class="">Writing <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="K6Hub.html">Tutorials &amp; articles</a>
+  </div></li>
+<li><span class="">More <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="News.html">News</a>
+    <a href="Interview.html">Interview prep</a>
+    <a href="ISTQB.html">ISTQB prep</a>
+  </div></li>
+<li><a class="cta" href="mailto:shamimasultanamiley605@gmail.com">Contact</a></li>
+</ul>
+</nav>
+
+<div id="app"></div>
+<script>/* Minimal renderer: replaces Claude's canvas engine so pages run anywhere. */
+(function(){
+  function resolve(scopes, path){
+    path=path.trim();
+    var parts=path.split('.'), head=parts[0], base, found=false;
+    for(var i=scopes.length-1;i>=0;i--){ if(scopes[i] && Object.prototype.hasOwnProperty.call(scopes[i],head)){ base=scopes[i][head]; found=true; break; } }
+    if(!found) return undefined;
+    for(var j=1;j<parts.length;j++){ if(base==null) return undefined; base=base[parts[j]]; }
+    return base;
+  }
+  function subst(str, scopes){
+    return str.replace(/\{\{([^}]+)\}\}/g, function(_,e){ var v=resolve(scopes,e); return v==null?'':String(v); });
+  }
+  function firstExpr(str){ var m=str.match(/\{\{([^}]+)\}\}/); return m?m[1].trim():null; }
+  function processNode(node, scopes, out){
+    if(node.nodeType===3){ // text
+      var t=node.nodeValue;
+      if(t.indexOf('{{')>=0) out.push(document.createTextNode(subst(t,scopes)));
+      else out.push(document.createTextNode(t));
+      return;
+    }
+    if(node.nodeType!==1){ return; }
+    var tag=node.tagName.toLowerCase();
+    if(tag==='sc-for'){
+      var listExpr=firstExpr(node.getAttribute('list')||'');
+      var as=node.getAttribute('as');
+      var arr=listExpr?resolve(scopes,listExpr):null;
+      if(Array.isArray(arr)){
+        for(var k=0;k<arr.length;k++){
+          var sc=scopes.concat([{__k:as, [as]:arr[k]}]);
+          for(var c=0;c<node.childNodes.length;c++) processNode(node.childNodes[c], sc, out);
+        }
+      }
+      return;
+    }
+    if(tag==='sc-if'){
+      var valExpr=firstExpr(node.getAttribute('value')||'');
+      var cond=valExpr?resolve(scopes,valExpr):false;
+      if(cond){ for(var c2=0;c2<node.childNodes.length;c2++) processNode(node.childNodes[c2], scopes, out); }
+      return;
+    }
+    var el=document.createElement(tag);
+    for(var a=0;a<node.attributes.length;a++){
+      var at=node.attributes[a], name=at.name, val=at.value;
+      if(name.indexOf('hint-')===0) continue;
+      if(name==='onclick'){ var h=firstExpr(val); (function(expr){ el.addEventListener('click', function(ev){ var fn=resolve(scopes,expr); if(typeof fn==='function') fn(ev); }); })(h); continue; }
+      if(name==='onchange'){ var h2=firstExpr(val); (function(expr){ el.addEventListener('input', function(ev){ var fn=resolve(scopes,expr); if(typeof fn==='function') fn(ev); }); })(h2); continue; }
+      var sv=val.indexOf('{{')>=0?subst(val,scopes):val;
+      if(name==='value' && (tag==='input'||tag==='textarea')){ el.value=sv; el.setAttribute('value',sv); }
+      else el.setAttribute(name, sv);
+    }
+    var kids=[];
+    for(var cc=0;cc<node.childNodes.length;cc++) processNode(node.childNodes[cc], scopes, kids);
+    for(var ki=0;ki<kids.length;ki++) el.appendChild(kids[ki]);
+    out.push(el);
+  }
+  window.__mountDC=function(templateHTML, ComponentClass){
+    var tplRoot=document.createElement('div'); tplRoot.innerHTML=templateHTML;
+    var mount=document.getElementById('app');
+    var comp=new ComponentClass({});
+    function doRender(){
+      var vals;
+      try{ vals=comp.renderVals(); }catch(e){ console.error('render error',e); return; }
+      var frag=document.createDocumentFragment();
+      var buf=[];
+      for(var i=0;i<tplRoot.childNodes.length;i++) processNode(tplRoot.childNodes[i], [vals], buf);
+      for(var b=0;b<buf.length;b++) frag.appendChild(buf[b]);
+      // preserve focus in search/textarea across re-render
+      var active=document.activeElement, sel=null, id=null;
+      mount.innerHTML=''; mount.appendChild(frag);
+    }
+    comp.setState=function(s){ Object.assign(comp.state, s); doRender(); };
+    doRender();
+  };
+  window.DCLogic=function(){};
+})();
+</script>
+<script>
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { m: 0, l: 0, mode: 'split', f: 0, done: {} };
+  }
+  renderVals() {
+    const st = this.state;
+    const MODS = [{"num": "A", "title": "Understand it", "blurb": "What AI can and can't do for Playwright testing, before installing anything.", "lessons": [{"title": "What 'Playwright + AI' means", "body": "Three different things are often called 'AI testing'. Know which one you're using.", "code": "1. AI assistant writing code\n   Claude Code, GitHub Copilot, Cursor… write tests\n   from your prompt, like a very fast teammate.\n\n2. Playwright MCP server\n   Lets the AI actually open a browser, click, read the\n   page (via the accessibility tree) and then write tests\n   from what it saw.\n\n3. Playwright Test Agents\n   Ready-made planner, generator and healer agents that\n   plan, write and fix Playwright tests.", "out": "All three produce normal Playwright code.\nYour CI runs it like any other test.", "tip": "AI speeds up writing and fixing tests. Deciding what to test is still your job.", "mistake": "Expecting AI to understand your business rules without being told them.", "viz": ""}, {"title": "How the agent loop works", "body": "Step through the loop below. The planner explores, the generator writes, the healer repairs, and you review every step.", "code": "seed test   → logs in, puts the app in a known state\nplanner     → explores, writes specs/*.md test plan\ngenerator   → turns the plan into test files,\n              checking locators live in the browser\nhealer      → runs tests, fixes broken locators/waits,\n              or marks a test as a real failure\nyou         → review the plan and every diff", "out": "The agents talk to the browser through MCP.\nYou choose the AI tool: Claude Code, VS Code Copilot, OpenCode…", "tip": "The seed test is the most important piece: it decides what state the agent starts from.", "mistake": "Letting the healer 'fix' a test that was failing because of a real bug.", "viz": "flow"}, {"title": "Python or TypeScript?", "body": "Important for you as a Python tester: the Test Agents currently generate tests for the JS/TS Playwright Test runner. MCP works with any language.", "code": "Playwright MCP + AI assistant\n  ✓ Python (pytest-playwright)  ✓ TypeScript\nPlaywright Test Agents (init-agents)\n  ✓ TypeScript / JavaScript runner\n  ✗ Python: not official yet (a feature request exists)", "out": "Practical plan for Python teams:\n  • Use MCP + your assistant to explore and write pytest tests\n  • Optionally keep a small TS project to try the agents,\n    then port useful tests to Python", "tip": "Check the Playwright release notes; Python agent support may arrive later.", "mistake": "Running init-agents in a Python repo and expecting pytest files.", "viz": ""}]}, {"num": "B", "title": "Install & set up", "blurb": "From zero to an AI assistant that can drive a browser.", "lessons": [{"title": "Prerequisites", "body": "Install these once. Node.js is needed even for Python projects, because the MCP server runs on it.", "code": "# check what you have\nnode -v        # Node.js 20 or newer (LTS)\nnpx -v\npython --version\npip show pytest-playwright\n\n# install if missing\n#   Node.js LTS: nodejs.org\n#   Python project: pip install pytest-playwright\n#                   playwright install", "out": "Plus one AI assistant that supports MCP, for example:\n  Claude Code (terminal)\n  VS Code with GitHub Copilot (agent mode)\n  Cursor, OpenCode, and others", "tip": "Use the same Node LTS version as your team to avoid version surprises.", "mistake": "Old Node versions; some Playwright releases break on specific Node minors.", "viz": ""}, {"title": "Start without AI: codegen", "body": "Before AI, try Playwright's recorder. It writes Python code as you click, which is a great way to learn locators.", "code": "playwright codegen --target python-pytest https://demo.playwright.dev/todomvc\n\n# click around; Playwright writes:\ndef test_example(page: Page) -> None:\n    page.goto(\"https://demo.playwright.dev/todomvc/\")\n    page.get_by_placeholder(\"What needs to be done?\").fill(\"Buy milk\")\n    page.get_by_placeholder(\"What needs to be done?\").press(\"Enter\")\n    expect(page.get_by_test_id(\"todo-title\")).to_have_text(\"Buy milk\")", "out": "Codegen = recording, no AI. Good for quick drafts\nand for learning which locator Playwright prefers.", "tip": "Move recorded steps into page objects; don't keep raw recordings as your suite.", "mistake": "Committing long recorded scripts full of repeated steps.", "viz": ""}, {"title": "Add the Playwright MCP server", "body": "One command connects your AI assistant to a real browser.", "code": "# Claude Code\nclaude mcp add playwright npx @playwright/mcp@latest\n\n# VS Code (Copilot agent mode)\ncode --add-mcp '{\"name\":\"playwright\",\"command\":\"npx\",\"args\":[\"@playwright/mcp@latest\"]}'\n\n# Any MCP client: add this to its MCP config\n{\n  \"mcpServers\": {\n    \"playwright\": { \"command\": \"npx\", \"args\": [\"@playwright/mcp@latest\"] }\n  }\n}", "out": "Check it's connected:\n  Claude Code → type /mcp  → playwright ✓\n  VS Code     → Copilot chat → tools list shows browser tools", "tip": "Check the microsoft/playwright-mcp README for current options (headless, browser, ports).", "mistake": "Pointing the MCP browser at production or real customer accounts.", "viz": ""}, {"title": "Your first AI browser session", "body": "Ask the assistant to explore a demo site and write a pytest test in your style.", "code": "Prompt:\nUse the Playwright MCP browser to open\nhttps://demo.playwright.dev/todomvc.\nAdd three todos, complete one, filter by Active.\nThen write a pytest-playwright test for that flow:\n- use get_by_role / get_by_placeholder locators\n- use expect() assertions, no time.sleep\n- save it as tests/test_todos.py", "out": "The assistant opens a browser, performs the steps,\nreads the page structure, then writes the file.\n\nThen YOU run it:\n  pytest tests/test_todos.py --headed", "tip": "Always run and read what it wrote before committing.", "mistake": "Accepting code you haven't run just because it looks right.", "viz": ""}, {"title": "Teach it your rules", "body": "AI follows project instructions. Write your framework rules once, in the file your assistant reads.", "code": "# CLAUDE.md  (Claude Code)  or\n# .github/copilot-instructions.md  (Copilot)\n\n## Test conventions\n- Python, pytest-playwright, sync API\n- Page objects live in pages/, one class per page\n- Locators: get_by_role > get_by_label > get_by_test_id;\n  never XPath or nth-child\n- Assertions: expect() only; never time.sleep\n- Test names: test_<behaviour>_<expected_result>\n- Test data: Faker, never real customer data\n- Run `pytest -x` after every change", "out": "Now every generated test follows your framework\ninstead of the AI's generic style.", "tip": "Update this file whenever you correct the AI twice for the same thing.", "mistake": "Correcting the same mistake in every chat instead of writing it down once.", "viz": ""}]}, {"num": "C", "title": "Test Agents", "blurb": "Planner, generator and healer: set up the full agentic loop.", "lessons": [{"title": "Initialise the agents", "body": "The agents live in a Playwright Test (TypeScript) project. One command adds them.", "code": "# new TypeScript project\nnpm init playwright@latest\n\n# add agent definitions for your AI tool\nnpx playwright init-agents --loop=claude     # Claude Code\nnpx playwright init-agents --loop=vscode     # VS Code Copilot\nnpx playwright init-agents --loop=opencode   # OpenCode", "out": "For Claude Code this creates:\n  .claude/agents/   planner, generator, healer definitions\n  .mcp.json         Playwright MCP config\n  specs/            where plans are saved\n  tests/seed.spec.ts (if you don't have one)", "tip": "Re-run init-agents after every Playwright upgrade to pick up new tools.", "mistake": "Running it where a .mcp.json already exists without a backup; it can be replaced.", "viz": ""}, {"title": "The seed test", "body": "The planner runs your seed test first, so it explores the app as a logged-in user in a known state.", "code": "// tests/seed.spec.ts\nimport { test, expect } from '@playwright/test';\n\ntest('seed', async ({ page }) => {\n  await page.goto('https://demo.playwright.dev/todomvc');\n  await expect(page.getByPlaceholder('What needs to be done?'))\n    .toBeVisible();\n});", "out": "For a real app the seed would: log in with a test\naccount, reset test data, open the starting page.", "tip": "A good seed test is the highest-value setup step.", "mistake": "A seed that depends on data someone else might delete.", "viz": ""}, {"title": "Planner: from goal to test plan", "body": "Give the planner a goal. It explores and writes a Markdown test plan you can review like a manual test design.", "code": "Prompt:\n@planner Create a test plan for managing todos:\nadding, completing, filtering and clearing.\n\nOutput: specs/todo-management.md\n  ## 1. Adding todos\n  ### 1.1 Add a single todo\n  Steps: 1. Type \"Buy milk\" 2. Press Enter\n  Expected: todo appears; counter shows \"1 item left\"\n  ### 1.2 Empty input is ignored\n  ...", "out": "Review the plan like any test design:\nmissing negatives? boundaries? wrong expectations?", "tip": "This is where your manual testing skill matters most. Edit the plan before generating.", "mistake": "Generating tests from a plan nobody reviewed.", "viz": ""}, {"title": "Generator: from plan to tests", "body": "The generator turns each scenario into a test file, checking selectors and assertions live in the browser as it writes.", "code": "Prompt:\n@generator Generate tests for section 1 of\nspecs/todo-management.md\n\nOutput: tests/adding-todos/add-single-todo.spec.ts\n  // spec: specs/todo-management.md  (1.1)\n  test('Add a single todo', async ({ page }) => {\n    await page.getByPlaceholder('What needs to be done?').fill('Buy milk');\n    await page.keyboard.press('Enter');\n    await expect(page.getByTestId('todo-title')).toHaveText('Buy milk');\n  });", "out": "Run them:\n  npx playwright test\n  npx playwright show-report", "tip": "Check generated tests follow your rules: role locators, no waitForTimeout.", "mistake": "Keeping duplicate tests the generator created for similar scenarios.", "viz": ""}, {"title": "Healer: fixing broken tests", "body": "When a test fails, the healer replays it, inspects the page, and proposes a fix, or decides the feature is really broken.", "code": "Prompt:\n@healer Fix the failing test\ntests/adding-todos/add-single-todo.spec.ts\n\nHealer:\n  ran the test → locator not found\n  inspected the page → placeholder text changed\n  patched the locator → test passes\n  (or) skipped the test: functionality appears broken", "out": "Good healer fix: updated locator, better wait.\nBad healer fix: deleted an assertion to make it pass.", "tip": "Review every healer diff. If an assertion was removed or weakened, reject it.", "mistake": "Letting the healer hide a real regression.", "viz": ""}]}, {"num": "D", "title": "Use it in your project", "blurb": "Make AI part of a real team workflow, safely.", "lessons": [{"title": "A daily workflow", "body": "How a tester can use AI day to day without losing control of quality.", "code": "New feature\n  1. You: read the story, list risks and scenarios\n  2. AI + MCP: explore the page, draft tests\n  3. You: review, fix, add negatives and boundaries\n  4. Run locally, then open a pull request\n\nFailing test in CI\n  1. Open the trace (Trace Viewer)\n  2. Ask the AI/healer to diagnose with the trace\n  3. You decide: test problem or real bug?", "out": "AI does the typing. You do the thinking,\nthe reviewing, and the final decision.", "tip": "Keep a log of prompts that worked well; reuse them.", "mistake": "Skipping step 1 and asking AI to 'test everything'.", "viz": ""}, {"title": "Safety, privacy and cost", "body": "Rules to follow before using AI tools on a work project.", "code": "✓ Check your company's policy on AI tools first\n✓ Use test environments and test accounts only\n✓ Never paste passwords, tokens or customer data in prompts\n✓ Keep credentials in env vars; tell the AI the variable names\n✓ Review every generated file and every healer diff\n✓ Pin Playwright versions; re-run init-agents after upgrades\n✓ Watch token usage: long exploration sessions cost more", "out": "Under client agreements, never share confidential\ncode, data or project names with external tools unless allowed.", "tip": "When unsure whether a tool is approved, ask before using it.", "mistake": "Pasting confidential client data into a public AI tool.", "viz": ""}, {"title": "CI and the agents", "body": "Agent-written tests are ordinary Playwright tests, so CI doesn't change. The agents themselves are a development-time tool.", "code": "# Python suite in GitHub Actions\n- run: pip install -r requirements.txt\n- run: playwright install --with-deps\n- run: pytest --tracing=retain-on-failure --alluredir=allure-results\n\n# TypeScript (agent) project\n- run: npm ci\n- run: npx playwright install --with-deps\n- run: npx playwright test", "out": "Traces and reports from CI are what you give the\nhealer (or your assistant) when something breaks.", "tip": "Keep humans in the loop: agents propose, pull requests approve.", "mistake": "Letting an agent push fixes straight to the main branch.", "viz": ""}, {"title": "Practice project", "body": "Build a portfolio project that shows you can use AI responsibly.", "code": "Target: https://demo.playwright.dev/todomvc\n         (or another public demo site)\n\n1. Write 5 scenarios yourself (manual skill)\n2. Use MCP to explore and draft pytest tests\n3. Refactor into page objects (OOP module)\n4. Add Allure reporting (Reporting module)\n5. Break a locator on purpose; fix it with AI help\n6. README: what AI did, what you changed, and why", "out": "The README section 'what I changed and why'\nis what interviewers will ask about.", "tip": "Show your judgement, not just the AI's output.", "mistake": "A repo that is 100% AI output with no explanation.", "viz": ""}]}];
+    const FLOW = [{"name": "Seed test", "desc": "Runs first: logs in, resets data, opens the start page. Everything else begins from here.", "next": "Next: the planner explores from this state.", "code": "tests/seed.spec.ts\n  goto start page\n  log in as test user\n  expect ready state"}, {"name": "Planner", "desc": "Explores the app through the MCP browser and writes a human-readable test plan.", "next": "Next: you review the plan.", "code": "@planner Create a test plan for checkout\n→ specs/checkout.md"}, {"name": "You review", "desc": "Add missing negatives and boundaries, fix wrong expectations, remove noise. Your manual testing skills matter most here.", "next": "Next: generate tests from the approved plan.", "code": "specs/checkout.md\n  + 1.4 Expired coupon is rejected\n  ~ 1.2 expected total fixed"}, {"name": "Generator", "desc": "Turns each scenario into a test file, validating locators and assertions live as it writes.", "next": "Next: run the tests.", "code": "@generator Generate tests for specs/checkout.md\n→ tests/checkout/*.spec.ts"}, {"name": "Run", "desc": "Run the suite like any Playwright tests, locally or in CI.", "next": "Failures go to the healer, or to you as bugs.", "code": "npx playwright test\n  12 passed, 1 failed"}, {"name": "Healer", "desc": "Replays the failure, inspects the page and proposes a patch, or marks the functionality as broken.", "next": "Next: you review the diff.", "code": "@healer Fix tests/checkout/coupon.spec.ts\n→ locator updated, test passes"}, {"name": "You approve", "desc": "Accept good fixes, reject any that weaken assertions, and report real bugs. Then merge through a normal pull request.", "next": "The loop repeats as the app changes.", "code": "git diff  → review\nPR → team review → merge"}];
+    const A = '#1F7A52', AD = '#7EE2A8';
+    const mod = MODS[st.m];
+    const cur = mod.lessons[st.l] || mod.lessons[0];
+    const key = (m, l) => m + '-' + l;
+    let total = 0, doneN = 0;
+    MODS.forEach((mm, i) => mm.lessons.forEach((_, j) => { total++; if (st.done[key(i, j)]) doneN++; }));
+    const modTabs = MODS.map((mm, i) => {
+      const on = i === st.m;
+      const d = mm.lessons.filter((_, j) => st.done[key(i, j)]).length;
+      return { num: mm.num + (d === mm.lessons.length ? ' ✓' : ''), title: mm.title, pick: () => this.setState({ m: i, l: 0 }),
+        style: 'display:flex;flex-direction:column;align-items:flex-start;gap:4px;min-height:64px;padding:10px 12px;border:none;border-radius:14px 14px 0 0;cursor:pointer;text-align:left;font:600 13px IBM Plex Sans,sans-serif;flex:1;' + (on ? 'background:#F4F1EA;color:#16181D;' : 'background:rgba(0,0,0,0.06);color:#0F3B28;') };
+    });
+    const lessonNav = mod.lessons.map((ls, j) => {
+      const on = j === st.l, dn = !!st.done[key(st.m, j)];
+      return { title: ls.title, num: dn ? '✓' : String(j + 1).padStart(2, '0'), pick: () => this.setState({ l: j }),
+        style: 'display:flex;align-items:center;gap:12px;min-height:44px;padding:8px 12px;border-radius:10px;border:none;cursor:pointer;text-align:left;font:' + (on ? '600' : '400') + ' 15px IBM Plex Sans,sans-serif;' + (on ? 'background:#16181D;color:#F4F1EA;' : 'background:transparent;color:#16181D;'),
+        numStyle: 'flex-shrink:0;font:600 12px JetBrains Mono,monospace;width:28px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;' + (on ? 'background:' + A + ';color:#fff;' : dn ? 'background:#DCEFE3;color:#1F7A52;' : 'background:#EAE5DA;color:#6A6E77;') };
+    });
+    const modeDefs = [['split', 'Side by side'], ['code', 'Do this'], ['out', 'Result']];
+    const modes = modeDefs.map(([id, label]) => ({ label, pick: () => this.setState({ mode: id }),
+      style: 'min-height:40px;padding:8px 14px;border-radius:8px;border:none;cursor:pointer;font:600 14px IBM Plex Sans,sans-serif;' + (st.mode === id ? 'background:#FFFFFF;color:#16181D;box-shadow:0 1px 3px rgba(0,0,0,.12);' : 'background:transparent;color:#5C606A;') }));
+    const isFirst = st.m === 0 && st.l === 0;
+    const isLast = st.m === MODS.length - 1 && st.l === mod.lessons.length - 1;
+    const go = (dir) => {
+      let m = st.m, l = st.l + dir;
+      if (l < 0) { if (m === 0) return; m -= 1; l = MODS[m].lessons.length - 1; }
+      if (l >= MODS[m].lessons.length) { if (m === MODS.length - 1) return; m += 1; l = 0; }
+      this.setState({ m, l });
+    };
+    const k = key(st.m, st.l); const isDone = !!st.done[k];
+    const pct = Math.round((doneN / total) * 100);
+    const fi = Math.min(st.f, FLOW.length - 1);
+    const fSteps = FLOW.map((s, i) => ({ num: String(i + 1), name: s.name, pick: () => this.setState({ f: i }),
+      style: 'display:flex;flex-direction:column;align-items:flex-start;gap:2px;min-height:52px;padding:8px 14px;border-radius:12px;cursor:pointer;font:600 14px IBM Plex Sans,sans-serif;text-align:left;' + (i === fi ? 'background:' + AD + ';color:#16181D;border:1.5px solid ' + AD + ';' : i < fi ? 'background:#2A2D35;color:#F4F1EA;border:1.5px solid #3A3E48;' : 'background:transparent;color:#A9AEBA;border:1.5px solid #3A3E48;') }));
+    return {
+      mod, cur, modTabs, lessonNav, modes,
+      lessonNum: String(st.l + 1), lessonTotal: String(mod.lessons.length),
+      showA: st.mode !== 'out', showB: st.mode !== 'code',
+      gridStyle: st.mode === 'split' ? 'display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;' : 'display:grid;grid-template-columns:repeat(1,minmax(0,1fr));gap:16px;',
+      prev: () => go(-1), next: () => go(1),
+      prevLabel: isFirst ? 'Start' : 'Previous', nextLabel: isLast ? 'Finished' : 'Next lesson',
+      markDone: () => this.setState({ done: { ...st.done, [k]: !isDone } }),
+      doneLabel: isDone ? '✓ Done' : 'Mark as done',
+      doneBtnStyle: 'min-height:48px;padding:12px 22px;border-radius:12px;cursor:pointer;font:600 15px IBM Plex Sans,sans-serif;' + (isDone ? 'background:#DCEFE3;color:#1F7A52;border:1.5px solid #7FC8A0;' : 'background:#FFFFFF;color:#16181D;border:1.5px solid #DDD7CB;'),
+      overallLabel: doneN + ' / ' + total + ' lessons',
+      overallStyle: 'height:100%;border-radius:999px;background:' + A + ';transition:width .3s;width:' + pct + '%;',
+      vizFlow: cur.viz === 'flow', fSteps, fCur: FLOW[fi], fLabel: (fi + 1) + ' / ' + FLOW.length,
+      fPrev: () => this.setState({ f: Math.max(0, fi - 1) }), fNext: () => this.setState({ f: Math.min(FLOW.length - 1, fi + 1) })
+    };
+  }
+}
+
+var __TPL=`<div style="width: 1440px; height: 2900px; box-sizing: border-box; display: flex; flex-direction: column; background: #F4F1EA; font-family: 'IBM Plex Sans', system-ui, sans-serif; color: #16181D;">
+
+<section style="background: #DCEFE3; padding: 48px 80px 0; display: flex; flex-direction: column; gap: 26px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 40px;">
+<div style="display: flex; flex-direction: column; gap: 14px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #2F5E47;">playwright / AI-assisted testing · module {{mod.num}}</span>
+<h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 56px; line-height: 1; letter-spacing: -0.03em; color: #0F3B28;">{{mod.title}}</h1>
+<p style="margin: 0; font-size: 18px; line-height: 1.6; color: #2F5E47; max-width: 760px;">{{mod.blurb}}</p>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px; min-width: 300px;">
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 22px; font-weight: 800; color: #0F3B28;">Playwright + AI: install → real project</span>
+<div style="display: flex; justify-content: space-between; font-size: 14px; color: #0F3B28;"><span>Course progress</span><span style="font-family: 'JetBrains Mono', monospace;">{{overallLabel}}</span></div>
+<div style="height: 8px; border-radius: 999px; background: rgba(0,0,0,0.1); overflow: hidden;"><div style="{{overallStyle}}"></div></div>
+<span style="font-size: 13px; color: #2F5E47;">Demo site: demo.playwright.dev/todomvc</span>
+</div>
+</div>
+<div style="display: flex; gap: 6px;">
+<sc-for list="{{modTabs}}" as="t" hint-placeholder-count="9">
+<button onClick="{{t.pick}}" style="{{t.style}}"><span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; opacity: 0.8;">{{t.num}}</span><span>{{t.title}}</span></button>
+</sc-for>
+</div>
+</section>
+
+<section style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 40px; padding: 56px 80px 48px;">
+<aside style="grid-column: span 3; display: flex; flex-direction: column; gap: 6px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #6A6E77; text-transform: uppercase; letter-spacing: 0.08em; padding: 0 12px 10px;">module {{mod.num}} · lessons</span>
+<sc-for list="{{lessonNav}}" as="l" hint-placeholder-count="7">
+<button onClick="{{l.pick}}" style="{{l.style}}"><span style="{{l.numStyle}}">{{l.num}}</span><span>{{l.title}}</span></button>
+</sc-for>
+</aside>
+<div style="grid-column: span 9; display: flex; flex-direction: column; gap: 22px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 20px;">
+<div style="display: flex; flex-direction: column; gap: 10px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #1F7A52;">module {{mod.num}} · lesson {{lessonNum}} of {{lessonTotal}}</span>
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 44px; letter-spacing: -0.02em; line-height: 1.05;">{{cur.title}}</h2>
+</div>
+<div style="display: flex; gap: 6px; background: #EAE5DA; padding: 5px; border-radius: 12px;">
+<sc-for list="{{modes}}" as="m" hint-placeholder-count="3"><button onClick="{{m.pick}}" style="{{m.style}}">{{m.label}}</button></sc-for>
+</div>
+</div>
+<p style="margin: 0; font-size: 18px; line-height: 1.7; color: #34373F; max-width: 840px;">{{cur.body}}</p>
+<div style="{{gridStyle}}">
+<sc-if value="{{showA}}" hint-placeholder-val="{{ true }}">
+<div style="background: #16181D; border-radius: 16px; overflow: hidden;">
+<div style="padding: 12px 18px; border-bottom: 1px solid #2A2D35; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #7EE2A8;">command / prompt / code</div>
+<pre style="margin: 0; padding: 20px; font-family: 'JetBrains Mono', monospace; font-size: 13.5px; line-height: 1.7; color: #D8DAE0; white-space: pre-wrap;">{{cur.code}}</pre>
+</div>
+</sc-if>
+<sc-if value="{{showB}}" hint-placeholder-val="{{ true }}">
+<div style="background: #FFFFFF; border: 1px solid #DDD7CB; border-radius: 16px; overflow: hidden;">
+<div style="padding: 12px 18px; border-bottom: 1px solid #DDD7CB; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #1F7A52;">what you get</div>
+<pre style="margin: 0; padding: 20px; font-family: 'JetBrains Mono', monospace; font-size: 13.5px; line-height: 1.7; color: #16181D; white-space: pre-wrap;">{{cur.out}}</pre>
+</div>
+</sc-if>
+</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px;">
+<div style="display: flex; gap: 14px; background: #DCEFE3; border-radius: 16px; padding: 20px 22px; align-items: flex-start;">
+<span style="flex-shrink: 0; width: 32px; height: 32px; border-radius: 9px; background: #1F7A52; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 700;">✓</span>
+<div style="display: flex; flex-direction: column; gap: 4px;"><span style="font-weight: 600; color: #174F37;">Remember</span><span style="font-size: 15px; line-height: 1.6; color: #174F37;">{{cur.tip}}</span></div>
+</div>
+<div style="display: flex; gap: 14px; background: #FCE7DD; border-radius: 16px; padding: 20px 22px; align-items: flex-start;">
+<span style="flex-shrink: 0; width: 32px; height: 32px; border-radius: 9px; background: #C4502A; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 700;">!</span>
+<div style="display: flex; flex-direction: column; gap: 4px;"><span style="font-weight: 600; color: #7A2E14;">Common mistake</span><span style="font-size: 15px; line-height: 1.6; color: #7A2E14;">{{cur.mistake}}</span></div>
+</div>
+</div>
+<div style="display: flex; justify-content: space-between; align-items: center;">
+<button onClick="{{prev}}" style="min-height: 48px; padding: 12px 22px; border-radius: 12px; border: 1.5px solid #16181D; background: transparent; cursor: pointer; font: 600 15px 'IBM Plex Sans', sans-serif; color: #16181D;">← {{prevLabel}}</button>
+<button onClick="{{markDone}}" style="{{doneBtnStyle}}">{{doneLabel}}</button>
+<button onClick="{{next}}" style="min-height: 48px; padding: 12px 22px; border-radius: 12px; border: none; background: #1F7A52; color: #FFFFFF; cursor: pointer; font: 600 15px 'IBM Plex Sans', sans-serif;">{{nextLabel}} →</button>
+</div>
+</div>
+</section>
+
+<sc-if value="{{vizFlow}}" hint-placeholder-val="{{ false }}">
+<section style="margin: 0 80px 64px; background: #16181D; color: #F4F1EA; border-radius: 28px; padding: 44px; display: flex; flex-direction: column; gap: 26px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 30px;">
+<div style="display: flex; flex-direction: column; gap: 10px;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #7EE2A8;">visualize · the agent loop</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 36px; font-weight: 800;">Seed → plan → generate → heal, with you in the loop</span></div>
+<div style="display: flex; gap: 10px; align-items: center;">
+<button onClick="{{fPrev}}" aria-label="Previous step" style="width: 48px; height: 48px; border-radius: 12px; border: 1.5px solid #3A3E48; background: transparent; color: #F4F1EA; cursor: pointer; font-size: 18px;">←</button>
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; min-width: 60px; text-align: center;">{{fLabel}}</span>
+<button onClick="{{fNext}}" aria-label="Next step" style="width: 48px; height: 48px; border-radius: 12px; border: none; background: #7EE2A8; color: #16181D; cursor: pointer; font-size: 18px;">→</button>
+</div>
+</div>
+<div style="display: flex; gap: 8px; flex-wrap: wrap;">
+<sc-for list="{{fSteps}}" as="fs" hint-placeholder-count="7"><button onClick="{{fs.pick}}" style="{{fs.style}}"><span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; opacity: 0.75;">{{fs.num}}</span><span>{{fs.name}}</span></button></sc-for>
+</div>
+<div style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 24px;">
+<div style="grid-column: span 6; background: #7EE2A8; color: #16181D; border-radius: 20px; padding: 26px; display: flex; flex-direction: column; gap: 10px;">
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 28px; font-weight: 800;">{{fCur.name}}</span>
+<span style="font-size: 16px; line-height: 1.6;">{{fCur.desc}}</span>
+<span style="font-size: 14px; font-weight: 600;">{{fCur.next}}</span>
+</div>
+<pre style="grid-column: span 6; margin: 0; background: #1E2129; border: 1px solid #2E323C; border-radius: 20px; padding: 22px; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #D8DAE0; white-space: pre-wrap;">{{fCur.code}}</pre>
+</div>
+</section>
+</sc-if>
+
+<div style="flex-grow: 1;"></div>
+<section style="padding: 0 80px 64px; display: flex; justify-content: space-between; align-items: center; gap: 30px;">
+<div style="display: flex; flex-direction: column; gap: 8px;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #6A6E77;">back to the path</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 30px; font-weight: 800;">Module 13 · Best Practices &amp; Anti-Patterns</span></div>
+<a href="PWBest.html" style="text-decoration: none; padding: 16px 26px; border-radius: 12px; background: #16181D; color: #7EE2A8; font-weight: 600;">Continue →</a>
+</section>
+</div>`;
+window.__mountDC(__TPL, Component);
+</script>
+</body>
+</html>

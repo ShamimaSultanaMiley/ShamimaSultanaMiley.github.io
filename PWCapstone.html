@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440">
+<title>Capstone Project — Playwright</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap">
+<style>html,body{margin:0;background:#F4F1EA;font-family:'IBM Plex Sans',system-ui,sans-serif} #app > div{margin:0 auto}</style>
+</head>
+<body>
+
+<style>
+.snav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:16px 40px;background:#16181D;color:#F4F1EA;font-family:'IBM Plex Sans',sans-serif;flex-wrap:wrap;gap:12px}
+.snav a{color:#F4F1EA;text-decoration:none}
+.snav .brand{display:flex;align-items:center;gap:10px;font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:18px}
+.snav .brand span.logo{width:34px;height:34px;border-radius:9px;background:#7EE2A8;color:#16181D;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:14px}
+.snav ul{list-style:none;display:flex;gap:6px;margin:0;padding:0;align-items:center;flex-wrap:wrap}
+.snav > ul > li{position:relative}
+.snav > ul > li > a,.snav > ul > li > span{display:block;padding:9px 14px;border-radius:9px;font-size:15px;font-weight:500;cursor:pointer;white-space:nowrap}
+.snav > ul > li:hover > a,.snav > ul > li:hover > span,.snav .cur{background:#2A2D35}
+.snav .caret{font-size:11px;opacity:.7;margin-left:4px}
+.snav .drop{position:absolute;top:100%;left:0;min-width:220px;background:#1E2129;border:1px solid #2E323C;border-radius:12px;padding:8px;display:none;flex-direction:column;gap:2px;box-shadow:0 18px 40px -16px rgba(0,0,0,.6)}
+.snav > ul > li:hover .drop{display:flex}
+.snav .drop a{padding:9px 12px;border-radius:8px;font-size:14px;color:#D8DAE0}
+.snav .drop a:hover{background:#2A2D35;color:#fff}
+.snav .drop .grp{font-family:'JetBrains Mono',monospace;font-size:11px;color:#8A8F9C;text-transform:uppercase;letter-spacing:.06em;padding:8px 12px 2px}
+.snav .cta{padding:9px 18px;border-radius:999px;background:#1F7A52;color:#fff;font-weight:600}
+.snav .menubtn{display:none;background:none;border:1.5px solid #3A3E48;color:#F4F1EA;border-radius:9px;padding:8px 12px;font-size:15px;cursor:pointer}
+@media(max-width:1100px){
+  .snav .menubtn{display:block}
+  .snav > ul{display:none;flex-direction:column;align-items:stretch;width:100%;order:3}
+  .snav.open > ul{display:flex}
+  .snav .drop{position:static;display:flex;border:none;box-shadow:none;background:transparent;padding:0 0 6px 14px}
+  .snav > ul > li:hover .drop{display:flex}
+}
+</style>
+<nav class="snav" id="snav">
+<a class="brand" href="index.html"><span class="logo">S✓</span>Shamima Sultana</a>
+<button class="menubtn" onclick="document.getElementById('snav').classList.toggle('open')">Menu ☰</button>
+<ul>
+<li><a href="index.html" class="">Home</a></li>
+<li><span class="">About <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="about.html">Intro &amp; journey</a>
+    <a href="skills.html">Skills</a>
+    <a href="certifications.html">Certifications</a>
+    <a href="research.html">Research</a>
+    <a href="achievements.html">Achievements</a>
+  </div></li>
+<li><span class="">Work <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="projects.html">Projects</a>
+  </div></li>
+<li><span class="cur">Learn <span class="caret">▾</span></span>
+  <div class="drop">
+    <span class="grp">Automation</span>
+    <a href="PWHub.html">Playwright path</a>
+    <a href="Selenium.html">Selenium with Java</a>
+    <a href="MobileTest.html">Mobile testing</a>
+    <span class="grp">Performance</span>
+    <a href="K6Hub.html">k6</a>
+    <a href="JMeter.html">JMeter</a>
+    <span class="grp">Data &amp; APIs</span>
+    <a href="SQLHub.html">SQL</a>
+    <a href="API.html">API testing</a>
+    <span class="grp">Core &amp; specialised</span>
+    <a href="Manual.html">Manual testing</a>
+    <a href="AITest.html">AI / LLM testing</a>
+    <a href="DevTools.html">DevTools</a>
+    <a href="Git.html">Git &amp; GitHub</a>
+    <a href="A11y.html">Accessibility</a>
+    <a href="Security.html">Security</a>
+  </div></li>
+<li><span class="">Writing <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="K6Hub.html">Tutorials &amp; articles</a>
+  </div></li>
+<li><span class="">More <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="News.html">News</a>
+    <a href="Interview.html">Interview prep</a>
+    <a href="ISTQB.html">ISTQB prep</a>
+  </div></li>
+<li><a class="cta" href="mailto:shamimasultanamiley605@gmail.com">Contact</a></li>
+</ul>
+</nav>
+
+<div id="app"></div>
+<script>/* Minimal renderer: replaces Claude's canvas engine so pages run anywhere. */
+(function(){
+  function resolve(scopes, path){
+    path=path.trim();
+    var parts=path.split('.'), head=parts[0], base, found=false;
+    for(var i=scopes.length-1;i>=0;i--){ if(scopes[i] && Object.prototype.hasOwnProperty.call(scopes[i],head)){ base=scopes[i][head]; found=true; break; } }
+    if(!found) return undefined;
+    for(var j=1;j<parts.length;j++){ if(base==null) return undefined; base=base[parts[j]]; }
+    return base;
+  }
+  function subst(str, scopes){
+    return str.replace(/\{\{([^}]+)\}\}/g, function(_,e){ var v=resolve(scopes,e); return v==null?'':String(v); });
+  }
+  function firstExpr(str){ var m=str.match(/\{\{([^}]+)\}\}/); return m?m[1].trim():null; }
+  function processNode(node, scopes, out){
+    if(node.nodeType===3){ // text
+      var t=node.nodeValue;
+      if(t.indexOf('{{')>=0) out.push(document.createTextNode(subst(t,scopes)));
+      else out.push(document.createTextNode(t));
+      return;
+    }
+    if(node.nodeType!==1){ return; }
+    var tag=node.tagName.toLowerCase();
+    if(tag==='sc-for'){
+      var listExpr=firstExpr(node.getAttribute('list')||'');
+      var as=node.getAttribute('as');
+      var arr=listExpr?resolve(scopes,listExpr):null;
+      if(Array.isArray(arr)){
+        for(var k=0;k<arr.length;k++){
+          var sc=scopes.concat([{__k:as, [as]:arr[k]}]);
+          for(var c=0;c<node.childNodes.length;c++) processNode(node.childNodes[c], sc, out);
+        }
+      }
+      return;
+    }
+    if(tag==='sc-if'){
+      var valExpr=firstExpr(node.getAttribute('value')||'');
+      var cond=valExpr?resolve(scopes,valExpr):false;
+      if(cond){ for(var c2=0;c2<node.childNodes.length;c2++) processNode(node.childNodes[c2], scopes, out); }
+      return;
+    }
+    var el=document.createElement(tag);
+    for(var a=0;a<node.attributes.length;a++){
+      var at=node.attributes[a], name=at.name, val=at.value;
+      if(name.indexOf('hint-')===0) continue;
+      if(name==='onclick'){ var h=firstExpr(val); (function(expr){ el.addEventListener('click', function(ev){ var fn=resolve(scopes,expr); if(typeof fn==='function') fn(ev); }); })(h); continue; }
+      if(name==='onchange'){ var h2=firstExpr(val); (function(expr){ el.addEventListener('input', function(ev){ var fn=resolve(scopes,expr); if(typeof fn==='function') fn(ev); }); })(h2); continue; }
+      var sv=val.indexOf('{{')>=0?subst(val,scopes):val;
+      if(name==='value' && (tag==='input'||tag==='textarea')){ el.value=sv; el.setAttribute('value',sv); }
+      else el.setAttribute(name, sv);
+    }
+    var kids=[];
+    for(var cc=0;cc<node.childNodes.length;cc++) processNode(node.childNodes[cc], scopes, kids);
+    for(var ki=0;ki<kids.length;ki++) el.appendChild(kids[ki]);
+    out.push(el);
+  }
+  window.__mountDC=function(templateHTML, ComponentClass){
+    var tplRoot=document.createElement('div'); tplRoot.innerHTML=templateHTML;
+    var mount=document.getElementById('app');
+    var comp=new ComponentClass({});
+    function doRender(){
+      var vals;
+      try{ vals=comp.renderVals(); }catch(e){ console.error('render error',e); return; }
+      var frag=document.createDocumentFragment();
+      var buf=[];
+      for(var i=0;i<tplRoot.childNodes.length;i++) processNode(tplRoot.childNodes[i], [vals], buf);
+      for(var b=0;b<buf.length;b++) frag.appendChild(buf[b]);
+      // preserve focus in search/textarea across re-render
+      var active=document.activeElement, sel=null, id=null;
+      mount.innerHTML=''; mount.appendChild(frag);
+    }
+    comp.setState=function(s){ Object.assign(comp.state, s); doRender(); };
+    doRender();
+  };
+  window.DCLogic=function(){};
+})();
+</script>
+<script>
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { m: 0, l: 0, mode: 'split', f: 0, done: {} };
+  }
+  renderVals() {
+    const st = this.state;
+    const MODS = [{"num": "1", "title": "Plan", "blurb": "Choose the targets and plan like a real test project.", "lessons": [{"title": "The project brief", "body": "Build one complete automation project using everything in the path. It becomes your strongest portfolio piece. Step through the milestones below.", "code": "UI target   https://www.saucedemo.com   (public practice shop)\n            users: standard_user, locked_out_user,\n                   problem_user, performance_glitch_user\n            password: secret_sauce  (published on the login page)\nAPI target  https://restful-booker.herokuapp.com\n\nDeliver\n  • framework with layers (Module 09)\n  • UI + API + hybrid tests\n  • Allure report, CI on GitHub Actions\n  • README + case study on your portfolio", "out": "Public practice sites only: never company systems,\nnever confidential data.", "tip": "Timebox it: aim for 2–3 weekends, then polish.", "mistake": "Starting to code before writing the plan.", "viz": "flow"}, {"title": "Write the test plan and scenarios", "body": "Use your manual testing skills first: scope, risks, scenarios.", "code": "Scope      login, product list, cart, checkout; booking API CRUD\nOut        payments (not real), admin\nRisks      checkout totals, sorting, locked-out users\nScenarios\n  UI-01 Standard user can log in\n  UI-02 Locked-out user sees a clear error\n  UI-03 Products can be sorted by price (low → high)\n  UI-04 Cart badge counts added items\n  UI-05 Checkout total = items + tax\n  UI-06 Checkout requires first name, last name, postal code\n  API-01 Create, read, update, delete a booking\n  API-02 Invalid booking data is rejected (find the 500s!)", "out": "Put the scenarios in the README as your\nRequirement → Test traceability.", "tip": "Include a few negative scenarios; they show testing skill, not just coding.", "mistake": "Automating 40 happy-path clicks and no negatives.", "viz": ""}]}, {"num": "2", "title": "Build", "blurb": "Set up the repository and build the framework layer by layer.", "lessons": [{"title": "Repository setup", "body": "Start the repo the way a team would.", "code": "gh repo create playwright-capstone --public --clone\ncd playwright-capstone\npython -m venv .venv && .venv\\Scripts\\activate\npip install pytest-playwright pytest-xdist allure-pytest \\\n            python-dotenv faker jsonschema pyyaml\npip freeze > requirements.txt\nplaywright install\n\n# add: .gitignore, pytest.ini, config/config.yaml, .env.example", "out": "First commit: 'Project skeleton with config and CI stub'.\nThen build on a branch per feature, merged via PRs.", "tip": "Use PRs even alone; the history shows how you work.", "mistake": "One commit at the end called 'project'.", "viz": ""}, {"title": "Pages, components and flows", "body": "Build the page layer for the SauceDemo screens, then one flow for checkout.", "code": "pages/\n  base_page.py         open(), is_loaded(), header\n  login_page.py        login(user, pwd), error\n  inventory_page.py    sort_by(), add_to_cart(name), cart_count\n  cart_page.py         items, checkout()\n  checkout_page.py     fill_info(), continue_(), finish()\n  components/header.py cart_badge, open_menu(), logout()\nflows/\n  purchase_flow.py     buy(products, customer) -> order summary", "out": "Locators with get_by_role / get_by_test_id\n(SauceDemo has data-test attributes: configure\nplaywright.selectors.set_test_id_attribute(\"data-test\")).", "tip": "Build and test one page at a time; don't write all classes first.", "mistake": "Page objects with assertions inside.", "viz": ""}, {"title": "Tests: UI, API and hybrid", "body": "Write the scenarios from the plan as focused tests.", "code": "tests/ui/test_login.py         UI-01, UI-02 (parametrized users)\ntests/ui/test_inventory.py     UI-03, UI-04\ntests/ui/test_checkout.py      UI-05, UI-06\ntests/api/test_bookings.py     API-01 CRUD with fixtures + cleanup\ntests/api/test_booking_validation.py  API-02 parametrized\ntests/api/test_contract.py     jsonschema check\n\nMarkers: smoke on UI-01, UI-04, API-01; regression on all", "out": "Record the real bugs you find (e.g. 500s on invalid\nbooking data, problem_user's broken images) in a\n'Findings' section of the README.", "tip": "Each test name should match a scenario ID in the plan.", "mistake": "Tests that pass even when the feature is broken (no assertions).", "viz": ""}]}, {"num": "3", "title": "Ship", "blurb": "Reports, CI, and presenting the project.", "lessons": [{"title": "Allure report and evidence", "body": "Make failures self-explanatory.", "code": "pytest.ini\n  addopts = -ra --strict-markers --alluredir=allure-results\n            --tracing retain-on-failure --screenshot only-on-failure\n\nAllure labels: epic Shop / API, feature, story, severity\nSteps via @allure.step on flows and page methods\nFailure hook attaches screenshot + trace", "out": "allure serve allure-results\n→ behaviours tree, steps, attachments, trends", "tip": "Break a locator on purpose once to check the evidence really appears.", "mistake": "A report with no steps or attachments.", "viz": ""}, {"title": "CI on GitHub Actions", "body": "Smoke on every push, full regression nightly, reports kept as artifacts.", "code": ".github/workflows/e2e.yml   (Module 10 template)\n  on: push, pull_request, schedule (nightly), workflow_dispatch\n  matrix: chromium, firefox\n  pytest -n auto -m smoke            on push / PR\n  pytest -n auto                     nightly\n  upload allure-results + test-results (if: always())\n\nREADME badge:\n  ![e2e](https://github.com/ShamimaSultanaMiley/playwright-capstone/actions/workflows/e2e.yml/badge.svg)", "out": "A green badge on the README is the first\nthing a recruiter sees.", "tip": "Store nothing secret in the repo; SauceDemo's public users can live in config.", "mistake": "CI that only runs when you remember to trigger it.", "viz": ""}, {"title": "README and case study", "body": "The write-up is what turns code into a portfolio piece.", "code": "README.md\n  What it tests and why (scope, risks)\n  Architecture diagram (layers)\n  How to run: 3 commands\n  Reports: how to open Allure\n  Findings: real bugs discovered, with evidence\n  What I'd do next\n\nPortfolio case study (Projects section of this site)\n  Problem → approach → results → what I learned", "out": "Interviewers ask about decisions: why storage_state,\nwhy flows, why these markers. Write those reasons down.", "tip": "Add a 60-second screen recording of a run and the report.", "mistake": "A repo with no README, or a README that only says 'Playwright tests'.", "viz": ""}]}];
+    const FLOW = [{"name": "Plan", "desc": "Scope, risks and scenario IDs, written before any code.", "next": "Next: repository and framework skeleton.", "code": "UI-01 … UI-06, API-01, API-02"}, {"name": "Skeleton", "desc": "Repo, venv, requirements, pytest.ini, config, .gitignore, CI stub.", "next": "Next: pages and flows.", "code": "first commit: project skeleton"}, {"name": "Pages & flows", "desc": "BasePage, page objects, header component, purchase flow.", "next": "Next: tests.", "code": "PurchaseFlow(page).buy([...], customer)"}, {"name": "Tests", "desc": "UI, API and hybrid tests, each mapped to a scenario ID, with fixtures and cleanup.", "next": "Next: evidence.", "code": "pytest -m smoke  →  green"}, {"name": "Reports", "desc": "Allure labels and steps, screenshots and traces on failure.", "next": "Next: automation in CI.", "code": "allure serve allure-results"}, {"name": "CI", "desc": "GitHub Actions: smoke on push, full nightly, artifacts, README badge.", "next": "Next: tell the story.", "code": "![e2e](…/badge.svg)"}, {"name": "Case study", "desc": "README and portfolio write-up: decisions, findings, next steps.", "next": "Add it to the Projects section of your portfolio.", "code": "Problem → Approach → Results → Learned"}];
+    const A = '#1F7A52', AD = '#7EE2A8';
+    const mod = MODS[st.m];
+    const cur = mod.lessons[st.l] || mod.lessons[0];
+    const key = (m, l) => m + '-' + l;
+    let total = 0, doneN = 0;
+    MODS.forEach((mm, i) => mm.lessons.forEach((_, j) => { total++; if (st.done[key(i, j)]) doneN++; }));
+    const modTabs = MODS.map((mm, i) => {
+      const on = i === st.m;
+      const d = mm.lessons.filter((_, j) => st.done[key(i, j)]).length;
+      return { num: mm.num + (d === mm.lessons.length ? ' ✓' : ''), title: mm.title, pick: () => this.setState({ m: i, l: 0 }),
+        style: 'display:flex;flex-direction:column;align-items:flex-start;gap:4px;min-height:64px;padding:10px 12px;border:none;border-radius:14px 14px 0 0;cursor:pointer;text-align:left;font:600 13px IBM Plex Sans,sans-serif;flex:1;' + (on ? 'background:#F4F1EA;color:#16181D;' : 'background:rgba(0,0,0,0.06);color:#0F3B28;') };
+    });
+    const lessonNav = mod.lessons.map((ls, j) => {
+      const on = j === st.l, dn = !!st.done[key(st.m, j)];
+      return { title: ls.title, num: dn ? '✓' : String(j + 1).padStart(2, '0'), pick: () => this.setState({ l: j }),
+        style: 'display:flex;align-items:center;gap:12px;min-height:44px;padding:8px 12px;border-radius:10px;border:none;cursor:pointer;text-align:left;font:' + (on ? '600' : '400') + ' 15px IBM Plex Sans,sans-serif;' + (on ? 'background:#16181D;color:#F4F1EA;' : 'background:transparent;color:#16181D;'),
+        numStyle: 'flex-shrink:0;font:600 12px JetBrains Mono,monospace;width:28px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;' + (on ? 'background:' + A + ';color:#fff;' : dn ? 'background:#DCEFE3;color:#1F7A52;' : 'background:#EAE5DA;color:#6A6E77;') };
+    });
+    const modeDefs = [['split', 'Side by side'], ['code', 'Code'], ['out', 'Explained']];
+    const modes = modeDefs.map(([id, label]) => ({ label, pick: () => this.setState({ mode: id }),
+      style: 'min-height:40px;padding:8px 14px;border-radius:8px;border:none;cursor:pointer;font:600 14px IBM Plex Sans,sans-serif;' + (st.mode === id ? 'background:#FFFFFF;color:#16181D;box-shadow:0 1px 3px rgba(0,0,0,.12);' : 'background:transparent;color:#5C606A;') }));
+    const isFirst = st.m === 0 && st.l === 0;
+    const isLast = st.m === MODS.length - 1 && st.l === mod.lessons.length - 1;
+    const go = (dir) => {
+      let m = st.m, l = st.l + dir;
+      if (l < 0) { if (m === 0) return; m -= 1; l = MODS[m].lessons.length - 1; }
+      if (l >= MODS[m].lessons.length) { if (m === MODS.length - 1) return; m += 1; l = 0; }
+      this.setState({ m, l });
+    };
+    const k = key(st.m, st.l); const isDone = !!st.done[k];
+    const pct = Math.round((doneN / total) * 100);
+    const fi = Math.min(st.f, FLOW.length - 1);
+    const fSteps = FLOW.map((s, i) => ({ num: String(i + 1), name: s.name, pick: () => this.setState({ f: i }),
+      style: 'display:flex;flex-direction:column;align-items:flex-start;gap:2px;min-height:52px;padding:8px 14px;border-radius:12px;cursor:pointer;font:600 14px IBM Plex Sans,sans-serif;text-align:left;' + (i === fi ? 'background:' + AD + ';color:#16181D;border:1.5px solid ' + AD + ';' : i < fi ? 'background:#2A2D35;color:#F4F1EA;border:1.5px solid #3A3E48;' : 'background:transparent;color:#A9AEBA;border:1.5px solid #3A3E48;') }));
+    return {
+      mod, cur, modTabs, lessonNav, modes,
+      lessonNum: String(st.l + 1), lessonTotal: String(mod.lessons.length),
+      showA: st.mode !== 'out', showB: st.mode !== 'code',
+      gridStyle: st.mode === 'split' ? 'display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;' : 'display:grid;grid-template-columns:repeat(1,minmax(0,1fr));gap:16px;',
+      prev: () => go(-1), next: () => go(1),
+      prevLabel: isFirst ? 'Start' : 'Previous', nextLabel: isLast ? 'Finished' : 'Next lesson',
+      markDone: () => this.setState({ done: { ...st.done, [k]: !isDone } }),
+      doneLabel: isDone ? '✓ Done' : 'Mark as done',
+      doneBtnStyle: 'min-height:48px;padding:12px 22px;border-radius:12px;cursor:pointer;font:600 15px IBM Plex Sans,sans-serif;' + (isDone ? 'background:#DCEFE3;color:#1F7A52;border:1.5px solid #7FC8A0;' : 'background:#FFFFFF;color:#16181D;border:1.5px solid #DDD7CB;'),
+      overallLabel: doneN + ' / ' + total + ' lessons',
+      overallStyle: 'height:100%;border-radius:999px;background:' + A + ';transition:width .3s;width:' + pct + '%;',
+      vizFlow: cur.viz === 'flow', fSteps, fCur: FLOW[fi], fLabel: (fi + 1) + ' / ' + FLOW.length,
+      fPrev: () => this.setState({ f: Math.max(0, fi - 1) }), fNext: () => this.setState({ f: Math.min(FLOW.length - 1, fi + 1) })
+    };
+  }
+}
+
+var __TPL=`<div style="width: 1440px; height: 2900px; box-sizing: border-box; display: flex; flex-direction: column; background: #F4F1EA; font-family: 'IBM Plex Sans', system-ui, sans-serif; color: #16181D;">
+
+<section style="background: #DCEFE3; padding: 48px 80px 0; display: flex; flex-direction: column; gap: 26px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 40px;">
+<div style="display: flex; flex-direction: column; gap: 14px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #2F5E47;">playwright / capstone · module {{mod.num}}</span>
+<h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 56px; line-height: 1; letter-spacing: -0.03em; color: #0F3B28;">{{mod.title}}</h1>
+<p style="margin: 0; font-size: 18px; line-height: 1.6; color: #2F5E47; max-width: 760px;">{{mod.blurb}}</p>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px; min-width: 300px;">
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 22px; font-weight: 800; color: #0F3B28;">Capstone · End-to-end project</span>
+<div style="display: flex; justify-content: space-between; font-size: 14px; color: #0F3B28;"><span>Course progress</span><span style="font-family: 'JetBrains Mono', monospace;">{{overallLabel}}</span></div>
+<div style="height: 8px; border-radius: 999px; background: rgba(0,0,0,0.1); overflow: hidden;"><div style="{{overallStyle}}"></div></div>
+<span style="font-size: 13px; color: #2F5E47;">Python + pytest-playwright.</span>
+</div>
+</div>
+<div style="display: flex; gap: 6px;">
+<sc-for list="{{modTabs}}" as="t" hint-placeholder-count="9">
+<button onClick="{{t.pick}}" style="{{t.style}}"><span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; opacity: 0.8;">{{t.num}}</span><span>{{t.title}}</span></button>
+</sc-for>
+</div>
+</section>
+
+<section style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 40px; padding: 56px 80px 48px;">
+<aside style="grid-column: span 3; display: flex; flex-direction: column; gap: 6px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #6A6E77; text-transform: uppercase; letter-spacing: 0.08em; padding: 0 12px 10px;">module {{mod.num}} · lessons</span>
+<sc-for list="{{lessonNav}}" as="l" hint-placeholder-count="7">
+<button onClick="{{l.pick}}" style="{{l.style}}"><span style="{{l.numStyle}}">{{l.num}}</span><span>{{l.title}}</span></button>
+</sc-for>
+</aside>
+<div style="grid-column: span 9; display: flex; flex-direction: column; gap: 22px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 20px;">
+<div style="display: flex; flex-direction: column; gap: 10px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #1F7A52;">module {{mod.num}} · lesson {{lessonNum}} of {{lessonTotal}}</span>
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 44px; letter-spacing: -0.02em; line-height: 1.05;">{{cur.title}}</h2>
+</div>
+<div style="display: flex; gap: 6px; background: #EAE5DA; padding: 5px; border-radius: 12px;">
+<sc-for list="{{modes}}" as="m" hint-placeholder-count="3"><button onClick="{{m.pick}}" style="{{m.style}}">{{m.label}}</button></sc-for>
+</div>
+</div>
+<p style="margin: 0; font-size: 18px; line-height: 1.7; color: #34373F; max-width: 840px;">{{cur.body}}</p>
+<div style="{{gridStyle}}">
+<sc-if value="{{showA}}" hint-placeholder-val="{{ true }}">
+<div style="background: #16181D; border-radius: 16px; overflow: hidden;">
+<div style="padding: 12px 18px; border-bottom: 1px solid #2A2D35; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #7EE2A8;">code</div>
+<pre style="margin: 0; padding: 20px; font-family: 'JetBrains Mono', monospace; font-size: 13.5px; line-height: 1.7; color: #D8DAE0; white-space: pre-wrap;">{{cur.code}}</pre>
+</div>
+</sc-if>
+<sc-if value="{{showB}}" hint-placeholder-val="{{ true }}">
+<div style="background: #FFFFFF; border: 1px solid #DDD7CB; border-radius: 16px; overflow: hidden;">
+<div style="padding: 12px 18px; border-bottom: 1px solid #DDD7CB; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #1F7A52;">what happens / why</div>
+<pre style="margin: 0; padding: 20px; font-family: 'JetBrains Mono', monospace; font-size: 13.5px; line-height: 1.7; color: #16181D; white-space: pre-wrap;">{{cur.out}}</pre>
+</div>
+</sc-if>
+</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px;">
+<div style="display: flex; gap: 14px; background: #DCEFE3; border-radius: 16px; padding: 20px 22px; align-items: flex-start;">
+<span style="flex-shrink: 0; width: 32px; height: 32px; border-radius: 9px; background: #1F7A52; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 700;">✓</span>
+<div style="display: flex; flex-direction: column; gap: 4px;"><span style="font-weight: 600; color: #174F37;">Remember</span><span style="font-size: 15px; line-height: 1.6; color: #174F37;">{{cur.tip}}</span></div>
+</div>
+<div style="display: flex; gap: 14px; background: #FCE7DD; border-radius: 16px; padding: 20px 22px; align-items: flex-start;">
+<span style="flex-shrink: 0; width: 32px; height: 32px; border-radius: 9px; background: #C4502A; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 700;">!</span>
+<div style="display: flex; flex-direction: column; gap: 4px;"><span style="font-weight: 600; color: #7A2E14;">Common mistake</span><span style="font-size: 15px; line-height: 1.6; color: #7A2E14;">{{cur.mistake}}</span></div>
+</div>
+</div>
+<div style="display: flex; justify-content: space-between; align-items: center;">
+<button onClick="{{prev}}" style="min-height: 48px; padding: 12px 22px; border-radius: 12px; border: 1.5px solid #16181D; background: transparent; cursor: pointer; font: 600 15px 'IBM Plex Sans', sans-serif; color: #16181D;">← {{prevLabel}}</button>
+<button onClick="{{markDone}}" style="{{doneBtnStyle}}">{{doneLabel}}</button>
+<button onClick="{{next}}" style="min-height: 48px; padding: 12px 22px; border-radius: 12px; border: none; background: #1F7A52; color: #FFFFFF; cursor: pointer; font: 600 15px 'IBM Plex Sans', sans-serif;">{{nextLabel}} →</button>
+</div>
+</div>
+</section>
+
+<sc-if value="{{vizFlow}}" hint-placeholder-val="{{ false }}">
+<section style="margin: 0 80px 64px; background: #16181D; color: #F4F1EA; border-radius: 28px; padding: 44px; display: flex; flex-direction: column; gap: 26px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 30px;">
+<div style="display: flex; flex-direction: column; gap: 10px;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #7EE2A8;">visualize · the project milestones</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 36px; font-weight: 800;">From plan to portfolio case study</span></div>
+<div style="display: flex; gap: 10px; align-items: center;">
+<button onClick="{{fPrev}}" aria-label="Previous step" style="width: 48px; height: 48px; border-radius: 12px; border: 1.5px solid #3A3E48; background: transparent; color: #F4F1EA; cursor: pointer; font-size: 18px;">←</button>
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; min-width: 60px; text-align: center;">{{fLabel}}</span>
+<button onClick="{{fNext}}" aria-label="Next step" style="width: 48px; height: 48px; border-radius: 12px; border: none; background: #7EE2A8; color: #16181D; cursor: pointer; font-size: 18px;">→</button>
+</div>
+</div>
+<div style="display: flex; gap: 8px; flex-wrap: wrap;">
+<sc-for list="{{fSteps}}" as="fs" hint-placeholder-count="7"><button onClick="{{fs.pick}}" style="{{fs.style}}"><span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; opacity: 0.75;">{{fs.num}}</span><span>{{fs.name}}</span></button></sc-for>
+</div>
+<div style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 24px;">
+<div style="grid-column: span 6; background: #7EE2A8; color: #16181D; border-radius: 20px; padding: 26px; display: flex; flex-direction: column; gap: 10px;">
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 28px; font-weight: 800;">{{fCur.name}}</span>
+<span style="font-size: 16px; line-height: 1.6;">{{fCur.desc}}</span>
+<span style="font-size: 14px; font-weight: 600;">{{fCur.next}}</span>
+</div>
+<pre style="grid-column: span 6; margin: 0; background: #1E2129; border: 1px solid #2E323C; border-radius: 20px; padding: 22px; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #D8DAE0; white-space: pre-wrap;">{{fCur.code}}</pre>
+</div>
+</section>
+</sc-if>
+
+<div style="flex-grow: 1;"></div>
+<section style="padding: 0 80px 64px; display: flex; justify-content: space-between; align-items: center; gap: 30px;">
+<div style="display: flex; flex-direction: column; gap: 8px;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #6A6E77;">next</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 30px; font-weight: 800;">Back to the Playwright path</span></div>
+<a href="PWHub.html" style="text-decoration: none; padding: 16px 26px; border-radius: 12px; background: #16181D; color: #7EE2A8; font-weight: 600;">Playwright path →</a>
+</section>
+</div>`;
+window.__mountDC(__TPL, Component);
+</script>
+</body>
+</html>

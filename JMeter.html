@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440">
+<title>JMeter for Performance Testing</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap">
+<style>html,body{margin:0;background:#F4F1EA;font-family:'IBM Plex Sans',system-ui,sans-serif} #app > div{margin:0 auto}</style>
+</head>
+<body>
+
+<style>
+.snav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:16px 40px;background:#16181D;color:#F4F1EA;font-family:'IBM Plex Sans',sans-serif;flex-wrap:wrap;gap:12px}
+.snav a{color:#F4F1EA;text-decoration:none}
+.snav .brand{display:flex;align-items:center;gap:10px;font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:18px}
+.snav .brand span.logo{width:34px;height:34px;border-radius:9px;background:#7EE2A8;color:#16181D;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:14px}
+.snav ul{list-style:none;display:flex;gap:6px;margin:0;padding:0;align-items:center;flex-wrap:wrap}
+.snav > ul > li{position:relative}
+.snav > ul > li > a,.snav > ul > li > span{display:block;padding:9px 14px;border-radius:9px;font-size:15px;font-weight:500;cursor:pointer;white-space:nowrap}
+.snav > ul > li:hover > a,.snav > ul > li:hover > span,.snav .cur{background:#2A2D35}
+.snav .caret{font-size:11px;opacity:.7;margin-left:4px}
+.snav .drop{position:absolute;top:100%;left:0;min-width:220px;background:#1E2129;border:1px solid #2E323C;border-radius:12px;padding:8px;display:none;flex-direction:column;gap:2px;box-shadow:0 18px 40px -16px rgba(0,0,0,.6)}
+.snav > ul > li:hover .drop{display:flex}
+.snav .drop a{padding:9px 12px;border-radius:8px;font-size:14px;color:#D8DAE0}
+.snav .drop a:hover{background:#2A2D35;color:#fff}
+.snav .drop .grp{font-family:'JetBrains Mono',monospace;font-size:11px;color:#8A8F9C;text-transform:uppercase;letter-spacing:.06em;padding:8px 12px 2px}
+.snav .cta{padding:9px 18px;border-radius:999px;background:#1F7A52;color:#fff;font-weight:600}
+.snav .menubtn{display:none;background:none;border:1.5px solid #3A3E48;color:#F4F1EA;border-radius:9px;padding:8px 12px;font-size:15px;cursor:pointer}
+@media(max-width:1100px){
+  .snav .menubtn{display:block}
+  .snav > ul{display:none;flex-direction:column;align-items:stretch;width:100%;order:3}
+  .snav.open > ul{display:flex}
+  .snav .drop{position:static;display:flex;border:none;box-shadow:none;background:transparent;padding:0 0 6px 14px}
+  .snav > ul > li:hover .drop{display:flex}
+}
+</style>
+<nav class="snav" id="snav">
+<a class="brand" href="index.html"><span class="logo">S✓</span>Shamima Sultana</a>
+<button class="menubtn" onclick="document.getElementById('snav').classList.toggle('open')">Menu ☰</button>
+<ul>
+<li><a href="index.html" class="">Home</a></li>
+<li><span class="">About <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="about.html">Intro &amp; journey</a>
+    <a href="skills.html">Skills</a>
+    <a href="certifications.html">Certifications</a>
+    <a href="research.html">Research</a>
+    <a href="achievements.html">Achievements</a>
+  </div></li>
+<li><span class="">Work <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="projects.html">Projects</a>
+  </div></li>
+<li><span class="cur">Learn <span class="caret">▾</span></span>
+  <div class="drop">
+    <span class="grp">Automation</span>
+    <a href="PWHub.html">Playwright path</a>
+    <a href="Selenium.html">Selenium with Java</a>
+    <a href="MobileTest.html">Mobile testing</a>
+    <span class="grp">Performance</span>
+    <a href="K6Hub.html">k6</a>
+    <a href="JMeter.html">JMeter</a>
+    <span class="grp">Data &amp; APIs</span>
+    <a href="SQLHub.html">SQL</a>
+    <a href="API.html">API testing</a>
+    <span class="grp">Core &amp; specialised</span>
+    <a href="Manual.html">Manual testing</a>
+    <a href="AITest.html">AI / LLM testing</a>
+    <a href="DevTools.html">DevTools</a>
+    <a href="Git.html">Git &amp; GitHub</a>
+    <a href="A11y.html">Accessibility</a>
+    <a href="Security.html">Security</a>
+  </div></li>
+<li><span class="">Writing <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="K6Hub.html">Tutorials &amp; articles</a>
+  </div></li>
+<li><span class="">More <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="News.html">News</a>
+    <a href="Interview.html">Interview prep</a>
+    <a href="ISTQB.html">ISTQB prep</a>
+  </div></li>
+<li><a class="cta" href="mailto:shamimasultanamiley605@gmail.com">Contact</a></li>
+</ul>
+</nav>
+
+<div id="app"></div>
+<script>/* Minimal renderer: replaces Claude's canvas engine so pages run anywhere. */
+(function(){
+  function resolve(scopes, path){
+    path=path.trim();
+    var parts=path.split('.'), head=parts[0], base, found=false;
+    for(var i=scopes.length-1;i>=0;i--){ if(scopes[i] && Object.prototype.hasOwnProperty.call(scopes[i],head)){ base=scopes[i][head]; found=true; break; } }
+    if(!found) return undefined;
+    for(var j=1;j<parts.length;j++){ if(base==null) return undefined; base=base[parts[j]]; }
+    return base;
+  }
+  function subst(str, scopes){
+    return str.replace(/\{\{([^}]+)\}\}/g, function(_,e){ var v=resolve(scopes,e); return v==null?'':String(v); });
+  }
+  function firstExpr(str){ var m=str.match(/\{\{([^}]+)\}\}/); return m?m[1].trim():null; }
+  function processNode(node, scopes, out){
+    if(node.nodeType===3){ // text
+      var t=node.nodeValue;
+      if(t.indexOf('{{')>=0) out.push(document.createTextNode(subst(t,scopes)));
+      else out.push(document.createTextNode(t));
+      return;
+    }
+    if(node.nodeType!==1){ return; }
+    var tag=node.tagName.toLowerCase();
+    if(tag==='sc-for'){
+      var listExpr=firstExpr(node.getAttribute('list')||'');
+      var as=node.getAttribute('as');
+      var arr=listExpr?resolve(scopes,listExpr):null;
+      if(Array.isArray(arr)){
+        for(var k=0;k<arr.length;k++){
+          var sc=scopes.concat([{__k:as, [as]:arr[k]}]);
+          for(var c=0;c<node.childNodes.length;c++) processNode(node.childNodes[c], sc, out);
+        }
+      }
+      return;
+    }
+    if(tag==='sc-if'){
+      var valExpr=firstExpr(node.getAttribute('value')||'');
+      var cond=valExpr?resolve(scopes,valExpr):false;
+      if(cond){ for(var c2=0;c2<node.childNodes.length;c2++) processNode(node.childNodes[c2], scopes, out); }
+      return;
+    }
+    var el=document.createElement(tag);
+    for(var a=0;a<node.attributes.length;a++){
+      var at=node.attributes[a], name=at.name, val=at.value;
+      if(name.indexOf('hint-')===0) continue;
+      if(name==='onclick'){ var h=firstExpr(val); (function(expr){ el.addEventListener('click', function(ev){ var fn=resolve(scopes,expr); if(typeof fn==='function') fn(ev); }); })(h); continue; }
+      if(name==='onchange'){ var h2=firstExpr(val); (function(expr){ el.addEventListener('input', function(ev){ var fn=resolve(scopes,expr); if(typeof fn==='function') fn(ev); }); })(h2); continue; }
+      var sv=val.indexOf('{{')>=0?subst(val,scopes):val;
+      if(name==='value' && (tag==='input'||tag==='textarea')){ el.value=sv; el.setAttribute('value',sv); }
+      else el.setAttribute(name, sv);
+    }
+    var kids=[];
+    for(var cc=0;cc<node.childNodes.length;cc++) processNode(node.childNodes[cc], scopes, kids);
+    for(var ki=0;ki<kids.length;ki++) el.appendChild(kids[ki]);
+    out.push(el);
+  }
+  window.__mountDC=function(templateHTML, ComponentClass){
+    var tplRoot=document.createElement('div'); tplRoot.innerHTML=templateHTML;
+    var mount=document.getElementById('app');
+    var comp=new ComponentClass({});
+    function doRender(){
+      var vals;
+      try{ vals=comp.renderVals(); }catch(e){ console.error('render error',e); return; }
+      var frag=document.createDocumentFragment();
+      var buf=[];
+      for(var i=0;i<tplRoot.childNodes.length;i++) processNode(tplRoot.childNodes[i], [vals], buf);
+      for(var b=0;b<buf.length;b++) frag.appendChild(buf[b]);
+      // preserve focus in search/textarea across re-render
+      var active=document.activeElement, sel=null, id=null;
+      mount.innerHTML=''; mount.appendChild(frag);
+    }
+    comp.setState=function(s){ Object.assign(comp.state, s); doRender(); };
+    doRender();
+  };
+  window.DCLogic=function(){};
+})();
+</script>
+<script>
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { m: 0, l: 0, mode: 'split', f: 0, done: {} };
+  }
+  renderVals() {
+    const st = this.state;
+    const MODS = [{"num": "01", "title": "Getting started", "blurb": "Install JMeter, learn the interface, and understand how a test plan is built.", "lessons": [{"title": "What JMeter is (and how it compares to k6)", "body": "Apache JMeter is a free, Java-based load testing tool with a graphical editor. Many job posts ask for it, often next to k6.", "code": "                 JMeter                 k6\nTests written    GUI (saved as .jmx XML) JavaScript code\nRuns on          Java                   single Go binary\nStrengths        GUI, recorder, many     code in Git, CI-friendly,\n                 protocols, plugins      light on resources\nBest for         teams that prefer GUI,  developer-style teams,\n                 JDBC/JMS/FTP tests      API + CI pipelines", "out": "Both answer the same questions: how many users,\nhow fast, where does it break. Learning both makes\nyou flexible in any team.", "tip": "The concepts from the k6 path (load profiles, p95, thresholds) apply directly.", "mistake": "Thinking JMeter is outdated; it's still one of the most requested performance tools.", "viz": ""}, {"title": "Installation", "body": "JMeter needs Java. After that it's just a folder you unzip.", "code": "1. Install Java 17 or newer\n     java -version\n2. Download the binary zip from jmeter.apache.org\n   (apache-jmeter-5.6.x.zip)\n3. Unzip, e.g. C:\\tools\\apache-jmeter-5.6.3\n4. Start the GUI\n     bin\\jmeter.bat        (Windows)\n     bin/jmeter             (macOS / Linux)\n   or:  winget install DEVCOM.JMeter", "out": "The GUI opens with an empty Test Plan.\nAdd C:\\tools\\apache-jmeter-5.6.3\\bin to PATH to run\n'jmeter' from any terminal.", "tip": "Check jmeter.apache.org for the latest version and its Java requirement.", "mistake": "Downloading the 'source' zip instead of the 'binaries' zip.", "viz": ""}, {"title": "The building blocks", "body": "A test plan is a tree of elements. Knowing the element types is most of JMeter.", "code": "Test Plan\n└─ Thread Group            virtual users, ramp-up, loops\n   ├─ Config elements      HTTP Defaults, Header Manager, CSV data\n   ├─ Samplers             HTTP Request: the actual calls\n   ├─ Pre-processors       run before a sampler\n   ├─ Post-processors      extract values after (JSON Extractor)\n   ├─ Assertions           check responses\n   ├─ Timers               pauses (think time)\n   └─ Listeners            show / save results", "out": "Right-click any element → Add → pick a type.\nElements apply to their scope: everything at the same\nlevel and below in the tree.", "tip": "Put shared config (defaults, headers) at Thread Group level, not under each request.", "mistake": "Placing an assertion at the wrong level so it checks every request, or none.", "viz": ""}, {"title": "Execution order", "body": "JMeter runs elements in a fixed order around each sampler, no matter how they appear in the tree. Step through it below.", "code": "For every sampler:\n  1. Config elements\n  2. Pre-processors\n  3. Timers\n  4. Sampler (the request)\n  5. Post-processors\n  6. Assertions\n  7. Listeners", "out": "So a timer placed after a request still runs BEFORE it,\nand an extractor runs before the assertions check the response.", "tip": "When a test behaves strangely, walk through this order.", "mistake": "Expecting the tree order to be the run order.", "viz": "flow"}, {"title": "Your first test plan", "body": "A tiny plan: one user, one request, results in a table.", "code": "Test Plan\n└─ Thread Group        Threads: 1 · Ramp-up: 1 · Loop: 1\n   ├─ HTTP Request     Protocol: https\n   │                   Server:   restful-booker.herokuapp.com\n   │                   Method:   GET   Path: /ping\n   └─ View Results Tree   (listener)\n\nClick the green ▶ Start button", "out": "View Results Tree → Sampler result\n  Response code: 201   (Restful Booker's /ping returns 201)\n  Load time: 412 ms", "tip": "Save the plan early (Ctrl + S) as a .jmx file and commit it to Git.", "mistake": "Using a public practice API for heavy load. Keep practice runs to a few threads.", "viz": ""}]}, {"num": "02", "title": "Building tests", "blurb": "Requests, headers, cookies, users, pacing and controllers.", "lessons": [{"title": "HTTP Request Defaults and headers", "body": "Set the server once and share headers across all requests.", "code": "Thread Group\n├─ HTTP Request Defaults\n│    Protocol: https   Server: restful-booker.herokuapp.com\n├─ HTTP Header Manager\n│    Content-Type: application/json\n│    Accept:       application/json\n├─ HTTP Cookie Manager        (clear cookies each iteration ✓)\n├─ HTTP Request  GET  /booking\n└─ HTTP Request  POST /booking", "out": "Requests now only need method + path.\nChange the server in one place to test another environment.", "tip": "Add a Cookie Manager to any plan that logs in; it keeps session cookies per user.", "mistake": "Typing the server name into 30 requests.", "viz": ""}, {"title": "A POST request with JSON", "body": "Send a JSON body to create a record.", "code": "HTTP Request   Name: Create booking\n  Method: POST   Path: /booking\n  Body Data:\n  {\n    \"firstname\": \"Perf\",\n    \"lastname\": \"User${__threadNum}\",\n    \"totalprice\": 1500,\n    \"depositpaid\": true,\n    \"bookingdates\": {\n      \"checkin\": \"2026-11-03\",\n      \"checkout\": \"2026-11-05\"\n    },\n    \"additionalneeds\": \"Breakfast\"\n  }", "out": "Response: 200 with {\"bookingid\": 1234, \"booking\": {...}}\n${__threadNum} gives each virtual user a different last name.", "tip": "Name every sampler clearly; names become the rows in your reports.", "mistake": "Leaving samplers named 'HTTP Request', so the report has 10 identical rows.", "viz": ""}, {"title": "Thread Group settings", "body": "The Thread Group defines the load: how many users, how fast they start, how long they run.", "code": "Number of threads (users):  50\nRamp-up period (seconds):   100   → a new user every 2 s\nLoop count:                 Infinite\n☑ Specify thread lifetime\n   Duration (seconds):      600  → 10-minute test\n\nsetUp Thread Group      runs before (e.g. create test data)\ntearDown Thread Group   runs after  (e.g. clean up)", "out": "Same ideas as k6: VUs = threads, stages ≈ ramp-up.\nFor complex stepped profiles, use the Concurrency Thread\nGroup plugin (module 06).", "tip": "Ramp up gradually; starting 500 threads in 1 second tests your machine, not the server.", "mistake": "Ramp-up 0 with hundreds of threads.", "viz": ""}, {"title": "Timers: think time and pacing", "body": "Without timers, every thread fires requests non-stop. Timers make users behave like people.", "code": "Constant Timer              fixed pause (e.g. 1000 ms)\nUniform Random Timer        1000 ms + random 0–2000 ms\nConstant Throughput Timer   target samples per MINUTE\nPrecise Throughput Timer    target throughput, more accurate\n\nTimer scope: a timer applies to every sampler in its scope,\nand runs before each of them.", "out": "For '30 requests per second' goals, use the Precise\nThroughput Timer (like k6's arrival-rate executors).", "tip": "Put one timer at Thread Group level for think time between all steps.", "mistake": "Forgetting that a timer at the top level delays every single request.", "viz": ""}, {"title": "Controllers", "body": "Logic controllers group and control requests: steps, loops, conditions.", "code": "Transaction Controller   groups steps into one business action\n                         \"Create booking\" = auth + create + get\n                         → one row with the total time\nOnce Only Controller     login once per thread\nLoop Controller          repeat children N times\nIf Controller            run only when a condition is true\n                         ${__jexl3(\"${bookingId}\" != \"\")}\nThroughput Controller    run children for X% of iterations", "out": "Transaction Controllers make reports speak business:\n'Checkout: p95 1.8 s' instead of eight separate URLs.", "tip": "Wrap each user journey step in a Transaction Controller.", "mistake": "Nesting controllers so deeply nobody can follow the plan.", "viz": ""}, {"title": "Recording a user journey", "body": "Record browser traffic into a plan instead of building every request by hand.", "code": "Option 1: HTTP(S) Test Script Recorder (built in)\n  Templates → Recording → set the browser proxy to\n  localhost:8888, install JMeter's certificate,\n  click around, stop.\nOption 2: a browser extension that exports .jmx\nOption 3: DevTools → Network → Save all as HAR,\n          then convert HAR to a JMeter plan\n\nAfter recording, ALWAYS clean up:\n  remove images/CSS/analytics requests,\n  rename samplers, add correlation (module 03)", "out": "A raw recording replays hardcoded tokens and IDs;\nit will fail until you correlate them.", "tip": "Record one journey at a time and group it in a Transaction Controller immediately.", "mistake": "Running a raw recording as a load test.", "viz": ""}]}, {"num": "03", "title": "Data & correlation", "blurb": "Variables, CSV data, extracting values and reusing them in later requests.", "lessons": [{"title": "Variables, properties and functions", "body": "Variables hold values per thread; properties are global and can come from the command line.", "code": "User Defined Variables:  baseUrl = restful-booker.herokuapp.com\nUse:                     ${baseUrl}\n\nProperty from CLI:       jmeter -Jusers=50 -Jduration=600\nUse in Thread Group:     ${__P(users,10)}    (default 10)\n\nHandy functions\n  ${__threadNum}          current thread number\n  ${__Random(1000,9999)}  random number\n  ${__UUID()}             unique id\n  ${__time(yyyy-MM-dd)}   today's date", "out": "${__P(users,10)} in the Thread Group lets you run the same\nplan with different loads without editing it.", "tip": "Use the Function Helper dialog (Tools → Function Helper) to build function calls.", "mistake": "Hardcoding thread counts, so every load change means editing the .jmx.", "viz": ""}, {"title": "CSV Data Set Config", "body": "Feed each virtual user different test data from a CSV file.", "code": "users.csv\n  username,password\n  buyer01,pass01\n  buyer02,pass02\n  buyer03,pass03\n\nCSV Data Set Config\n  Filename: users.csv  (relative to the .jmx)\n  Variable Names: (empty = use header row)\n  Recycle on EOF: True    Stop thread on EOF: False\n  Sharing mode: All threads\n\nUse: ${username}  ${password}", "out": "Each iteration takes the next row, so users don't all\nlog in with the same account.", "tip": "Keep CSV files next to the .jmx and use relative paths so it runs on any machine.", "mistake": "An absolute path like C:\\Users\\me\\data.csv that breaks in CI.", "viz": ""}, {"title": "Extracting values: JSON Extractor", "body": "Correlation: take a value from one response and use it in the next request.", "code": "POST /auth  → {\"token\": \"abc123def456\"}\n\nAdd → Post Processors → JSON Extractor (under the auth request)\n  Names of created variables: token\n  JSON Path expressions:      $.token\n  Match No.:                  1\n  Default Values:             TOKEN_NOT_FOUND\n\nPOST /booking → {\"bookingid\": 1234, ...}\nJSON Extractor:  bookingId  ←  $.bookingid", "out": "Now ${token} and ${bookingId} are available to\nevery later request in that thread.", "tip": "Set a default like TOKEN_NOT_FOUND; if it appears in later requests, extraction failed.", "mistake": "Leaving the default empty and chasing confusing 403 errors.", "viz": ""}, {"title": "Regex and Boundary extractors", "body": "For HTML or text responses, extract with a regular expression or left/right boundaries.", "code": "HTML response:  <input name=\"csrf\" value=\"9f8e7d6c\">\n\nRegular Expression Extractor\n  Name: csrf\n  Regex: name=\"csrf\" value=\"(.+?)\"\n  Template: $1$     Match No.: 1\n\nBoundary Extractor (simpler, faster)\n  Left boundary:  name=\"csrf\" value=\"\n  Right boundary: \"", "out": "Many web apps need CSRF tokens like this on every form\nsubmit; forgetting them gives 403s under load.", "tip": "Test extractors on one real response in View Results Tree → 'RegExp Tester' / 'JSON Path Tester'.", "mistake": "Greedy regex (.+) that swallows half the page.", "viz": ""}, {"title": "Using extracted values", "body": "Put the extracted token and ID into later requests.", "code": "HTTP Header Manager (under the update request)\n  Cookie: token=${token}             (Restful Booker style)\n  Authorization: Bearer ${token}     (most APIs)\n\nHTTP Request  PUT  /booking/${bookingId}\nHTTP Request  DELETE /booking/${bookingId}", "out": "A full chained flow: auth → create → update → delete,\neach user working on their own booking.", "tip": "Clean up data you create (DELETE in the flow or a tearDown group).", "mistake": "Hardcoding an ID from a recording, so every thread edits the same record.", "viz": ""}]}, {"num": "04", "title": "Assertions", "blurb": "Make JMeter check correctness, not just count responses.", "lessons": [{"title": "Response and JSON assertions", "body": "A fast wrong answer isn't a success. Assertions mark samples as failed when the response is wrong.", "code": "Response Assertion\n  Field: Response Code   Pattern: Equals   200\nResponse Assertion\n  Field: Text Response   Contains   \"bookingid\"\n\nJSON Assertion\n  Assert JSON Path exists: $.booking.firstname\n  Expected value: Perf", "out": "Failed assertions count as errors in reports,\nso your error rate reflects real correctness.", "tip": "Assert the status AND one key field in the body for every important request.", "mistake": "Assertion-free load tests where error pages count as successes.", "viz": ""}, {"title": "Duration and size assertions", "body": "Fail samples that are too slow or suspiciously small.", "code": "Duration Assertion\n  Duration in milliseconds: 2000\n  → any response slower than 2 s is marked failed\n\nSize Assertion\n  Response size: ≥ 200 bytes\n  → catches empty error pages returned with status 200", "out": "Duration assertions turn SLAs into errors, but for\npercentile goals (p95), judge the report instead.", "tip": "Use duration assertions for hard limits, not for normal variation.", "mistake": "A 500 ms duration assertion on everything, making the error rate meaningless.", "viz": ""}]}, {"num": "05", "title": "Running for real", "blurb": "Non-GUI runs, the HTML dashboard, and reading results.", "lessons": [{"title": "Non-GUI (CLI) mode", "body": "The GUI is for building and debugging. Real load tests run from the command line.", "code": "jmeter -n -t booking-load.jmx -l results/results.jtl \\\n       -e -o results/report \\\n       -Jusers=50 -Jduration=600\n\n-n   non-GUI     -t   test plan    -l   results file\n-e -o  generate the HTML dashboard into an empty folder\n-J   set properties (read with ${__P(users)})", "out": "results/report/index.html → the HTML dashboard\nresults/results.jtl         → raw results (CSV)", "tip": "Disable or remove View Results Tree before load runs; it uses lots of memory.", "mistake": "Running a 200-user test from the GUI and trusting the numbers.", "viz": ""}, {"title": "Reading the HTML dashboard", "body": "The dashboard summarises everything. Read it in this order.", "code": "1. Statistics table: per transaction\n     samples, error %, average, 90th/95th/99th pct, throughput\n2. Errors table: which errors, how many\n3. Response Times Over Time: where did it get slow?\n4. Active Threads Over Time: at what load?\n5. Throughput vs Threads: where did throughput stop growing?\n6. APDEX: satisfied / tolerating / frustrated users", "out": "Same reading method as the k6 path:\nthe point where latency rises and throughput flattens\nis your capacity.", "tip": "Report percentiles per business transaction, not just an overall average.", "mistake": "Quoting only the 'Average' column.", "viz": ""}, {"title": "Listeners and memory", "body": "Listeners collect results in memory; too many slow JMeter down and skew the test.", "code": "During building / debugging\n  View Results Tree, Summary Report, Aggregate Report\nDuring load runs\n  none in the plan, or only Simple Data Writer\n  write to .jtl, build the report afterwards\n\nHeap for big tests (bin/jmeter.bat or env var)\n  set HEAP=-Xms1g -Xmx4g", "out": "If the machine running JMeter is at 100% CPU, your\nresults measure JMeter, not the server.", "tip": "Watch the load generator's CPU and memory during every run.", "mistake": "Graph listeners open during a 30-minute load test.", "viz": ""}]}, {"num": "06", "title": "Advanced", "blurb": "Groovy scripting, plugins, distributed runs, live dashboards and CI.", "lessons": [{"title": "JSR223 and Groovy", "body": "When built-in elements aren't enough, a JSR223 element runs Groovy code.", "code": "// JSR223 PostProcessor (language: groovy)\ndef body = prev.getResponseDataAsString()\ndef json = new groovy.json.JsonSlurper().parseText(body)\nvars.put(\"price\", json.booking.totalprice.toString())\nlog.info(\"Booking ${vars.get('bookingId')} costs ${vars.get('price')}\")\n\n// JSR223 Assertion\nif (vars.get(\"price\").toInteger() <= 0) {\n    AssertionResult.setFailure(true)\n    AssertionResult.setFailureMessage(\"Price must be positive\")\n}", "out": "vars = thread variables, props = global properties,\nprev = the previous sample result, log = jmeter.log", "tip": "Always choose Groovy and tick 'Cache compiled script' for speed.", "mistake": "Using the old BeanShell elements; they're much slower under load.", "viz": ""}, {"title": "Plugins Manager", "body": "The community plugins add better thread groups, graphs and more.", "code": "1. Download plugins-manager.jar from jmeter-plugins.org\n2. Put it in lib/ext/, restart JMeter\n3. Options → Plugins Manager → install:\n     Custom Thread Groups (Concurrency, Ultimate, Stepping)\n     3 Basic Graphs, PerfMon\n\nConcurrency Thread Group\n  Target concurrency: 100\n  Ramp-up time: 5 min   Ramp-up steps: 5\n  Hold target rate: 10 min", "out": "Stepped ramps show clearly at which level\nperformance changes.", "tip": "Commit a list of required plugins with the project so teammates can install the same set.", "mistake": "A .jmx that only runs on your machine because of unlisted plugins.", "viz": ""}, {"title": "Distributed testing", "body": "One machine can't always generate enough load. JMeter can control several load generators.", "code": "On each generator:  bin/jmeter-server\nOn the controller:  jmeter -n -t plan.jmx -R gen1,gen2,gen3 \\\n                           -l results.jtl -e -o report\n\nEach generator runs the FULL thread count:\n  50 threads × 3 generators = 150 users", "out": "Same JMeter version, plugins and CSV files on every\nmachine. Remote RMI needs keystore setup in recent versions.", "tip": "Try a bigger single machine and non-GUI mode first; distributed setups add complexity.", "mistake": "Forgetting that thread counts multiply per generator.", "viz": ""}, {"title": "Live results with InfluxDB and Grafana", "body": "Stream results during the test to a live dashboard, like k6 outputs.", "code": "Add → Listener → Backend Listener\n  Implementation: InfluxdbBackendListenerClient\n  influxdbUrl:   http://localhost:8086/write?db=jmeter\n  application:   booking-api\n  measurement:   jmeter\n\nGrafana: import a community JMeter dashboard\n  → live throughput, percentiles, errors per transaction", "out": "Keeps history across runs, so you can compare\nthis release with the last one.", "tip": "Tag runs with the application name and version for clean comparisons.", "mistake": "Only keeping one HTML report per test and losing all history.", "viz": ""}, {"title": "JMeter in CI", "body": "Run JMeter in a pipeline and publish the dashboard.", "code": "# .github/workflows/jmeter.yml\njobs:\n  load:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - uses: actions/setup-java@v4\n        with: { distribution: temurin, java-version: \"17\" }\n      - run: |\n          curl -sL https://dlcdn.apache.org/jmeter/binaries/apache-jmeter-5.6.3.tgz | tar xz\n          ./apache-jmeter-5.6.3/bin/jmeter -n -t perf/smoke.jmx \\\n            -l results.jtl -e -o report -Jusers=5\n      - uses: actions/upload-artifact@v4\n        if: always()\n        with: { name: jmeter-report, path: report }", "out": "Fail the job on high error rates by checking the .jtl\n(e.g. a small script), since JMeter itself exits 0.", "tip": "Check the Apache download page for the current version and URL before pinning it.", "mistake": "Heavy load tests on every commit; keep CI runs to a smoke level.", "viz": ""}]}, {"num": "07", "title": "Interview & comparison", "blurb": "Explain JMeter confidently and compare it with k6.", "lessons": [{"title": "JMeter interview questions", "body": "Short answers you can build on.", "code": "Q What is correlation?\nA Extracting dynamic values (tokens, IDs) from a response\n  and reusing them in later requests (JSON/Regex extractors).\nQ Why run in non-GUI mode?\nA The GUI uses too much memory and CPU; results are unreliable.\nQ What's the element execution order?\nA Config → Pre-processors → Timers → Sampler →\n  Post-processors → Assertions → Listeners.\nQ Throughput vs response time?\nA Throughput = requests per second handled; response time =\n  how long each takes. Capacity is where throughput flattens\n  and response time climbs.\nQ How do you parameterise users?\nA CSV Data Set Config, and properties with ${__P()}.", "out": "Pair each answer with an example from a practice plan\n(auth → create → update → delete on Restful Booker).", "tip": "Mention both JMeter and k6 when asked about performance tools.", "mistake": "Saying you ran load tests from the GUI.", "viz": ""}, {"title": "JMeter or k6?", "body": "Interviewers often ask which you'd choose. Answer with context.", "code": "Choose JMeter when\n  • the team prefers a GUI and recording\n  • you need protocols like JDBC, JMS, FTP, LDAP\n  • there's an existing JMeter suite and skills\nChoose k6 when\n  • tests should live in Git as readable code\n  • CI/CD integration and thresholds matter most\n  • load generators must be lightweight", "out": "A strong answer: \"Both measure the same things.\nI'd pick based on the team's workflow and protocols,\nand I've used both.\"", "tip": "Build the same small test in both tools for your portfolio.", "mistake": "Arguing one tool is always better.", "viz": ""}]}];
+    const FLOW = [{"name": "Config", "desc": "Config elements are applied first: defaults, headers, cookies, CSV data.", "next": "Then pre-processors.", "code": "HTTP Request Defaults · Header Manager\nCSV Data Set Config → ${username}"}, {"name": "Pre-processors", "desc": "Run just before the sampler, for example to prepare a value.", "next": "Then timers.", "code": "JSR223 PreProcessor → vars.put(\"ts\", ...)"}, {"name": "Timers", "desc": "Pause before the sampler, even if the timer appears after it in the tree.", "next": "Then the request itself.", "code": "Uniform Random Timer: 1000 + 0–2000 ms"}, {"name": "Sampler", "desc": "The actual request is sent and timed.", "next": "Then post-processors.", "code": "POST /booking   → 200   412 ms"}, {"name": "Post-processors", "desc": "Extract values from the response for later requests.", "next": "Then assertions.", "code": "JSON Extractor: bookingId ← $.bookingid"}, {"name": "Assertions", "desc": "Check the response. Failures mark the sample as an error.", "next": "Then listeners.", "code": "Response Assertion: code = 200\nJSON Assertion: $.booking.firstname exists"}, {"name": "Listeners", "desc": "Record or display the result. Keep them minimal during load runs.", "next": "Next sampler: the cycle repeats.", "code": "Simple Data Writer → results.jtl"}];
+    const A = '#B3261E', AD = '#FF9E94';
+    const mod = MODS[st.m];
+    const cur = mod.lessons[st.l] || mod.lessons[0];
+    const key = (m, l) => m + '-' + l;
+    let total = 0, doneN = 0;
+    MODS.forEach((mm, i) => mm.lessons.forEach((_, j) => { total++; if (st.done[key(i, j)]) doneN++; }));
+    const modTabs = MODS.map((mm, i) => {
+      const on = i === st.m;
+      const d = mm.lessons.filter((_, j) => st.done[key(i, j)]).length;
+      return { num: mm.num + (d === mm.lessons.length ? ' ✓' : ''), title: mm.title, pick: () => this.setState({ m: i, l: 0 }),
+        style: 'display:flex;flex-direction:column;align-items:flex-start;gap:4px;min-height:64px;padding:10px 12px;border:none;border-radius:14px 14px 0 0;cursor:pointer;text-align:left;font:600 13px IBM Plex Sans,sans-serif;flex:1;' + (on ? 'background:#F4F1EA;color:#16181D;' : 'background:rgba(0,0,0,0.06);color:#410B07;') };
+    });
+    const lessonNav = mod.lessons.map((ls, j) => {
+      const on = j === st.l, dn = !!st.done[key(st.m, j)];
+      return { title: ls.title, num: dn ? '✓' : String(j + 1).padStart(2, '0'), pick: () => this.setState({ l: j }),
+        style: 'display:flex;align-items:center;gap:12px;min-height:44px;padding:8px 12px;border-radius:10px;border:none;cursor:pointer;text-align:left;font:' + (on ? '600' : '400') + ' 15px IBM Plex Sans,sans-serif;' + (on ? 'background:#16181D;color:#F4F1EA;' : 'background:transparent;color:#16181D;'),
+        numStyle: 'flex-shrink:0;font:600 12px JetBrains Mono,monospace;width:28px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;' + (on ? 'background:' + A + ';color:#fff;' : dn ? 'background:#DCEFE3;color:#1F7A52;' : 'background:#EAE5DA;color:#6A6E77;') };
+    });
+    const modeDefs = [['split', 'Side by side'], ['code', 'Set up'], ['out', 'Result']];
+    const modes = modeDefs.map(([id, label]) => ({ label, pick: () => this.setState({ mode: id }),
+      style: 'min-height:40px;padding:8px 14px;border-radius:8px;border:none;cursor:pointer;font:600 14px IBM Plex Sans,sans-serif;' + (st.mode === id ? 'background:#FFFFFF;color:#16181D;box-shadow:0 1px 3px rgba(0,0,0,.12);' : 'background:transparent;color:#5C606A;') }));
+    const isFirst = st.m === 0 && st.l === 0;
+    const isLast = st.m === MODS.length - 1 && st.l === mod.lessons.length - 1;
+    const go = (dir) => {
+      let m = st.m, l = st.l + dir;
+      if (l < 0) { if (m === 0) return; m -= 1; l = MODS[m].lessons.length - 1; }
+      if (l >= MODS[m].lessons.length) { if (m === MODS.length - 1) return; m += 1; l = 0; }
+      this.setState({ m, l });
+    };
+    const k = key(st.m, st.l); const isDone = !!st.done[k];
+    const pct = Math.round((doneN / total) * 100);
+    const fi = Math.min(st.f, FLOW.length - 1);
+    const fSteps = FLOW.map((s, i) => ({ num: String(i + 1), name: s.name, pick: () => this.setState({ f: i }),
+      style: 'display:flex;flex-direction:column;align-items:flex-start;gap:2px;min-height:52px;padding:8px 14px;border-radius:12px;cursor:pointer;font:600 14px IBM Plex Sans,sans-serif;text-align:left;' + (i === fi ? 'background:' + AD + ';color:#16181D;border:1.5px solid ' + AD + ';' : i < fi ? 'background:#2A2D35;color:#F4F1EA;border:1.5px solid #3A3E48;' : 'background:transparent;color:#A9AEBA;border:1.5px solid #3A3E48;') }));
+    return {
+      mod, cur, modTabs, lessonNav, modes,
+      lessonNum: String(st.l + 1), lessonTotal: String(mod.lessons.length),
+      showA: st.mode !== 'out', showB: st.mode !== 'code',
+      gridStyle: st.mode === 'split' ? 'display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;' : 'display:grid;grid-template-columns:repeat(1,minmax(0,1fr));gap:16px;',
+      prev: () => go(-1), next: () => go(1),
+      prevLabel: isFirst ? 'Start' : 'Previous', nextLabel: isLast ? 'Finished' : 'Next lesson',
+      markDone: () => this.setState({ done: { ...st.done, [k]: !isDone } }),
+      doneLabel: isDone ? '✓ Done' : 'Mark as done',
+      doneBtnStyle: 'min-height:48px;padding:12px 22px;border-radius:12px;cursor:pointer;font:600 15px IBM Plex Sans,sans-serif;' + (isDone ? 'background:#DCEFE3;color:#1F7A52;border:1.5px solid #7FC8A0;' : 'background:#FFFFFF;color:#16181D;border:1.5px solid #DDD7CB;'),
+      overallLabel: doneN + ' / ' + total + ' lessons',
+      overallStyle: 'height:100%;border-radius:999px;background:' + A + ';transition:width .3s;width:' + pct + '%;',
+      vizFlow: cur.viz === 'flow', fSteps, fCur: FLOW[fi], fLabel: (fi + 1) + ' / ' + FLOW.length,
+      fPrev: () => this.setState({ f: Math.max(0, fi - 1) }), fNext: () => this.setState({ f: Math.min(FLOW.length - 1, fi + 1) })
+    };
+  }
+}
+
+var __TPL=`<div style="width: 1440px; height: 2900px; box-sizing: border-box; display: flex; flex-direction: column; background: #F4F1EA; font-family: 'IBM Plex Sans', system-ui, sans-serif; color: #16181D;">
+
+<section style="background: #FBE3E0; padding: 48px 80px 0; display: flex; flex-direction: column; gap: 26px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 40px;">
+<div style="display: flex; flex-direction: column; gap: 14px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #7A2A22;">jmeter · module {{mod.num}}</span>
+<h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 56px; line-height: 1; letter-spacing: -0.03em; color: #410B07;">{{mod.title}}</h1>
+<p style="margin: 0; font-size: 18px; line-height: 1.6; color: #7A2A22; max-width: 760px;">{{mod.blurb}}</p>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px; min-width: 300px;">
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 22px; font-weight: 800; color: #410B07;">JMeter for performance testing</span>
+<div style="display: flex; justify-content: space-between; font-size: 14px; color: #410B07;"><span>Course progress</span><span style="font-family: 'JetBrains Mono', monospace;">{{overallLabel}}</span></div>
+<div style="height: 8px; border-radius: 999px; background: rgba(0,0,0,0.1); overflow: hidden;"><div style="{{overallStyle}}"></div></div>
+<span style="font-size: 13px; color: #7A2A22;">Practice API: Restful Booker. Keep practice load tiny.</span>
+</div>
+</div>
+<div style="display: flex; gap: 6px;">
+<sc-for list="{{modTabs}}" as="t" hint-placeholder-count="9">
+<button onClick="{{t.pick}}" style="{{t.style}}"><span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; opacity: 0.8;">{{t.num}}</span><span>{{t.title}}</span></button>
+</sc-for>
+</div>
+</section>
+
+<section style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 40px; padding: 56px 80px 48px;">
+<aside style="grid-column: span 3; display: flex; flex-direction: column; gap: 6px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #6A6E77; text-transform: uppercase; letter-spacing: 0.08em; padding: 0 12px 10px;">module {{mod.num}} · lessons</span>
+<sc-for list="{{lessonNav}}" as="l" hint-placeholder-count="7">
+<button onClick="{{l.pick}}" style="{{l.style}}"><span style="{{l.numStyle}}">{{l.num}}</span><span>{{l.title}}</span></button>
+</sc-for>
+</aside>
+<div style="grid-column: span 9; display: flex; flex-direction: column; gap: 22px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 20px;">
+<div style="display: flex; flex-direction: column; gap: 10px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #B3261E;">module {{mod.num}} · lesson {{lessonNum}} of {{lessonTotal}}</span>
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 44px; letter-spacing: -0.02em; line-height: 1.05;">{{cur.title}}</h2>
+</div>
+<div style="display: flex; gap: 6px; background: #EAE5DA; padding: 5px; border-radius: 12px;">
+<sc-for list="{{modes}}" as="m" hint-placeholder-count="3"><button onClick="{{m.pick}}" style="{{m.style}}">{{m.label}}</button></sc-for>
+</div>
+</div>
+<p style="margin: 0; font-size: 18px; line-height: 1.7; color: #34373F; max-width: 840px;">{{cur.body}}</p>
+<div style="{{gridStyle}}">
+<sc-if value="{{showA}}" hint-placeholder-val="{{ true }}">
+<div style="background: #16181D; border-radius: 16px; overflow: hidden;">
+<div style="padding: 12px 18px; border-bottom: 1px solid #2A2D35; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #FF9E94;">what to set up / run</div>
+<pre style="margin: 0; padding: 20px; font-family: 'JetBrains Mono', monospace; font-size: 13.5px; line-height: 1.7; color: #D8DAE0; white-space: pre-wrap;">{{cur.code}}</pre>
+</div>
+</sc-if>
+<sc-if value="{{showB}}" hint-placeholder-val="{{ true }}">
+<div style="background: #FFFFFF; border: 1px solid #DDD7CB; border-radius: 16px; overflow: hidden;">
+<div style="padding: 12px 18px; border-bottom: 1px solid #DDD7CB; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #B3261E;">what you get / why</div>
+<pre style="margin: 0; padding: 20px; font-family: 'JetBrains Mono', monospace; font-size: 13.5px; line-height: 1.7; color: #16181D; white-space: pre-wrap;">{{cur.out}}</pre>
+</div>
+</sc-if>
+</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px;">
+<div style="display: flex; gap: 14px; background: #DCEFE3; border-radius: 16px; padding: 20px 22px; align-items: flex-start;">
+<span style="flex-shrink: 0; width: 32px; height: 32px; border-radius: 9px; background: #1F7A52; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 700;">✓</span>
+<div style="display: flex; flex-direction: column; gap: 4px;"><span style="font-weight: 600; color: #174F37;">Remember</span><span style="font-size: 15px; line-height: 1.6; color: #174F37;">{{cur.tip}}</span></div>
+</div>
+<div style="display: flex; gap: 14px; background: #FCE7DD; border-radius: 16px; padding: 20px 22px; align-items: flex-start;">
+<span style="flex-shrink: 0; width: 32px; height: 32px; border-radius: 9px; background: #C4502A; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 700;">!</span>
+<div style="display: flex; flex-direction: column; gap: 4px;"><span style="font-weight: 600; color: #7A2E14;">Common mistake</span><span style="font-size: 15px; line-height: 1.6; color: #7A2E14;">{{cur.mistake}}</span></div>
+</div>
+</div>
+<div style="display: flex; justify-content: space-between; align-items: center;">
+<button onClick="{{prev}}" style="min-height: 48px; padding: 12px 22px; border-radius: 12px; border: 1.5px solid #16181D; background: transparent; cursor: pointer; font: 600 15px 'IBM Plex Sans', sans-serif; color: #16181D;">← {{prevLabel}}</button>
+<button onClick="{{markDone}}" style="{{doneBtnStyle}}">{{doneLabel}}</button>
+<button onClick="{{next}}" style="min-height: 48px; padding: 12px 22px; border-radius: 12px; border: none; background: #B3261E; color: #FFFFFF; cursor: pointer; font: 600 15px 'IBM Plex Sans', sans-serif;">{{nextLabel}} →</button>
+</div>
+</div>
+</section>
+
+<sc-if value="{{vizFlow}}" hint-placeholder-val="{{ false }}">
+<section style="margin: 0 80px 64px; background: #16181D; color: #F4F1EA; border-radius: 28px; padding: 44px; display: flex; flex-direction: column; gap: 26px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 30px;">
+<div style="display: flex; flex-direction: column; gap: 10px;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #FF9E94;">visualize · element execution order</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 36px; font-weight: 800;">What runs, in what order, for every request</span></div>
+<div style="display: flex; gap: 10px; align-items: center;">
+<button onClick="{{fPrev}}" aria-label="Previous step" style="width: 48px; height: 48px; border-radius: 12px; border: 1.5px solid #3A3E48; background: transparent; color: #F4F1EA; cursor: pointer; font-size: 18px;">←</button>
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; min-width: 60px; text-align: center;">{{fLabel}}</span>
+<button onClick="{{fNext}}" aria-label="Next step" style="width: 48px; height: 48px; border-radius: 12px; border: none; background: #FF9E94; color: #16181D; cursor: pointer; font-size: 18px;">→</button>
+</div>
+</div>
+<div style="display: flex; gap: 8px; flex-wrap: wrap;">
+<sc-for list="{{fSteps}}" as="fs" hint-placeholder-count="7"><button onClick="{{fs.pick}}" style="{{fs.style}}"><span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; opacity: 0.75;">{{fs.num}}</span><span>{{fs.name}}</span></button></sc-for>
+</div>
+<div style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 24px;">
+<div style="grid-column: span 6; background: #FF9E94; color: #16181D; border-radius: 20px; padding: 26px; display: flex; flex-direction: column; gap: 10px;">
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 28px; font-weight: 800;">{{fCur.name}}</span>
+<span style="font-size: 16px; line-height: 1.6;">{{fCur.desc}}</span>
+<span style="font-size: 14px; font-weight: 600;">{{fCur.next}}</span>
+</div>
+<pre style="grid-column: span 6; margin: 0; background: #1E2129; border: 1px solid #2E323C; border-radius: 20px; padding: 22px; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #D8DAE0; white-space: pre-wrap;">{{fCur.code}}</pre>
+</div>
+</section>
+</sc-if>
+
+<div style="flex-grow: 1;"></div>
+<section style="padding: 0 80px 64px; display: flex; justify-content: space-between; align-items: center; gap: 30px;">
+<div style="display: flex; flex-direction: column; gap: 8px;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #6A6E77;">next course</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 30px; font-weight: 800;">Selenium with Java</span></div>
+<a href="Selenium.html" style="text-decoration: none; padding: 16px 26px; border-radius: 12px; background: #16181D; color: #FF9E94; font-weight: 600;">Start Selenium →</a>
+</section>
+</div>`;
+window.__mountDC(__TPL, Component);
+</script>
+</body>
+</html>

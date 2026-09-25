@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440">
+<title>k6 Course — Modules 02 to 08</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap">
+<style>html,body{margin:0;background:#F4F1EA;font-family:'IBM Plex Sans',system-ui,sans-serif} #app > div{margin:0 auto}</style>
+</head>
+<body>
+
+<style>
+.snav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:16px 40px;background:#16181D;color:#F4F1EA;font-family:'IBM Plex Sans',sans-serif;flex-wrap:wrap;gap:12px}
+.snav a{color:#F4F1EA;text-decoration:none}
+.snav .brand{display:flex;align-items:center;gap:10px;font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:18px}
+.snav .brand span.logo{width:34px;height:34px;border-radius:9px;background:#7EE2A8;color:#16181D;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:14px}
+.snav ul{list-style:none;display:flex;gap:6px;margin:0;padding:0;align-items:center;flex-wrap:wrap}
+.snav > ul > li{position:relative}
+.snav > ul > li > a,.snav > ul > li > span{display:block;padding:9px 14px;border-radius:9px;font-size:15px;font-weight:500;cursor:pointer;white-space:nowrap}
+.snav > ul > li:hover > a,.snav > ul > li:hover > span,.snav .cur{background:#2A2D35}
+.snav .caret{font-size:11px;opacity:.7;margin-left:4px}
+.snav .drop{position:absolute;top:100%;left:0;min-width:220px;background:#1E2129;border:1px solid #2E323C;border-radius:12px;padding:8px;display:none;flex-direction:column;gap:2px;box-shadow:0 18px 40px -16px rgba(0,0,0,.6)}
+.snav > ul > li:hover .drop{display:flex}
+.snav .drop a{padding:9px 12px;border-radius:8px;font-size:14px;color:#D8DAE0}
+.snav .drop a:hover{background:#2A2D35;color:#fff}
+.snav .drop .grp{font-family:'JetBrains Mono',monospace;font-size:11px;color:#8A8F9C;text-transform:uppercase;letter-spacing:.06em;padding:8px 12px 2px}
+.snav .cta{padding:9px 18px;border-radius:999px;background:#1F7A52;color:#fff;font-weight:600}
+.snav .menubtn{display:none;background:none;border:1.5px solid #3A3E48;color:#F4F1EA;border-radius:9px;padding:8px 12px;font-size:15px;cursor:pointer}
+@media(max-width:1100px){
+  .snav .menubtn{display:block}
+  .snav > ul{display:none;flex-direction:column;align-items:stretch;width:100%;order:3}
+  .snav.open > ul{display:flex}
+  .snav .drop{position:static;display:flex;border:none;box-shadow:none;background:transparent;padding:0 0 6px 14px}
+  .snav > ul > li:hover .drop{display:flex}
+}
+</style>
+<nav class="snav" id="snav">
+<a class="brand" href="index.html"><span class="logo">S✓</span>Shamima Sultana</a>
+<button class="menubtn" onclick="document.getElementById('snav').classList.toggle('open')">Menu ☰</button>
+<ul>
+<li><a href="index.html" class="">Home</a></li>
+<li><span class="">About <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="about.html">Intro &amp; journey</a>
+    <a href="skills.html">Skills</a>
+    <a href="certifications.html">Certifications</a>
+    <a href="research.html">Research</a>
+    <a href="achievements.html">Achievements</a>
+  </div></li>
+<li><span class="">Work <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="projects.html">Projects</a>
+  </div></li>
+<li><span class="cur">Learn <span class="caret">▾</span></span>
+  <div class="drop">
+    <span class="grp">Automation</span>
+    <a href="PWHub.html">Playwright path</a>
+    <a href="Selenium.html">Selenium with Java</a>
+    <a href="MobileTest.html">Mobile testing</a>
+    <span class="grp">Performance</span>
+    <a href="K6Hub.html">k6</a>
+    <a href="JMeter.html">JMeter</a>
+    <span class="grp">Data &amp; APIs</span>
+    <a href="SQLHub.html">SQL</a>
+    <a href="API.html">API testing</a>
+    <span class="grp">Core &amp; specialised</span>
+    <a href="Manual.html">Manual testing</a>
+    <a href="AITest.html">AI / LLM testing</a>
+    <a href="DevTools.html">DevTools</a>
+    <a href="Git.html">Git &amp; GitHub</a>
+    <a href="A11y.html">Accessibility</a>
+    <a href="Security.html">Security</a>
+  </div></li>
+<li><span class="">Writing <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="K6Hub.html">Tutorials &amp; articles</a>
+  </div></li>
+<li><span class="">More <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="News.html">News</a>
+    <a href="Interview.html">Interview prep</a>
+    <a href="ISTQB.html">ISTQB prep</a>
+  </div></li>
+<li><a class="cta" href="mailto:shamimasultanamiley605@gmail.com">Contact</a></li>
+</ul>
+</nav>
+
+<div id="app"></div>
+<script>/* Minimal renderer: replaces Claude's canvas engine so pages run anywhere. */
+(function(){
+  function resolve(scopes, path){
+    path=path.trim();
+    var parts=path.split('.'), head=parts[0], base, found=false;
+    for(var i=scopes.length-1;i>=0;i--){ if(scopes[i] && Object.prototype.hasOwnProperty.call(scopes[i],head)){ base=scopes[i][head]; found=true; break; } }
+    if(!found) return undefined;
+    for(var j=1;j<parts.length;j++){ if(base==null) return undefined; base=base[parts[j]]; }
+    return base;
+  }
+  function subst(str, scopes){
+    return str.replace(/\{\{([^}]+)\}\}/g, function(_,e){ var v=resolve(scopes,e); return v==null?'':String(v); });
+  }
+  function firstExpr(str){ var m=str.match(/\{\{([^}]+)\}\}/); return m?m[1].trim():null; }
+  function processNode(node, scopes, out){
+    if(node.nodeType===3){ // text
+      var t=node.nodeValue;
+      if(t.indexOf('{{')>=0) out.push(document.createTextNode(subst(t,scopes)));
+      else out.push(document.createTextNode(t));
+      return;
+    }
+    if(node.nodeType!==1){ return; }
+    var tag=node.tagName.toLowerCase();
+    if(tag==='sc-for'){
+      var listExpr=firstExpr(node.getAttribute('list')||'');
+      var as=node.getAttribute('as');
+      var arr=listExpr?resolve(scopes,listExpr):null;
+      if(Array.isArray(arr)){
+        for(var k=0;k<arr.length;k++){
+          var sc=scopes.concat([{__k:as, [as]:arr[k]}]);
+          for(var c=0;c<node.childNodes.length;c++) processNode(node.childNodes[c], sc, out);
+        }
+      }
+      return;
+    }
+    if(tag==='sc-if'){
+      var valExpr=firstExpr(node.getAttribute('value')||'');
+      var cond=valExpr?resolve(scopes,valExpr):false;
+      if(cond){ for(var c2=0;c2<node.childNodes.length;c2++) processNode(node.childNodes[c2], scopes, out); }
+      return;
+    }
+    var el=document.createElement(tag);
+    for(var a=0;a<node.attributes.length;a++){
+      var at=node.attributes[a], name=at.name, val=at.value;
+      if(name.indexOf('hint-')===0) continue;
+      if(name==='onclick'){ var h=firstExpr(val); (function(expr){ el.addEventListener('click', function(ev){ var fn=resolve(scopes,expr); if(typeof fn==='function') fn(ev); }); })(h); continue; }
+      if(name==='onchange'){ var h2=firstExpr(val); (function(expr){ el.addEventListener('input', function(ev){ var fn=resolve(scopes,expr); if(typeof fn==='function') fn(ev); }); })(h2); continue; }
+      var sv=val.indexOf('{{')>=0?subst(val,scopes):val;
+      if(name==='value' && (tag==='input'||tag==='textarea')){ el.value=sv; el.setAttribute('value',sv); }
+      else el.setAttribute(name, sv);
+    }
+    var kids=[];
+    for(var cc=0;cc<node.childNodes.length;cc++) processNode(node.childNodes[cc], scopes, kids);
+    for(var ki=0;ki<kids.length;ki++) el.appendChild(kids[ki]);
+    out.push(el);
+  }
+  window.__mountDC=function(templateHTML, ComponentClass){
+    var tplRoot=document.createElement('div'); tplRoot.innerHTML=templateHTML;
+    var mount=document.getElementById('app');
+    var comp=new ComponentClass({});
+    function doRender(){
+      var vals;
+      try{ vals=comp.renderVals(); }catch(e){ console.error('render error',e); return; }
+      var frag=document.createDocumentFragment();
+      var buf=[];
+      for(var i=0;i<tplRoot.childNodes.length;i++) processNode(tplRoot.childNodes[i], [vals], buf);
+      for(var b=0;b<buf.length;b++) frag.appendChild(buf[b]);
+      // preserve focus in search/textarea across re-render
+      var active=document.activeElement, sel=null, id=null;
+      mount.innerHTML=''; mount.appendChild(frag);
+    }
+    comp.setState=function(s){ Object.assign(comp.state, s); doRender(); };
+    doRender();
+  };
+  window.DCLogic=function(){};
+})();
+</script>
+<script>
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { m: 0, l: 0, mode: 'split', ex: 2, ph: 4, done: {} };
+  }
+  renderVals() {
+    const st = this.state;
+    const MODS = [{"num": "02", "title": "Getting started", "blurb": "Install k6, run your first test and read what it tells you.", "lessons": [{"title": "Install k6", "body": "k6 is a single program you run from the terminal. Install it once, then check the version.", "code": "# Windows\nwinget install k6 --source winget\n# or: choco install k6\n\n# macOS\nbrew install k6\n\n# Docker, no install\ndocker run --rm -i grafana/k6 run - <script.js\n\nk6 version     # this course targets k6 2.x", "out": "k6 version prints the installed version, e.g. k6 v2.x.\nIf the command isn't found, open a new terminal so it picks up the new PATH.", "tip": "k6 is not a Node.js package. npm install k6 installs something else.", "mistake": "Running k6 scripts with node script.js. k6 has its own JavaScript runtime; always use k6 run.", "viz": ""}, {"title": "What changed in k6 2.0", "body": "k6 2.0 (May 2026) removed long-deprecated commands and options. If you follow older tutorials, these are the changes to know.", "code": "Removed                        Use instead\nk6 login cloud                 k6 cloud login\nk6 cloud script.js             k6 cloud run script.js\n--upload-only                  k6 cloud upload script.js\n--no-summary                   --summary-mode=disabled\n--summary-mode=legacy          compact (default) or full\noptions.ext.loadimpact         options.cloud\nexecutor: externally-controlled  ramping-vus / arrival-rate\nk6 pause / resume / scale / status   (gone)\nk6/experimental/redis          k6/x/redis", "out": "Also new in 2.x: a Playwright-style assertions API (module 05), an extension catalog, and AI/MCP helper commands.\nExtensions built for 1.x must be rebuilt for v2.", "tip": "Scripts using normal http, check, thresholds and scenarios keep working. Most changes are CLI and cloud options.", "mistake": "Copying commands from a pre-2026 blog post and getting 'unknown command' errors.", "viz": ""}, {"title": "Your first script", "body": "A k6 script is a JavaScript file with a default function. Each virtual user runs it again and again.", "code": "// k6 new  creates a starter script.js\nimport http from 'k6/http';\nimport { sleep } from 'k6';\n\nexport default function () {\n  http.get('https://quickpizza.grafana.com');\n  sleep(1);\n}\n\n// run it\n// k6 run script.js", "out": "One virtual user, one iteration.\nAt the end k6 prints a summary with request count and timings.", "tip": "Start every new script with 1 user and 1 iteration. Make it work before adding load.", "mistake": "Load testing a site you don't own. Only test your own systems, or ones you have written permission for.", "viz": ""}, {"title": "The test lifecycle", "body": "A k6 script has four stages. Knowing which code runs when (and how often) avoids most beginner bugs.", "code": "// 1. init: runs once per VU, before the test\nimport http from 'k6/http';\nconst data = JSON.parse(open('./users.json'));\n\n// 2. setup: runs once for the whole test\nexport function setup() {\n  return { token: login() };\n}\n\n// 3. default: runs over and over for every VU\nexport default function (setupData) {\n  http.get(URL, { headers: { Authorization: `Bearer ${setupData.token}` } });\n}\n\n// 4. teardown: runs once at the end\nexport function teardown(setupData) {}", "out": "init      → once per VU\nsetup     → once\ndefault   → many times per VU\nteardown  → once", "tip": "open() to read files only works in init code, at the top of the script.", "mistake": "Making HTTP requests in init code. It's not allowed; use setup() instead.", "viz": ""}, {"title": "Reading the end-of-test summary", "body": "When the test ends, k6 prints its metrics. These few lines answer most questions.", "code": "k6 run --vus 10 --duration 30s script.js\n\n# more detail in the summary\nk6 run --summary-mode=full script.js", "out": "checks.........: 100.00%  300 out of 300\nhttp_req_duration: avg=182ms med=160ms\n                   p(90)=260ms p(95)=320ms max=900ms\nhttp_req_failed..: 0.00%    0 out of 300\nhttp_reqs........: 300      9.8/s\niterations.......: 300      9.8/s\nvus..............: 10\n\n(trimmed sample; the exact layout depends on your k6 version\nand --summary-mode: compact is the default, full shows more)", "tip": "Read it in this order: failed rate, then p(95) duration, then requests per second.", "mistake": "Judging by avg. One slow request in twenty barely moves the average but users feel it; watch p(95).", "viz": ""}, {"title": "CLI options and precedence", "body": "Most script options can be overridden from the command line, which makes one script reusable.", "code": "k6 run --vus 20 --duration 1m script.js\nk6 run --iterations 100 script.js\nk6 run -e BASE_URL=https://staging.example.com script.js\nk6 run --out json=results.json script.js\nk6 run --http-debug=full script.js   # print requests\nk6 run --quiet script.js             # less output\nk6 run --summary-mode=disabled script.js  # no summary\n                                     # (replaces --no-summary)", "out": "Precedence, highest first:\n1. command-line flags\n2. environment variables (K6_VUS=20)\n3. options exported in the script\n4. defaults", "tip": "--http-debug=full is the fastest way to see exactly what was sent and received.", "mistake": "Changing options in the script and wondering why nothing changed, because a CLI flag overrides it.", "viz": ""}]}, {"num": "03", "title": "Load profiles & scenarios", "blurb": "Shape the load: users, stages, pacing, executors and scenarios.", "lessons": [{"title": "VUs, duration and iterations", "body": "VUs are simulated users running your default function in a loop. Duration or iterations decide when the test stops.", "code": "export const options = {\n  vus: 10,\n  duration: '30s',\n};\n\n// or a fixed amount of work\nexport const options = {\n  vus: 5,\n  iterations: 100,   // shared across all VUs\n};", "out": "10 VUs for 30 s → as many iterations as they can finish.\n5 VUs, 100 iterations → stops after 100 in total.", "tip": "A VU is not a request per second. How many requests you get depends on response time and sleep.", "mistake": "Setting 1000 VUs on a laptop. Your machine becomes the bottleneck and the numbers mean nothing.", "viz": ""}, {"title": "Stages: ramping up and down", "body": "stages change the number of VUs over time. Real traffic ramps up, so should your test.", "code": "export const options = {\n  stages: [\n    { duration: '2m', target: 50 },   // ramp up\n    { duration: '5m', target: 50 },   // hold\n    { duration: '1m', target: 0 },    // ramp down\n  ],\n};", "out": "0 → 50 VUs over 2 min, hold 50 for 5 min, down to 0.\nstages is a shortcut for the ramping-vus executor.", "tip": "Always include a ramp-down so in-flight iterations finish cleanly.", "mistake": "Jumping straight to full load. You can't tell at which level problems started.", "viz": ""}, {"title": "Think time and pacing", "body": "Real users pause between actions. sleep() adds that pause; a little randomness avoids every VU hitting at the same moment.", "code": "import { sleep } from 'k6';\n\nexport default function () {\n  http.get(`${BASE}/tenders`);\n  sleep(Math.random() * 2 + 1);   // 1 to 3 s\n  http.get(`${BASE}/tenders/42`);\n  sleep(1);\n}", "out": "Each iteration now looks more like a person browsing:\nlook at a list, pause, open one item, pause.", "tip": "Estimate think time from real usage: how long does someone actually stay on the page?", "mistake": "No sleep at all. Every VU becomes a machine firing requests as fast as possible.", "viz": ""}, {"title": "Scenarios: the full-control way", "body": "scenarios let you describe the load precisely. Each scenario picks an executor, which decides how VUs and iterations are scheduled.", "code": "export const options = {\n  scenarios: {\n    browse: {\n      executor: 'constant-vus',\n      vus: 20,\n      duration: '5m',\n    },\n  },\n};", "out": "Same as vus: 20, duration: '5m', but now you can add more scenarios, pick other executors, and tag results by scenario.", "tip": "vus/duration/stages are shortcuts. Scenarios are what they turn into.", "mistake": "Mixing top-level vus/duration with scenarios. Use one style per script.", "viz": "exec"}, {"title": "Closed-model executors", "body": "In a closed model, a VU starts its next iteration only after the previous one finishes. If the system slows down, the load drops too.", "code": "shared_iterations: {\n  executor: 'shared-iterations',\n  vus: 10, iterations: 200, maxDuration: '10m',\n},\nper_vu: {\n  executor: 'per-vu-iterations',\n  vus: 10, iterations: 20,        // 20 each\n},\nsteady: {\n  executor: 'constant-vus',\n  vus: 10, duration: '5m',\n},\nramp: {\n  executor: 'ramping-vus',\n  startVUs: 0,\n  stages: [{ duration: '2m', target: 50 }, { duration: '3m', target: 50 }],\n},", "out": "shared-iterations   fixed total, split between VUs\nper-vu-iterations   fixed amount per VU\nconstant-vus        fixed users for a time\nramping-vus         users change over time", "tip": "Closed models answer: how does the system behave with N users?", "mistake": "Using shared-iterations to measure throughput. Fast VUs do more iterations, so it's uneven by design.", "viz": "exec"}, {"title": "Open-model executors", "body": "In an open model, new iterations start at a fixed rate no matter how slow the system gets, like real visitors arriving. k6 adds VUs as needed.", "code": "arrivals: {\n  executor: 'constant-arrival-rate',\n  rate: 30, timeUnit: '1s',       // 30 iterations per second\n  duration: '5m',\n  preAllocatedVUs: 50, maxVUs: 200,\n},\nramp_rate: {\n  executor: 'ramping-arrival-rate',\n  startRate: 10, timeUnit: '1s',\n  preAllocatedVUs: 50, maxVUs: 300,\n  stages: [\n    { duration: '2m', target: 50 },\n    { duration: '3m', target: 50 },\n  ],\n},", "out": "If k6 runs out of VUs it can't start iterations on time and counts them in dropped_iterations.", "tip": "Use arrival-rate executors when the business requirement is in requests or transactions per second.", "mistake": "maxVUs too low. dropped_iterations climbs and the test quietly applies less load than you asked for.", "viz": "exec"}, {"title": "Multiple scenarios in one test", "body": "Real systems serve different users at once. Run several scenarios together, each with its own function, timing and tags.", "code": "export const options = {\n  scenarios: {\n    buyers: {\n      executor: 'constant-vus', vus: 20, duration: '10m',\n      exec: 'browseTenders',\n    },\n    vendors: {\n      executor: 'constant-arrival-rate',\n      rate: 5, timeUnit: '1s', duration: '8m',\n      preAllocatedVUs: 20,\n      exec: 'submitBid', startTime: '2m',\n    },\n  },\n};\n\nexport function browseTenders() { /* ... */ }\nexport function submitBid() { /* ... */ }", "out": "Buyers browse for 10 min. Vendors start bidding at minute 2.\nResults are tagged with scenario:buyers / scenario:vendors.", "tip": "Each scenario's exec must be an exported function.", "mistake": "Forgetting startTime and having every scenario hit at second 0.", "viz": "exec"}, {"title": "Choosing the test type", "body": "The load shape follows from the question you're asking. See the interactive chart on the k6 hub page.", "code": "// smoke:     vus: 2, duration: '1m'\n// average:   ramp to normal traffic, hold 30-60 min\n// stress:    ramp above normal, hold\n// spike:     very fast jump, short, straight down\n// soak:      normal traffic for hours\n// breakpoint: keep ramping until it breaks", "out": "Smoke      Does the script work?\nAverage    Is a normal day fine?\nStress     What happens above normal?\nSpike      Can it survive a sudden rush?\nSoak       Does it stay healthy for hours?\nBreakpoint Where is the limit?", "tip": "Always run a smoke test first. It catches script bugs cheaply.", "mistake": "Running a stress test on a shared QA server without warning the team.", "viz": ""}]}, {"num": "04", "title": "Requests & test data", "blurb": "HTTP calls, authentication, chaining values and feeding realistic data.", "lessons": [{"title": "HTTP methods and responses", "body": "k6/http has a function for each HTTP method. Every call returns a response with status, body, headers and timings.", "code": "import http from 'k6/http';\n\nconst res = http.get(`${BASE}/api/tenders`);\nhttp.post(url, JSON.stringify(body), params);\nhttp.put(url, JSON.stringify(body), params);\nhttp.patch(url, JSON.stringify(body), params);\nhttp.del(url, null, params);        // DELETE is http.del\n\nres.status               // 200\nres.json('items.0.id')   // value from the JSON body\nres.timings.duration     // ms", "out": "res.status, res.body, res.headers, res.json(), res.timings", "tip": "http.del, not http.delete: delete is a reserved word in JavaScript.", "mistake": "Reading res.body on huge responses in every iteration. It costs memory at scale.", "viz": ""}, {"title": "Headers, params and tags", "body": "The params object carries headers, a timeout and tags. Tags label requests so you can filter results and set thresholds on them.", "code": "const params = {\n  headers: {\n    'Content-Type': 'application/json',\n    Accept: 'application/json',\n  },\n  timeout: '30s',\n  tags: { name: 'CreateTender', flow: 'buyer' },\n};\n\nhttp.post(`${BASE}/api/tenders`, JSON.stringify(t), params);", "out": "Results can now be filtered by name:CreateTender or flow:buyer.", "tip": "Put shared headers in one object and reuse it.", "mistake": "Forgetting Content-Type on a JSON POST; the server may reject or misread the body.", "viz": ""}, {"title": "Authentication", "body": "Log in once in setup(), pass the token to every VU, and send it as a header.", "code": "export function setup() {\n  const res = http.post(`${BASE}/api/login`,\n    JSON.stringify({ username: __ENV.USER, password: __ENV.PASS }),\n    { headers: { 'Content-Type': 'application/json' } });\n  return { token: res.json('access_token') };\n}\n\nexport default function (data) {\n  http.get(`${BASE}/api/tenders`, {\n    headers: { Authorization: `Bearer ${data.token}` },\n  });\n}\n\n// cookies are handled per VU automatically;\n// set one yourself with http.cookieJar().set(url, name, value)", "out": "One login for the whole test instead of one per iteration.", "tip": "If the real system logs in every session, test login separately with its own scenario.", "mistake": "Putting passwords in the script. Pass them with -e and read __ENV.", "viz": ""}, {"title": "Correlation: chaining requests", "body": "Many flows need a value from one response in the next request, like the ID of the tender you just created.", "code": "const create = http.post(`${BASE}/api/tenders`, JSON.stringify(t), params);\nconst id = create.json('id');\n\nhttp.get(`${BASE}/api/tenders/${id}`, params);\nhttp.post(`${BASE}/api/tenders/${id}/publish`, null, params);", "out": "Each iteration creates its own tender and works on that one.", "tip": "Check the create call succeeded before using its ID, or later requests fail confusingly.", "mistake": "Hardcoding an ID from your manual testing. It works once, then every VU fights over the same record.", "viz": ""}, {"title": "Groups and dynamic URL names", "body": "group() organises requests into user journeys in the results. The name tag stops every unique URL becoming its own metric.", "code": "import { group } from 'k6';\n\nexport default function () {\n  group('Browse tenders', () => {\n    http.get(`${BASE}/tenders`);\n  });\n  group('Open tender', () => {\n    const id = pickId();\n    http.get(`${BASE}/tenders/${id}`,\n      { tags: { name: 'TenderDetail' } });\n  });\n}", "out": "Results show timings per group, and all /tenders/<id> calls are grouped as TenderDetail.", "tip": "Without the name tag, 1,000 IDs create 1,000 separate URL entries.", "mistake": "Nesting groups many levels deep; the results get hard to read.", "viz": ""}, {"title": "Batch requests", "body": "Browsers load several resources at once. http.batch() sends requests in parallel from one VU.", "code": "const responses = http.batch([\n  ['GET', `${BASE}/api/tenders`],\n  ['GET', `${BASE}/api/vendors`],\n  ['GET', `${BASE}/api/categories`],\n]);\n\ncheck(responses[0], { 'tenders ok': (r) => r.status === 200 });", "out": "Three requests in parallel; the iteration waits for all of them.", "tip": "Use batch to mimic a page that calls several APIs as it loads.", "mistake": "Batching everything. Requests that depend on each other must stay sequential.", "viz": ""}, {"title": "Test data with SharedArray and CSV", "body": "Load data files once and share them between VUs. SharedArray keeps memory low even with thousands of VUs.", "code": "import { SharedArray } from 'k6/data';\nimport papaparse from 'https://jslib.k6.io/papaparse/5.1.1/index.js';\n\nconst users = new SharedArray('users', function () {\n  return JSON.parse(open('./users.json'));\n});\n\nconst items = new SharedArray('items', function () {\n  return papaparse.parse(open('./items.csv'), { header: true }).data;\n});\n\nexport default function () {\n  const user = users[Math.floor(Math.random() * users.length)];\n}", "out": "The file is read once in init code and shared read-only by every VU.", "tip": "SharedArray must be created in init code, and its contents can't be changed later.", "mistake": "Plain JSON.parse(open()) with a big file: every VU gets its own copy and memory explodes.", "viz": ""}, {"title": "Unique data per VU and iteration", "body": "Some actions need unique data, like one account per VU or a unique title per iteration.", "code": "import exec from 'k6/execution';\nimport { uuidv4 } from 'https://jslib.k6.io/k6-utils/1.4.0/index.js';\n\nexport default function () {\n  // one account per VU\n  const user = users[(exec.vu.idInTest - 1) % users.length];\n\n  // a unique value per iteration, across all VUs\n  const title = `Tender ${exec.scenario.iterationInTest}`;\n\n  const ref = uuidv4();\n}", "out": "__VU and __ITER still work; k6/execution gives clearer, test-wide counters.", "tip": "Give each VU its own login if the system blocks the same user logging in twice.", "mistake": "Random picks when uniqueness matters. Two VUs will eventually choose the same row.", "viz": ""}, {"title": "File uploads", "body": "Upload files with a multipart body. Read the file in init code with the 'b' (binary) flag.", "code": "const quote = open('./quote.pdf', 'b');\n\nexport default function () {\n  http.post(`${BASE}/api/bids/42/documents`, {\n    title: 'Technical offer',\n    file: http.file(quote, 'quote.pdf', 'application/pdf'),\n  });\n}", "out": "k6 builds a multipart/form-data request automatically when the body contains http.file().", "tip": "Use a realistic file size; upload time depends heavily on it.", "mistake": "Calling open() inside the default function. It only works in init code.", "viz": ""}]}, {"num": "05", "title": "Checks, thresholds & metrics", "blurb": "Decide what passing means, and understand every number k6 reports.", "lessons": [{"title": "Checks", "body": "Checks verify a response is correct. Failed checks are counted, but they don't stop the test.", "code": "import { check } from 'k6';\n\nconst res = http.get(`${BASE}/api/tenders`);\ncheck(res, {\n  'status is 200': (r) => r.status === 200,\n  'has items': (r) => r.json('items').length > 0,\n  'under 500 ms': (r) => r.timings.duration < 500,\n});", "out": "checks.........: 98.50%  591 out of 600\n  ✓ status is 200\n  ✗ has items  (9 failed)", "tip": "A fast wrong answer is still wrong. Always check the body, not just the status.", "mistake": "Treating checks as pass/fail for the test. Only thresholds do that.", "viz": ""}, {"title": "Assertions with expect (k6 2.x)", "body": "k6 2.x adds a Playwright-style assertions API. Checks count failures and carry on; expect() stops the iteration on failure, unless you make it soft.", "code": "import http from 'k6/http';\nimport { expect } from 'https://jslib.k6.io/k6-testing/0.6.1/index.js';\n\nexport default function () {\n  const res = http.get('https://quickpizza.grafana.com/');\n\n  expect(res.status).toBe(200);\n  expect(res.body).toBeDefined();\n\n  // soft: record the failure but keep the iteration going\n  expect.soft(res.headers['Content-Type']).toContain('text/html');\n}\n\n// in browser tests, assertions retry automatically:\n// await expect(page.locator('button[name=pizza-please]')).toBeVisible();", "out": "check()   counts pass/fail, never stops; use with thresholds for load results\nexpect()  fails fast with a clear message; best for correctness\nexpect.soft()  marks the test failed but continues", "tip": "Same idea as Playwright's expect in the Assertions module, so you only learn it once.", "mistake": "Replacing every check with hard expect() in a load test. One failure stops that iteration, which changes your load.", "viz": ""}, {"title": "Thresholds", "body": "Thresholds are the pass/fail criteria for the whole test. If one fails, k6 exits with a non-zero code, which fails a CI build.", "code": "export const options = {\n  thresholds: {\n    http_req_failed: ['rate<0.01'],          // under 1% errors\n    http_req_duration: ['p(95)<500', 'p(99)<1500'],\n    checks: ['rate>0.99'],                    // 99% of checks pass\n  },\n};", "out": "✓ http_req_failed    rate<0.01   0.20%\n✗ http_req_duration  p(95)<500   p(95)=620ms\n\nthresholds failed → exit code 99", "tip": "Write thresholds from real requirements, for example a service level agreement.", "mistake": "No thresholds at all. Then every test 'passes' and someone has to read the numbers by eye.", "viz": ""}, {"title": "Stopping early with abortOnFail", "body": "If the system is clearly failing, stop the test instead of hammering it for another hour.", "code": "export const options = {\n  thresholds: {\n    http_req_failed: [\n      { threshold: 'rate<0.05', abortOnFail: true, delayAbortEval: '30s' },\n    ],\n  },\n};", "out": "If more than 5% of requests fail, k6 stops the test (after a 30 s grace period for warm-up).", "tip": "delayAbortEval avoids aborting on the noisy first few seconds.", "mistake": "Using abortOnFail on a spike test, where short error bursts are part of what you're measuring.", "viz": ""}, {"title": "Thresholds on tags, groups and scenarios", "body": "Different endpoints deserve different targets. Thresholds can target any tag.", "code": "thresholds: {\n  'http_req_duration{name:Login}': ['p(95)<300'],\n  'http_req_duration{name:TenderSearch}': ['p(95)<800'],\n  'http_req_duration{group:::Create tender}': ['p(95)<1000'],\n  'http_req_duration{scenario:vendors}': ['p(95)<600'],\n},", "out": "Each tagged threshold shows as its own line in the summary.", "tip": "Group tags start with :: (the root), hence the three colons.", "mistake": "One global threshold for everything: fast endpoints hide slow ones.", "viz": ""}, {"title": "Built-in metrics and request timings", "body": "k6 splits every request's time into phases. Knowing them tells you where the time goes.", "code": "res.timings.blocked         // waiting for a free connection\nres.timings.connecting      // TCP connect\nres.timings.tls_handshaking // HTTPS setup\nres.timings.sending         // uploading the request\nres.timings.waiting         // server thinking (TTFB)\nres.timings.receiving       // downloading the response\nres.timings.duration        // sending + waiting + receiving", "out": "Other built-ins: http_reqs, http_req_failed, iterations,\niteration_duration, vus, vus_max, data_sent, data_received,\ndropped_iterations, checks", "tip": "High waiting means the server or database is slow. High receiving means big responses or slow network.", "mistake": "Blaming the server for slow connecting or TLS times; those are network and setup costs.", "viz": "timing"}, {"title": "Custom metrics", "body": "Track business numbers k6 doesn't know about, like how long creating a tender takes end to end.", "code": "import { Counter, Gauge, Rate, Trend } from 'k6/metrics';\n\nconst createTime = new Trend('tender_create_time', true); // true = time\nconst created = new Counter('tenders_created');\nconst failedBids = new Rate('bid_failures');\n\nexport default function () {\n  const res = http.post(`${BASE}/api/tenders`, body, params);\n  createTime.add(res.timings.duration);\n  created.add(1);\n  failedBids.add(res.status !== 201);\n}\n\n// thresholds work on them too\n// tender_create_time: ['p(95)<1200']", "out": "Counter  adds up\nGauge    keeps the latest value\nRate     % of true values\nTrend    min / avg / percentiles", "tip": "Name custom metrics after the business action, not the endpoint.", "mistake": "Creating metrics inside the default function. Create them in init code.", "viz": ""}, {"title": "Percentiles, not averages", "body": "Averages hide pain. The 95th percentile (p95) is the time that 95% of requests beat, so 1 in 20 users is slower.", "code": "// summary options\nexport const options = {\n  summaryTrendStats: ['avg', 'min', 'med', 'p(90)', 'p(95)', 'p(99)', 'max'],\n};", "out": "avg   = total ÷ count, pulled around by outliers\nmed   = the middle request\np(95) = 95% of requests were faster than this\nmax   = the single worst request", "tip": "Report median and p95 together: typical experience and bad-case experience.", "mistake": "Reporting only the average because it looks better.", "viz": "pct"}]}, {"num": "06", "title": "Results & reporting", "blurb": "Turn raw numbers into dashboards, HTML reports and findings people can act on.", "lessons": [{"title": "The end-of-test summary", "body": "The summary is always there. Tune which statistics it shows and export it for later.", "code": "export const options = {\n  summaryTrendStats: ['avg', 'med', 'p(90)', 'p(95)', 'p(99)', 'max'],\n};\n\n# choose how much the terminal shows\nk6 run --summary-mode=compact script.js   # default\nk6 run --summary-mode=full script.js      # more detail\n\n# keep a JSON copy of the results: see handleSummary (next lesson)", "out": "The terminal summary, trimmed to the stats you care about.\nFor files to keep (JSON, HTML), use handleSummary in the next lesson.", "tip": "Save a summary for every run so you can compare runs over time.", "mistake": "Copying numbers from the terminal by hand into a spreadsheet.", "viz": ""}, {"title": "handleSummary: custom and HTML reports", "body": "handleSummary() runs at the end and decides where the summary goes: terminal, JSON, HTML or anything else.", "code": "import { htmlReport } from 'https://raw.githubusercontent.com/benc-uk/k6-reporter/main/dist/bundle.js';\nimport { textSummary } from 'https://jslib.k6.io/k6-summary/0.0.2/index.js';\n\nexport function handleSummary(data) {\n  return {\n    'report.html': htmlReport(data),\n    'summary.json': JSON.stringify(data),\n    stdout: textSummary(data, { indent: ' ', enableColors: true }),\n  };\n}", "out": "report.html   shareable HTML report (community k6-reporter)\nsummary.json  raw data\nterminal      the normal summary", "tip": "Include stdout, or the terminal summary disappears once you define handleSummary.", "mistake": "Relying on a remote import in CI without a fallback; pin the version or vendor the file.", "viz": ""}, {"title": "The built-in web dashboard", "body": "k6 has a live dashboard in the browser while the test runs, and can save it as an HTML report.", "code": "# watch live at http://127.0.0.1:5665\nK6_WEB_DASHBOARD=true k6 run script.js\n\n# also save it as a self-contained HTML file\nK6_WEB_DASHBOARD=true K6_WEB_DASHBOARD_EXPORT=report.html k6 run script.js\n\n# Windows PowerShell\n$env:K6_WEB_DASHBOARD=\"true\"; k6 run script.js", "out": "Live graphs of VUs, request rate, response time percentiles and errors, updating every few seconds.", "tip": "The exported HTML is great evidence to attach to a performance ticket.", "mistake": "Forgetting the dashboard closes when the test ends unless you export it.", "viz": ""}, {"title": "Outputs: JSON, CSV, InfluxDB + Grafana, cloud", "body": "Outputs stream every data point during the test, for detailed analysis or long-term dashboards.", "code": "k6 run --out json=results.json script.js\nk6 run --out csv=results.csv script.js\n\n# InfluxDB (v1) + Grafana dashboards\nk6 run --out influxdb=http://localhost:8086/k6 script.js\n\n# Prometheus remote write\nk6 run --out experimental-prometheus-rw script.js\n\n# Grafana Cloud k6\nk6 cloud login            # once (k6 login cloud was removed in 2.0)\nk6 cloud run script.js", "out": "json / csv    every sample, for your own analysis\nInfluxDB      time-series database behind Grafana\nPrometheus    fits teams already using it\nCloud         hosted runs and dashboards", "tip": "InfluxDB + Grafana is the classic self-hosted setup for trends across many runs.", "mistake": "Streaming every data point from a long, heavy test to a local JSON file. It gets huge fast.", "viz": ""}, {"title": "Reading results", "body": "Numbers only matter when you connect them. Look for the point where things change.", "code": "Questions to ask:\n1. At what VU / request level did p95 start rising?\n2. Did errors appear at the same time?\n3. Did requests per second stop growing\n   while VUs kept growing?  (saturation)\n4. Which endpoint or group got slow first?\n5. Did it recover after the load dropped?", "out": "Typical pattern:\n  load ↑  → throughput ↑, latency flat   (healthy)\n  load ↑  → throughput flat, latency ↑   (saturated)\n  load ↑  → errors ↑                      (breaking)", "tip": "The knee of the curve, where throughput stops rising, is usually the real capacity.", "mistake": "Reading only the final summary of a ramping test; it averages the healthy and broken parts together.", "viz": ""}, {"title": "Writing a performance test report", "body": "A short, structured report turns a test run into a decision for the team.", "code": "1. Goal         what question this test answers\n2. Setup        environment, data, k6 version\n3. Load model   executor, VUs or rate, duration\n4. Results      p95, error rate, throughput\n                 (table + one or two graphs)\n5. Thresholds   pass / fail against targets\n6. Findings     bottlenecks, with evidence\n7. Next steps   fixes to try, retest plan", "out": "Attach: the HTML report, the script version, and the exact command used.", "tip": "Lead with the answer: 'Handles 50 tenders/min at p95 420 ms; fails above 80.'", "mistake": "Pasting 40 metrics with no conclusion.", "viz": ""}]}, {"num": "07", "title": "Beyond HTTP & CI", "blurb": "Organise bigger suites, test browsers, WebSockets and gRPC, extend k6 and run it in CI.", "lessons": [{"title": "Organising a k6 project", "body": "As tests grow, split them into modules and keep environment settings in config files.", "code": "k6-tests/\n├── config/\n│   ├── qa.json\n│   └── staging.json\n├── lib/\n│   ├── auth.js        // export function login() {...}\n│   └── tenders.js\n├── scenarios/\n│   ├── smoke.js\n│   └── average-load.js\n└── data/users.json\n\n// scenarios/smoke.js\nimport { login } from '../lib/auth.js';\nconst config = JSON.parse(open(`../config/${__ENV.ENV || 'qa'}.json`));", "out": "k6 run -e ENV=staging scenarios/smoke.js", "tip": "Same functions, different load profiles: one file per test type.", "mistake": "Copy-pasting login code into every script.", "viz": ""}, {"title": "Browser testing with k6/browser", "body": "k6 can drive a real Chromium browser to measure what users actually see, like Largest Contentful Paint. Combine a few browser VUs with many HTTP VUs.", "code": "import { browser } from 'k6/browser';\n\nexport const options = {\n  scenarios: {\n    ui: {\n      executor: 'shared-iterations',\n      options: { browser: { type: 'chromium' } },\n    },\n  },\n  thresholds: { browser_web_vital_lcp: ['p(95)<2500'] },\n};\n\nexport default async function () {\n  const page = await browser.newPage();\n  try {\n    await page.goto('https://quickpizza.grafana.com');\n  } finally {\n    await page.close();\n  }\n}", "out": "Web vitals (LCP, FCP, CLS...) appear in the summary alongside the usual metrics.", "tip": "Browser VUs are heavy. Use a handful for real-user timing, and HTTP VUs for the load.", "mistake": "Forgetting await. Browser calls are async here, unlike Playwright's sync Python API.", "viz": ""}, {"title": "WebSockets", "body": "Live features like notifications or bid countdowns often use WebSockets.", "code": "import ws from 'k6/ws';\nimport { check } from 'k6';\n\nexport default function () {\n  const res = ws.connect('wss://example.com/live', null, function (socket) {\n    socket.on('open', () => socket.send(JSON.stringify({ subscribe: 'tender-42' })));\n    socket.on('message', (msg) => console.log(msg));\n    socket.setTimeout(() => socket.close(), 10000);\n  });\n  check(res, { 'connected': (r) => r && r.status === 101 });\n}", "out": "Each VU holds a socket open for 10 s and receives messages.", "tip": "Status 101 means the connection switched to WebSocket successfully.", "mistake": "Opening sockets without closing them; VUs never finish their iteration.", "viz": ""}, {"title": "gRPC", "body": "Some back-end services talk gRPC instead of REST. k6 can call them directly.", "code": "import grpc from 'k6/net/grpc';\nimport { check } from 'k6';\n\nconst client = new grpc.Client();\nclient.load(['definitions'], 'hello.proto');   // init code\n\nexport default () => {\n  client.connect('grpcbin.test.k6.io:9001');\n  const res = client.invoke('hello.HelloService/SayHello', { greeting: 'Shamima' });\n  check(res, { 'status OK': (r) => r && r.status === grpc.StatusOK });\n  client.close();\n};", "out": "The .proto file describes the service; k6 uses it to build requests.", "tip": "Load .proto files in init code, like any other file.", "mistake": "Connecting once per request instead of once per iteration.", "viz": ""}, {"title": "Extensions with xk6", "body": "Extensions add features to k6, like talking to a database, Kafka or Redis. In k6 2.x, importing an official extension (k6/x/...) can make k6 fetch it automatically; xk6 is still how you build a custom binary.", "code": "# needs Go installed\ngo install go.k6.io/xk6/cmd/xk6@latest\n\nxk6 build \\\n  --with github.com/grafana/xk6-sql \\\n  --with github.com/grafana/xk6-sql-driver-mysql\n\n./k6 run db-test.js      # use the new binary", "out": "A ./k6 binary in the current folder with SQL support built in.\n(A preview of the SQL path.)\n\nk6 2.x: extensions built for 1.x must be rebuilt for v2.", "tip": "Check an extension's README for the current import name and supported k6 versions.", "mistake": "Running the system k6 instead of the custom ./k6 and getting 'unknown module' errors.", "viz": ""}, {"title": "k6 in CI/CD", "body": "Run a load test on every deploy. Thresholds make the pipeline fail automatically when performance drops.", "code": "# .github/workflows/load-test.yml\nname: load-test\non: [workflow_dispatch]\njobs:\n  k6:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - uses: grafana/setup-k6-action@v1\n      - uses: grafana/run-k6-action@v1\n        with:\n          path: scenarios/smoke.js\n        env:\n          BASE_URL: ${{ secrets.QA_BASE_URL }}", "out": "Thresholds fail → k6 exits with code 99 → the job fails → the team is notified.", "tip": "Run a short smoke test on every deploy and the heavy tests on a schedule.", "mistake": "Running a full stress test on every pull request against a shared environment.", "viz": ""}]}, {"num": "08", "title": "Project: load test a public API", "blurb": "Put it all together on the QuickPizza demo, from plan to published report.", "lessons": [{"title": "Step 1: pick a target and write the plan", "body": "Grafana's QuickPizza demo exists for practising k6. Write a short plan before any code.", "code": "Target      https://quickpizza.grafana.com\nEndpoints   GET  /             home page\n            POST /api/pizza    get a recommendation\nQuestions   Does it handle 20 users?  Where does it slow down?\nTargets     p95 < 800 ms, errors < 1%\nTests       smoke → average → stress\nData        a few restriction sets in a JSON file", "out": "A one-page plan you'll reuse in the final report.", "tip": "Only load test systems you own or have written permission for. Public demos like this are meant for it.", "mistake": "Pointing a practice stress test at your company's shared QA server.", "viz": ""}, {"title": "Step 2: the smoke test", "body": "Make the script correct with minimal load.", "code": "import http from 'k6/http';\nimport { check, sleep } from 'k6';\n\nconst BASE = __ENV.BASE_URL || 'https://quickpizza.grafana.com';\nexport const options = { vus: 1, iterations: 5 };\n\nexport default function () {\n  const res = http.post(`${BASE}/api/pizza`,\n    JSON.stringify({ maxCaloriesPerSlice: 500, mustBeVegetarian: false }),\n    { headers: { 'Content-Type': 'application/json',\n                 Authorization: 'token abcdef0123456789' },\n      tags: { name: 'Recommend' } });\n  check(res, {\n    'status 200': (r) => r.status === 200,\n    'has a pizza': (r) => r.json('pizza.name') !== undefined,\n  });\n  sleep(1);\n}", "out": "5 iterations, all checks green: the script is ready for load.", "tip": "Check the demo's documentation for the current endpoints and token before running.", "mistake": "Skipping straight to 50 VUs with a script that fails on every request.", "viz": ""}, {"title": "Step 3: average load with thresholds", "body": "Add a realistic load profile and your pass/fail targets.", "code": "export const options = {\n  scenarios: {\n    average: {\n      executor: 'ramping-vus',\n      startVUs: 0,\n      stages: [\n        { duration: '1m', target: 20 },\n        { duration: '3m', target: 20 },\n        { duration: '30s', target: 0 },\n      ],\n    },\n  },\n  thresholds: {\n    http_req_failed: ['rate<0.01'],\n    'http_req_duration{name:Recommend}': ['p(95)<800'],\n    checks: ['rate>0.99'],\n  },\n};", "out": "Run with the web dashboard exported:\nK6_WEB_DASHBOARD=true K6_WEB_DASHBOARD_EXPORT=average.html k6 run load.js", "tip": "Keep the same script and swap only the options between test types.", "mistake": "Changing the script and the load at the same time; then you can't tell which change mattered.", "viz": ""}, {"title": "Step 4: stress and spike variants", "body": "Switch profiles with an environment variable instead of copying the script.", "code": "const profiles = {\n  smoke:  { vus: 1, iterations: 5 },\n  stress: { stages: [ { duration: '2m', target: 60 },\n                      { duration: '3m', target: 60 },\n                      { duration: '1m', target: 0 } ] },\n  spike:  { stages: [ { duration: '20s', target: 100 },\n                      { duration: '40s', target: 0 } ] },\n};\n\nexport const options = {\n  ...profiles[__ENV.PROFILE || 'smoke'],\n  thresholds: { http_req_failed: ['rate<0.05'] },\n};\n\n// k6 run -e PROFILE=stress load.js", "out": "One script, three tests. Compare p95 and error rate between them.", "tip": "Record the exact command for each run; you'll need it in the report.", "mistake": "Treating a spike test failure as a bug by default. Sometimes the finding is simply the limit.", "viz": ""}, {"title": "Step 5: report and publish", "body": "Write up the results with the report template from module 06 and add it to your portfolio.", "code": "Portfolio case study\n  · the plan (step 1)\n  · scripts on GitHub, with a README\n  · average.html and stress.html dashboards\n  · a results table: p95, error rate, req/s per test\n  · 3 findings and what you'd test next\n  · the CI workflow that runs the smoke test", "out": "A finished, real project to discuss in interviews, with evidence.", "tip": "Explain one decision you made, like why you chose an arrival-rate executor.", "mistake": "Publishing numbers without saying what machine and network they came from.", "viz": ""}]}];
+    const mod = MODS[st.m];
+    const cur = mod.lessons[st.l] || mod.lessons[0];
+    const key = (m, l) => m + '-' + l;
+    let total = 0, doneN = 0;
+    MODS.forEach((mm, i) => mm.lessons.forEach((_, j) => { total++; if (st.done[key(i, j)]) doneN++; }));
+    const modTabs = MODS.map((mm, i) => {
+      const on = i === st.m;
+      const d = mm.lessons.filter((_, j) => st.done[key(i, j)]).length;
+      return { num: mm.num + (d === mm.lessons.length ? ' ✓' : ''), title: mm.title, pick: () => this.setState({ m: i, l: 0 }),
+        style: 'display:flex;flex-direction:column;align-items:flex-start;gap:4px;min-height:64px;padding:12px 16px;border:none;border-radius:14px 14px 0 0;cursor:pointer;text-align:left;font:600 14px IBM Plex Sans,sans-serif;flex:1;' + (on ? 'background:#F4F1EA;color:#16181D;' : 'background:rgba(255,255,255,0.12);color:#FFFFFF;') };
+    });
+    const lessonNav = mod.lessons.map((ls, j) => {
+      const on = j === st.l, dn = !!st.done[key(st.m, j)];
+      return { title: ls.title, num: dn ? '✓' : String(j + 1).padStart(2, '0'), pick: () => this.setState({ l: j }),
+        style: 'display:flex;align-items:center;gap:12px;min-height:44px;padding:8px 12px;border-radius:10px;border:none;cursor:pointer;text-align:left;font:' + (on ? '600' : '400') + ' 15px IBM Plex Sans,sans-serif;' + (on ? 'background:#16181D;color:#F4F1EA;' : 'background:transparent;color:#16181D;'),
+        numStyle: 'flex-shrink:0;font:600 12px JetBrains Mono,monospace;width:28px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;' + (on ? 'background:#6C4DF5;color:#fff;' : dn ? 'background:#DCEFE3;color:#1F7A52;' : 'background:#EAE5DA;color:#6A6E77;') };
+    });
+    const modeDefs = [['split', 'Side by side'], ['code', 'Script'], ['out', 'Result']];
+    const modes = modeDefs.map(([id, label]) => ({ label, pick: () => this.setState({ mode: id }),
+      style: 'min-height:40px;padding:8px 14px;border-radius:8px;border:none;cursor:pointer;font:600 14px IBM Plex Sans,sans-serif;' + (st.mode === id ? 'background:#FFFFFF;color:#16181D;box-shadow:0 1px 3px rgba(0,0,0,.12);' : 'background:transparent;color:#5C606A;') }));
+    const isFirst = st.m === 0 && st.l === 0;
+    const isLast = st.m === MODS.length - 1 && st.l === mod.lessons.length - 1;
+    const go = (dir) => {
+      let m = st.m, l = st.l + dir;
+      if (l < 0) { if (m === 0) return; m -= 1; l = MODS[m].lessons.length - 1; }
+      if (l >= MODS[m].lessons.length) { if (m === MODS.length - 1) return; m += 1; l = 0; }
+      this.setState({ m, l });
+    };
+    const k = key(st.m, st.l); const isDone = !!st.done[k];
+    const pct = Math.round((doneN / total) * 100);
+
+    // executors
+    const EX = [
+      { label: 'shared-iterations', y: 'VUs', model: 'closed', pts: [[0,200],[10,90],[380,90],[420,200]], desc: 'A fixed total of iterations shared by all VUs. Fast VUs take more. The test ends when all are done.', when: 'you need an exact amount of work done, like 200 tender submissions.', code: "executor: 'shared-iterations',\nvus: 10,\niterations: 200,\nmaxDuration: '10m'," },
+      { label: 'per-vu-iterations', y: 'VUs', model: 'closed', pts: [[0,200],[10,90],[300,90],[340,140],[470,140],[500,200]], desc: 'Each VU runs the same number of iterations. Slow VUs finish later, so VUs drop off one by one.', when: 'each simulated user should do the same fixed journey.', code: "executor: 'per-vu-iterations',\nvus: 10,\niterations: 20,   // per VU" },
+      { label: 'constant-vus', y: 'VUs', model: 'closed', pts: [[0,200],[10,90],[590,90],[600,200]], desc: 'A fixed number of VUs loop for a fixed time. The simplest executor.', when: 'you want N concurrent users for a set time.', code: "executor: 'constant-vus',\nvus: 20,\nduration: '5m'," },
+      { label: 'ramping-vus', y: 'VUs', model: 'closed', pts: [[0,200],[180,60],[450,60],[600,200]], desc: 'The number of VUs follows the stages you define, up and down.', when: 'you want realistic ramp-up and ramp-down of users.', code: "executor: 'ramping-vus',\nstartVUs: 0,\nstages: [\n  { duration: '2m', target: 50 },\n  { duration: '5m', target: 50 },\n  { duration: '1m', target: 0 },\n]," },
+      { label: 'constant-arrival-rate', y: 'iterations / second', model: 'open', pts: [[0,200],[5,100],[595,100],[600,200]], desc: 'New iterations start at a fixed rate, no matter how slow the system gets. k6 adds VUs as needed.', when: 'the requirement is a throughput, like 30 requests per second.', code: "executor: 'constant-arrival-rate',\nrate: 30, timeUnit: '1s',\nduration: '5m',\npreAllocatedVUs: 50,\nmaxVUs: 200," },
+      { label: 'ramping-arrival-rate', y: 'iterations / second', model: 'open', pts: [[0,180],[200,120],[320,120],[480,40],[600,40]], desc: 'The start rate of iterations follows stages. The open-model way to find where throughput stops keeping up.', when: 'you want to increase throughput step by step, as in a breakpoint test.', code: "executor: 'ramping-arrival-rate',\nstartRate: 10, timeUnit: '1s',\npreAllocatedVUs: 50, maxVUs: 300,\nstages: [\n  { duration: '2m', target: 30 },\n  { duration: '3m', target: 80 },\n]," }
+    ];
+    const e = EX[st.ex];
+    const ptsStr = e.pts.map((p) => p.join(',')).join(' ');
+    const exTabs = EX.map((x, i) => ({ label: x.label, pick: () => this.setState({ ex: i }),
+      style: 'min-height:40px;padding:8px 12px;border-radius:10px;cursor:pointer;font:600 13px JetBrains Mono,monospace;' + (i === st.ex ? 'background:#B7A8FF;color:#16181D;border:1.5px solid #B7A8FF;' : 'background:transparent;color:#F4F1EA;border:1.5px solid #3A3E48;') }));
+
+    // timing phases
+    const PH = [
+      { name: 'blocked', short: 'blk', ms: 4, color: '#C9C1B1', desc: 'Waiting for a free connection slot before the request can start.', fix: 'too many parallel requests per host, or VUs starved of connections.' },
+      { name: 'connecting', short: 'TCP', ms: 22, color: '#B7A8FF', desc: 'Opening the TCP connection to the server.', fix: 'network distance or a struggling load balancer.' },
+      { name: 'tls_handshaking', short: 'TLS', ms: 38, color: '#8B74F7', desc: 'Setting up HTTPS encryption.', fix: 'connections not being reused, or slow TLS setup.' },
+      { name: 'sending', short: 'send', ms: 2, color: '#E8B64C', desc: 'Uploading the request, including its body.', fix: 'large uploads or slow upstream bandwidth.' },
+      { name: 'waiting', short: 'waiting (TTFB)', ms: 180, color: '#6C4DF5', desc: 'Time to first byte: the server is processing. Usually the biggest part.', fix: 'slow code, slow database queries or an overloaded server.' },
+      { name: 'receiving', short: 'recv', ms: 14, color: '#1F7A52', desc: 'Downloading the response body.', fix: 'very large responses; consider pagination or compression.' }
+    ];
+    const tot = PH.reduce((a, p) => a + p.ms, 0);
+    const phases = PH.map((p, i) => ({ name: p.name, short: p.short, pick: () => this.setState({ ph: i }),
+      style: 'flex-grow:' + p.ms + ';flex-basis:0;min-width:34px;border:none;cursor:pointer;color:#fff;font:600 12px JetBrains Mono,monospace;background:' + p.color + ';' + (i === st.ph ? 'box-shadow:inset 0 0 0 3px #16181D;' : 'opacity:.75;') }));
+
+    // percentiles
+    const RT = [120, 128, 135, 140, 142, 150, 155, 160, 165, 170, 175, 180, 190, 200, 210, 230, 260, 320, 900, 1500];
+    const avg = Math.round(RT.reduce((a, b) => a + b, 0) / RT.length);
+    const med = (RT[9] + RT[10]) / 2;
+    const p95 = RT[Math.ceil(0.95 * RT.length) - 1];
+    const maxV = RT[RT.length - 1];
+    const bars = RT.map((v, i) => ({ style: 'flex:1;border-radius:4px 4px 0 0;height:' + Math.max(2, (v / maxV) * 100) + '%;background:' + (v >= p95 ? '#F08A62' : '#6C4DF5') + ';' }));
+
+    return {
+      mod, cur, modTabs, lessonNav, modes,
+      lessonNum: String(st.l + 1), lessonTotal: String(mod.lessons.length),
+      showA: st.mode !== 'out', showB: st.mode !== 'code',
+      gridStyle: st.mode === 'split' ? 'display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;' : 'display:grid;grid-template-columns:repeat(1,minmax(0,1fr));gap:16px;',
+      prev: () => go(-1), next: () => go(1),
+      prevLabel: isFirst ? 'Start' : 'Previous', nextLabel: isLast ? 'Finished' : 'Next lesson',
+      markDone: () => this.setState({ done: { ...st.done, [k]: !isDone } }),
+      doneLabel: isDone ? '✓ Done' : 'Mark as done',
+      doneBtnStyle: 'min-height:48px;padding:12px 22px;border-radius:12px;cursor:pointer;font:600 15px IBM Plex Sans,sans-serif;' + (isDone ? 'background:#DCEFE3;color:#1F7A52;border:1.5px solid #7FC8A0;' : 'background:#FFFFFF;color:#16181D;border:1.5px solid #DDD7CB;'),
+      overallLabel: doneN + ' / ' + total + ' lessons',
+      overallStyle: 'height:100%;border-radius:999px;background:#7EE2A8;transition:width .3s;width:' + pct + '%;',
+      vizExec: cur.viz === 'exec', vizTiming: cur.viz === 'timing', vizPct: cur.viz === 'pct',
+      exTabs, ex: { ...e, points: ptsStr, area: ptsStr + ' 600,200 0,200', yLabel: e.y, modelLabel: e.model + ' model' },
+      phases, phase: PH[st.ph], phaseTotal: String(tot),
+      bars, avgMs: String(avg), medMs: String(med), p95Ms: String(p95), maxMs: String(maxV),
+      avgLine: 'position:absolute;left:0;right:0;border-top:2px dashed #E8B64C;bottom:' + (avg / maxV) * 100 + '%;'
+    };
+  }
+}
+
+var __TPL=`<div style="width: 1440px; height: 2900px; box-sizing: border-box; display: flex; flex-direction: column; background: #F4F1EA; font-family: 'IBM Plex Sans', system-ui, sans-serif; color: #16181D;">
+
+<!-- HERO + MODULE TABS -->
+<section style="background: #6C4DF5; color: #FFFFFF; padding: 48px 80px 0; display: flex; flex-direction: column; gap: 26px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 40px;">
+<div style="display: flex; flex-direction: column; gap: 14px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #E4DEFF;"><a href="K6Hub.html" style="color: #FFFFFF;">k6</a> / course · modules 02–08</span>
+<h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 60px; line-height: 1; letter-spacing: -0.03em;">{{mod.title}}</h1>
+<p style="margin: 0; font-size: 18px; line-height: 1.6; color: #E4DEFF; max-width: 760px;">{{mod.blurb}}</p>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px; min-width: 280px;">
+<div style="display: flex; justify-content: space-between; font-size: 14px;"><span>Course progress</span><span style="font-family: 'JetBrains Mono', monospace;">{{overallLabel}}</span></div>
+<div style="height: 8px; border-radius: 999px; background: rgba(255,255,255,0.25); overflow: hidden;"><div style="{{overallStyle}}"></div></div>
+<a href="K6.html" style="font-size: 13px; color: #FFFFFF;">New to JavaScript? Start with module 01 →</a>
+</div>
+</div>
+<div style="display: flex; gap: 6px;">
+<sc-for list="{{modTabs}}" as="t" hint-placeholder-count="7">
+<button onClick="{{t.pick}}" style="{{t.style}}"><span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; opacity: 0.8;">{{t.num}}</span><span>{{t.title}}</span></button>
+</sc-for>
+</div>
+</section>
+
+<!-- LESSON -->
+<section style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 40px; padding: 56px 80px 48px;">
+<aside style="grid-column: span 3; display: flex; flex-direction: column; gap: 6px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #6A6E77; text-transform: uppercase; letter-spacing: 0.08em; padding: 0 12px 10px;">module {{mod.num}} · lessons</span>
+<sc-for list="{{lessonNav}}" as="l" hint-placeholder-count="8">
+<button onClick="{{l.pick}}" style="{{l.style}}"><span style="{{l.numStyle}}">{{l.num}}</span><span>{{l.title}}</span></button>
+</sc-for>
+</aside>
+<div style="grid-column: span 9; display: flex; flex-direction: column; gap: 22px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 20px;">
+<div style="display: flex; flex-direction: column; gap: 10px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #6C4DF5;">module {{mod.num}} · lesson {{lessonNum}} of {{lessonTotal}}</span>
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 44px; letter-spacing: -0.02em; line-height: 1.05;">{{cur.title}}</h2>
+</div>
+<div style="display: flex; gap: 6px; background: #EAE5DA; padding: 5px; border-radius: 12px;">
+<sc-for list="{{modes}}" as="m" hint-placeholder-count="3"><button onClick="{{m.pick}}" style="{{m.style}}">{{m.label}}</button></sc-for>
+</div>
+</div>
+<p style="margin: 0; font-size: 18px; line-height: 1.7; color: #34373F; max-width: 840px;">{{cur.body}}</p>
+<div style="{{gridStyle}}">
+<sc-if value="{{showA}}" hint-placeholder-val="{{ true }}">
+<div style="background: #16181D; border-radius: 16px; overflow: hidden;">
+<div style="padding: 12px 18px; border-bottom: 1px solid #2A2D35; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #B7A8FF;">script / command</div>
+<pre style="margin: 0; padding: 20px; font-family: 'JetBrains Mono', monospace; font-size: 13.5px; line-height: 1.7; color: #D8DAE0; white-space: pre; overflow-x: auto;">{{cur.code}}</pre>
+</div>
+</sc-if>
+<sc-if value="{{showB}}" hint-placeholder-val="{{ true }}">
+<div style="background: #FFFFFF; border: 1px solid #DDD7CB; border-radius: 16px; overflow: hidden;">
+<div style="padding: 12px 18px; border-bottom: 1px solid #DDD7CB; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #6C4DF5;">what happens / what you get</div>
+<pre style="margin: 0; padding: 20px; font-family: 'JetBrains Mono', monospace; font-size: 13.5px; line-height: 1.7; color: #16181D; white-space: pre-wrap;">{{cur.out}}</pre>
+</div>
+</sc-if>
+</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px;">
+<div style="display: flex; gap: 14px; background: #DCEFE3; border-radius: 16px; padding: 20px 22px; align-items: flex-start;">
+<span style="flex-shrink: 0; width: 32px; height: 32px; border-radius: 9px; background: #1F7A52; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 700;">✓</span>
+<div style="display: flex; flex-direction: column; gap: 4px;"><span style="font-weight: 600; color: #174F37;">Remember</span><span style="font-size: 15px; line-height: 1.6; color: #174F37;">{{cur.tip}}</span></div>
+</div>
+<div style="display: flex; gap: 14px; background: #FCE7DD; border-radius: 16px; padding: 20px 22px; align-items: flex-start;">
+<span style="flex-shrink: 0; width: 32px; height: 32px; border-radius: 9px; background: #C4502A; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 700;">!</span>
+<div style="display: flex; flex-direction: column; gap: 4px;"><span style="font-weight: 600; color: #7A2E14;">Common mistake</span><span style="font-size: 15px; line-height: 1.6; color: #7A2E14;">{{cur.mistake}}</span></div>
+</div>
+</div>
+<div style="display: flex; justify-content: space-between; align-items: center;">
+<button onClick="{{prev}}" style="min-height: 48px; padding: 12px 22px; border-radius: 12px; border: 1.5px solid #16181D; background: transparent; cursor: pointer; font: 600 15px 'IBM Plex Sans', sans-serif; color: #16181D;">← {{prevLabel}}</button>
+<button onClick="{{markDone}}" style="{{doneBtnStyle}}">{{doneLabel}}</button>
+<button onClick="{{next}}" style="min-height: 48px; padding: 12px 22px; border-radius: 12px; border: none; background: #6C4DF5; color: #FFFFFF; cursor: pointer; font: 600 15px 'IBM Plex Sans', sans-serif;">{{nextLabel}} →</button>
+</div>
+</div>
+</section>
+
+<!-- VISUALS (shown for specific lessons) -->
+<sc-if value="{{vizExec}}" hint-placeholder-val="{{ false }}">
+<section style="margin: 0 80px 64px; background: #16181D; color: #F4F1EA; border-radius: 28px; padding: 44px; display: flex; flex-direction: column; gap: 28px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 30px;">
+<div style="display: flex; flex-direction: column; gap: 10px;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #B7A8FF;">visualize · executors</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 36px; font-weight: 800;">How each executor schedules work</span></div>
+<div style="display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; max-width: 760px;">
+<sc-for list="{{exTabs}}" as="x" hint-placeholder-count="6"><button onClick="{{x.pick}}" style="{{x.style}}">{{x.label}}</button></sc-for>
+</div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 28px;">
+<div style="grid-column: span 7; background: #1E2129; border: 1px solid #2E323C; border-radius: 18px; padding: 22px; display: flex; flex-direction: column; gap: 8px;">
+<div style="display: flex; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #8A8F9C;"><span>{{ex.yLabel}}</span><span>{{ex.modelLabel}}</span></div>
+<svg width="100%" height="220" viewBox="0 0 600 220" fill="none">
+<line x1="0" y1="200" x2="600" y2="200" stroke="#3A3E48" stroke-width="1"></line>
+<polygon points="{{ex.area}}" fill="#6C4DF5" fill-opacity="0.25"></polygon>
+<polyline points="{{ex.points}}" stroke="#B7A8FF" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"></polyline>
+</svg>
+<div style="display: flex; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #8A8F9C;"><span>start</span><span>time →</span><span>end</span></div>
+</div>
+<div style="grid-column: span 5; display: flex; flex-direction: column; gap: 14px;">
+<span style="font-size: 16px; line-height: 1.65; color: #D8DAE0;">{{ex.desc}}</span>
+<div style="background: #2A2640; border-radius: 12px; padding: 12px 14px; font-size: 14px; color: #E4DEFF;">Use it when: {{ex.when}}</div>
+<pre style="margin: 0; background: #1E2129; border: 1px solid #2E323C; border-radius: 12px; padding: 16px; font-family: 'JetBrains Mono', monospace; font-size: 12.5px; line-height: 1.7; color: #D8DAE0; white-space: pre;">{{ex.code}}</pre>
+</div>
+</div>
+</section>
+</sc-if>
+
+<sc-if value="{{vizTiming}}" hint-placeholder-val="{{ false }}">
+<section style="margin: 0 80px 64px; background: #FFFFFF; border: 1px solid #DDD7CB; border-radius: 28px; padding: 44px; display: flex; flex-direction: column; gap: 26px;">
+<div style="display: flex; flex-direction: column; gap: 10px;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #6C4DF5;">visualize · one request, split into phases</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 36px; font-weight: 800;">Where did the time go?</span><span style="font-size: 15px; color: #5C606A;">Sample first request to a new host. Click a phase.</span></div>
+<div style="display: flex; height: 64px; border-radius: 12px; overflow: hidden;">
+<sc-for list="{{phases}}" as="ph" hint-placeholder-count="6"><button onClick="{{ph.pick}}" aria-label="{{ph.name}}" style="{{ph.style}}">{{ph.short}}</button></sc-for>
+</div>
+<div style="display: flex; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #6A6E77;"><span>0 ms</span><span>{{phaseTotal}} ms</span></div>
+<div style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 24px; align-items: start;">
+<div style="grid-column: span 7; background: #F4F1EA; border-radius: 16px; padding: 22px; display: flex; flex-direction: column; gap: 8px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 16px; font-weight: 600;">{{phase.name}} · {{phase.ms}} ms</span>
+<span style="font-size: 15px; line-height: 1.6; color: #34373F;">{{phase.desc}}</span>
+<span style="font-size: 14px; color: #6C4DF5;">If this is high: {{phase.fix}}</span>
+</div>
+<div style="grid-column: span 5; background: #ECE8FF; border-radius: 16px; padding: 22px; font-size: 14px; line-height: 1.6; color: #231660;">http_req_duration = sending + waiting + receiving. Connection phases (blocked, connecting, TLS) are usually near zero after the first request, because connections are reused.</div>
+</div>
+</section>
+</sc-if>
+
+<sc-if value="{{vizPct}}" hint-placeholder-val="{{ false }}">
+<section style="margin: 0 80px 64px; background: #16181D; color: #F4F1EA; border-radius: 28px; padding: 44px; display: flex; flex-direction: column; gap: 24px;">
+<div style="display: flex; flex-direction: column; gap: 10px;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #B7A8FF;">visualize · 20 sample requests, sorted</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 36px; font-weight: 800;">Why the average lies</span></div>
+<div style="position: relative; height: 260px; display: flex; align-items: flex-end; gap: 8px; border-bottom: 1px solid #3A3E48;">
+<sc-for list="{{bars}}" as="b" hint-placeholder-count="20"><div style="{{b.style}}"></div></sc-for>
+<div style="{{avgLine}}"><span style="position: absolute; right: 0; top: -22px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #E8B64C;">avg {{avgMs}} ms</span></div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px;">
+<div style="background: #1E2129; border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 4px;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #8A8F9C;">median</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 30px; font-weight: 800; color: #7EE2A8;">{{medMs}} ms</span><span style="font-size: 13px; color: #A9AEBA;">the typical user</span></div>
+<div style="background: #1E2129; border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 4px;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #8A8F9C;">average</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 30px; font-weight: 800; color: #E8B64C;">{{avgMs}} ms</span><span style="font-size: 13px; color: #A9AEBA;">matches almost no one</span></div>
+<div style="background: #1E2129; border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 4px;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #8A8F9C;">p(95)</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 30px; font-weight: 800; color: #F08A62;">{{p95Ms}} ms</span><span style="font-size: 13px; color: #A9AEBA;">1 in 20 users waits longer</span></div>
+<div style="background: #1E2129; border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 4px;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #8A8F9C;">max</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 30px; font-weight: 800;">{{maxMs}} ms</span><span style="font-size: 13px; color: #A9AEBA;">one unlucky request</span></div>
+</div>
+</section>
+</sc-if>
+
+<div style="flex-grow: 1;"></div>
+<section style="padding: 0 80px 64px; display: flex; justify-content: space-between; align-items: center; gap: 30px;">
+<div style="display: flex; flex-direction: column; gap: 8px;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #6A6E77;">after k6</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 30px; font-weight: 800;">Next path: SQL for testers</span></div>
+<div style="display: flex; gap: 12px;"><a href="K6Hub.html" style="text-decoration: none; padding: 16px 26px; border-radius: 12px; border: 1.5px solid #16181D; font-weight: 600;">k6 path</a><a href="SQLHub.html" style="text-decoration: none; padding: 16px 26px; border-radius: 12px; background: #A8550E; color: #FFFFFF; font-weight: 600;">Start SQL →</a></div>
+</section>
+</div>`;
+window.__mountDC(__TPL, Component);
+</script>
+</body>
+</html>

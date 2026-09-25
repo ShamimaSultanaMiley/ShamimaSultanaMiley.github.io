@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440">
+<title>ISTQB Foundation Prep</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap">
+<style>html,body{margin:0;background:#F4F1EA;font-family:'IBM Plex Sans',system-ui,sans-serif} #app > div{margin:0 auto}</style>
+</head>
+<body>
+
+<style>
+.snav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:16px 40px;background:#16181D;color:#F4F1EA;font-family:'IBM Plex Sans',sans-serif;flex-wrap:wrap;gap:12px}
+.snav a{color:#F4F1EA;text-decoration:none}
+.snav .brand{display:flex;align-items:center;gap:10px;font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:18px}
+.snav .brand span.logo{width:34px;height:34px;border-radius:9px;background:#7EE2A8;color:#16181D;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:14px}
+.snav ul{list-style:none;display:flex;gap:6px;margin:0;padding:0;align-items:center;flex-wrap:wrap}
+.snav > ul > li{position:relative}
+.snav > ul > li > a,.snav > ul > li > span{display:block;padding:9px 14px;border-radius:9px;font-size:15px;font-weight:500;cursor:pointer;white-space:nowrap}
+.snav > ul > li:hover > a,.snav > ul > li:hover > span,.snav .cur{background:#2A2D35}
+.snav .caret{font-size:11px;opacity:.7;margin-left:4px}
+.snav .drop{position:absolute;top:100%;left:0;min-width:220px;background:#1E2129;border:1px solid #2E323C;border-radius:12px;padding:8px;display:none;flex-direction:column;gap:2px;box-shadow:0 18px 40px -16px rgba(0,0,0,.6)}
+.snav > ul > li:hover .drop{display:flex}
+.snav .drop a{padding:9px 12px;border-radius:8px;font-size:14px;color:#D8DAE0}
+.snav .drop a:hover{background:#2A2D35;color:#fff}
+.snav .drop .grp{font-family:'JetBrains Mono',monospace;font-size:11px;color:#8A8F9C;text-transform:uppercase;letter-spacing:.06em;padding:8px 12px 2px}
+.snav .cta{padding:9px 18px;border-radius:999px;background:#1F7A52;color:#fff;font-weight:600}
+.snav .menubtn{display:none;background:none;border:1.5px solid #3A3E48;color:#F4F1EA;border-radius:9px;padding:8px 12px;font-size:15px;cursor:pointer}
+@media(max-width:1100px){
+  .snav .menubtn{display:block}
+  .snav > ul{display:none;flex-direction:column;align-items:stretch;width:100%;order:3}
+  .snav.open > ul{display:flex}
+  .snav .drop{position:static;display:flex;border:none;box-shadow:none;background:transparent;padding:0 0 6px 14px}
+  .snav > ul > li:hover .drop{display:flex}
+}
+</style>
+<nav class="snav" id="snav">
+<a class="brand" href="index.html"><span class="logo">S✓</span>Shamima Sultana</a>
+<button class="menubtn" onclick="document.getElementById('snav').classList.toggle('open')">Menu ☰</button>
+<ul>
+<li><a href="index.html" class="">Home</a></li>
+<li><span class="">About <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="about.html">Intro &amp; journey</a>
+    <a href="skills.html">Skills</a>
+    <a href="certifications.html">Certifications</a>
+    <a href="research.html">Research</a>
+    <a href="achievements.html">Achievements</a>
+  </div></li>
+<li><span class="">Work <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="projects.html">Projects</a>
+  </div></li>
+<li><span class="">Learn <span class="caret">▾</span></span>
+  <div class="drop">
+    <span class="grp">Automation</span>
+    <a href="PWHub.html">Playwright path</a>
+    <a href="Selenium.html">Selenium with Java</a>
+    <a href="MobileTest.html">Mobile testing</a>
+    <span class="grp">Performance</span>
+    <a href="K6Hub.html">k6</a>
+    <a href="JMeter.html">JMeter</a>
+    <span class="grp">Data &amp; APIs</span>
+    <a href="SQLHub.html">SQL</a>
+    <a href="API.html">API testing</a>
+    <span class="grp">Core &amp; specialised</span>
+    <a href="Manual.html">Manual testing</a>
+    <a href="AITest.html">AI / LLM testing</a>
+    <a href="DevTools.html">DevTools</a>
+    <a href="Git.html">Git &amp; GitHub</a>
+    <a href="A11y.html">Accessibility</a>
+    <a href="Security.html">Security</a>
+  </div></li>
+<li><span class="">Writing <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="K6Hub.html">Tutorials &amp; articles</a>
+  </div></li>
+<li><span class="cur">More <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="News.html">News</a>
+    <a href="Interview.html">Interview prep</a>
+    <a href="ISTQB.html">ISTQB prep</a>
+  </div></li>
+<li><a class="cta" href="mailto:shamimasultanamiley605@gmail.com">Contact</a></li>
+</ul>
+</nav>
+
+<div id="app"></div>
+<script>/* Minimal renderer: replaces Claude's canvas engine so pages run anywhere. */
+(function(){
+  function resolve(scopes, path){
+    path=path.trim();
+    var parts=path.split('.'), head=parts[0], base, found=false;
+    for(var i=scopes.length-1;i>=0;i--){ if(scopes[i] && Object.prototype.hasOwnProperty.call(scopes[i],head)){ base=scopes[i][head]; found=true; break; } }
+    if(!found) return undefined;
+    for(var j=1;j<parts.length;j++){ if(base==null) return undefined; base=base[parts[j]]; }
+    return base;
+  }
+  function subst(str, scopes){
+    return str.replace(/\{\{([^}]+)\}\}/g, function(_,e){ var v=resolve(scopes,e); return v==null?'':String(v); });
+  }
+  function firstExpr(str){ var m=str.match(/\{\{([^}]+)\}\}/); return m?m[1].trim():null; }
+  function processNode(node, scopes, out){
+    if(node.nodeType===3){ // text
+      var t=node.nodeValue;
+      if(t.indexOf('{{')>=0) out.push(document.createTextNode(subst(t,scopes)));
+      else out.push(document.createTextNode(t));
+      return;
+    }
+    if(node.nodeType!==1){ return; }
+    var tag=node.tagName.toLowerCase();
+    if(tag==='sc-for'){
+      var listExpr=firstExpr(node.getAttribute('list')||'');
+      var as=node.getAttribute('as');
+      var arr=listExpr?resolve(scopes,listExpr):null;
+      if(Array.isArray(arr)){
+        for(var k=0;k<arr.length;k++){
+          var sc=scopes.concat([{__k:as, [as]:arr[k]}]);
+          for(var c=0;c<node.childNodes.length;c++) processNode(node.childNodes[c], sc, out);
+        }
+      }
+      return;
+    }
+    if(tag==='sc-if'){
+      var valExpr=firstExpr(node.getAttribute('value')||'');
+      var cond=valExpr?resolve(scopes,valExpr):false;
+      if(cond){ for(var c2=0;c2<node.childNodes.length;c2++) processNode(node.childNodes[c2], scopes, out); }
+      return;
+    }
+    var el=document.createElement(tag);
+    for(var a=0;a<node.attributes.length;a++){
+      var at=node.attributes[a], name=at.name, val=at.value;
+      if(name.indexOf('hint-')===0) continue;
+      if(name==='onclick'){ var h=firstExpr(val); (function(expr){ el.addEventListener('click', function(ev){ var fn=resolve(scopes,expr); if(typeof fn==='function') fn(ev); }); })(h); continue; }
+      if(name==='onchange'){ var h2=firstExpr(val); (function(expr){ el.addEventListener('input', function(ev){ var fn=resolve(scopes,expr); if(typeof fn==='function') fn(ev); }); })(h2); continue; }
+      var sv=val.indexOf('{{')>=0?subst(val,scopes):val;
+      if(name==='value' && (tag==='input'||tag==='textarea')){ el.value=sv; el.setAttribute('value',sv); }
+      else el.setAttribute(name, sv);
+    }
+    var kids=[];
+    for(var cc=0;cc<node.childNodes.length;cc++) processNode(node.childNodes[cc], scopes, kids);
+    for(var ki=0;ki<kids.length;ki++) el.appendChild(kids[ki]);
+    out.push(el);
+  }
+  window.__mountDC=function(templateHTML, ComponentClass){
+    var tplRoot=document.createElement('div'); tplRoot.innerHTML=templateHTML;
+    var mount=document.getElementById('app');
+    var comp=new ComponentClass({});
+    function doRender(){
+      var vals;
+      try{ vals=comp.renderVals(); }catch(e){ console.error('render error',e); return; }
+      var frag=document.createDocumentFragment();
+      var buf=[];
+      for(var i=0;i<tplRoot.childNodes.length;i++) processNode(tplRoot.childNodes[i], [vals], buf);
+      for(var b=0;b<buf.length;b++) frag.appendChild(buf[b]);
+      // preserve focus in search/textarea across re-render
+      var active=document.activeElement, sel=null, id=null;
+      mount.innerHTML=''; mount.appendChild(frag);
+    }
+    comp.setState=function(s){ Object.assign(comp.state, s); doRender(); };
+    doRender();
+  };
+  window.DCLogic=function(){};
+})();
+</script>
+<script>
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { chap: 0, i: 0, answers: {} };
+  }
+  renderVals() {
+    const st = this.state;
+    const Q = [{"ch": 1, "q": "Which statement best reflects a fundamental principle of testing?", "o": ["Testing can prove that software is completely free of defects", "Exhaustive testing is achievable for most applications", "Testing shows the presence of defects, not their absence", "A tested product is guaranteed to be correct"], "c": 2, "e": "Correct: C. 'Testing shows the presence of defects, but cannot prove their absence' is one of the seven principles. A and D claim testing proves correctness, which it cannot. B is wrong because exhaustive testing (all inputs and preconditions) is impossible except in trivial cases."}, {"ch": 1, "q": "A team keeps running the same automated regression tests every release and they stop finding new defects. Which principle explains this?", "o": ["Defects cluster together", "The pesticide paradox", "Testing is context dependent", "Absence-of-errors fallacy"], "c": 1, "e": "Correct: B. The pesticide paradox: repeating the same tests eventually stops finding new defects, so tests must be reviewed and updated. A is about defects concentrating in certain areas. C is about tailoring testing to context. D is about a bug-free product still failing to meet needs."}, {"ch": 1, "q": "When is the cheapest time to find and fix a defect, according to the principle of early testing?", "o": ["During system testing", "As early as possible in the SDLC", "During user acceptance testing", "After release, from user feedback"], "c": 1, "e": "Correct: B. 'Early testing saves time and money': the earlier a defect is found (e.g. reviewing requirements), the cheaper it is to fix. The later phases in A, C and D are progressively more expensive places to find the same defect."}, {"ch": 1, "q": "A developer makes a mistake that introduces a fault in the code. When the code runs, the system behaves incorrectly. What is the incorrect behaviour called?", "o": ["Error", "Defect", "Failure", "Root cause"], "c": 2, "e": "Correct: C. A person makes an error (mistake), which introduces a defect/fault in the code, which may cause a failure when executed. The error is the human action (A) and the defect is the flaw in the code (B), not the runtime behaviour."}, {"ch": 1, "q": "Which of the following is a typical objective of testing?", "o": ["To increase the number of test cases", "To evaluate work products such as requirements and to find defects", "To replace the need for reviews", "To guarantee zero defects in production"], "c": 1, "e": "Correct: B. Objectives of testing include evaluating work products, finding defects, building confidence, and providing information for decisions. A is an activity, not an objective. Testing complements reviews (C) and cannot guarantee zero defects (D)."}, {"ch": 2, "q": "Which test level focuses on interfaces and interactions between integrated components or systems?", "o": ["Component testing", "Integration testing", "System testing", "Acceptance testing"], "c": 1, "e": "Correct: B. Integration testing focuses on interactions between components (component integration) or systems (system integration). Component testing (A) tests units in isolation, system testing (C) tests the whole system, and acceptance testing (D) validates readiness for use."}, {"ch": 2, "q": "A change is made to fix a defect. Tests are run on unrelated areas that previously worked, to ensure the change caused no new defects. This is:", "o": ["Confirmation testing", "Regression testing", "Smoke testing", "Maintenance testing"], "c": 1, "e": "Correct: B. Regression testing checks that a change has not adversely affected unchanged parts. Confirmation (re-)testing (A) checks that the original defect is fixed. Smoke testing (C) is a broad stability check; maintenance testing (D) is testing triggered by changes to a deployed system."}, {"ch": 2, "q": "Which of the following is an example of a functional test?", "o": ["Measuring the response time of a search under load", "Checking that a valid login navigates to the dashboard", "Verifying the application works on Safari and Chrome", "Assessing how easy the interface is for new users"], "c": 1, "e": "Correct: B. Functional testing checks what the system does. A is performance (non-functional), C is compatibility (non-functional), and D is usability (non-functional)."}, {"ch": 2, "q": "What is the main purpose of acceptance testing?", "o": ["To find as many defects as possible", "To test individual functions in isolation", "To establish confidence that the system is ready for use and meets business needs", "To check the internal code structure"], "c": 2, "e": "Correct: C. Acceptance testing (e.g. UAT) establishes confidence that the system is ready for delivery and meets user/business requirements. Finding many defects (A) is more a system-testing objective, isolation testing (B) is component testing, and structure (D) is white-box testing."}, {"ch": 2, "q": "In which activity is a static test technique typically used?", "o": ["Executing test cases against a running system", "Reviewing a requirements document", "Running a performance test", "Performing exploratory testing"], "c": 1, "e": "Correct: B. Static testing examines work products without executing code, e.g. reviews of requirements, designs or code. A, C and D all involve executing the software (dynamic testing)."}, {"ch": 2, "q": "Which testing type is most concerned with confirming that a change has not broken previously working functionality?", "o": ["Smoke testing", "Regression testing", "Confirmation testing", "Component testing"], "c": 1, "e": "Correct: B. Regression testing protects previously working functionality after a change. Smoke testing (A) checks basic stability of a build, confirmation testing (C) verifies a specific fix, and component testing (D) tests units."}, {"ch": 3, "q": "What is a key benefit of static testing compared with dynamic testing?", "o": ["It can measure performance under load", "It can find defects earlier, before code is executed", "It requires the software to be fully built", "It replaces the need for any dynamic testing"], "c": 1, "e": "Correct: B. Static testing (reviews, static analysis) finds defects early, before execution, when they are cheaper to fix. It cannot measure runtime performance (A), does not need a running build (C), and complements rather than replaces dynamic testing (D)."}, {"ch": 3, "q": "During which review type does the author typically lead the meeting and the main purpose is to find defects, with a trained moderator and defined roles and metrics?", "o": ["Informal review", "Walkthrough", "Technical review", "Inspection"], "c": 3, "e": "Correct: D. An inspection is the most formal review: a trained moderator (not the author) leads, roles are defined, and metrics are collected, with defect detection as a primary goal. A walkthrough (B) is often author-led and less formal; a technical review (C) is expert-led; an informal review (A) has no formal process."}, {"ch": 3, "q": "Which of the following can be found by static analysis tools?", "o": ["Incorrect business logic that only shows at runtime", "Slow response times under heavy load", "Coding standard violations and unreachable code", "Usability problems for end users"], "c": 2, "e": "Correct: C. Static analysis tools examine code without executing it and find things like coding-standard violations, unreachable code, and some security issues. Runtime logic errors (A), performance (B) and usability (D) require dynamic testing or human evaluation."}, {"ch": 4, "q": "A field accepts ages from 18 to 65. Using boundary value analysis (2-value), which set of values is most appropriate to test the boundaries?", "o": ["18, 40, 65", "17, 18, 65, 66", "0, 18, 65, 100", "18, 19, 64, 65"], "c": 1, "e": "Correct: B. Two-value BVA tests each boundary value and its nearest neighbour outside the range: 17/18 at the lower boundary and 65/66 at the upper. A tests only valid values and a midpoint, missing invalid neighbours. C uses arbitrary far values, and D tests inner neighbours but not the invalid outer ones."}, {"ch": 4, "q": "A discount is 0% for orders under 1000, 5% from 1000 to 4999, and 10% for 5000 or more. Using equivalence partitioning, how many valid partitions are there for the order amount?", "o": ["Two", "Three", "Four", "Five"], "c": 1, "e": "Correct: B. There are three valid partitions: under 1000, 1000 to 4999, and 5000 or more. Each should be represented by at least one test value. (Invalid partitions such as negative amounts would be additional.)"}, {"ch": 4, "q": "Which technique is best suited to testing a feature whose behaviour depends on combinations of several conditions, such as membership status AND order size AND an active promotion?", "o": ["State transition testing", "Decision table testing", "Boundary value analysis", "Use case testing"], "c": 1, "e": "Correct: B. Decision table testing systematically covers combinations of conditions and their resulting actions. State transition testing (A) is for state-dependent behaviour, BVA (C) is for boundaries of ordered inputs, and use case testing (D) covers end-to-end scenarios."}, {"ch": 4, "q": "An order can move Pending -> Paid -> Shipped, and Pending -> Cancelled. Which technique would you use to verify that invalid transitions (such as Shipped -> Pending) are blocked?", "o": ["Equivalence partitioning", "Decision table testing", "State transition testing", "Statement testing"], "c": 2, "e": "Correct: C. State transition testing models states and the valid/invalid transitions between them, and is ideal for verifying that invalid transitions are prevented. The others do not model state-dependent behaviour."}, {"ch": 4, "q": "Which of the following is an experience-based test technique?", "o": ["Boundary value analysis", "Decision table testing", "Error guessing", "State transition testing"], "c": 2, "e": "Correct: C. Error guessing is experience-based: the tester uses knowledge and intuition to anticipate likely defects. A, B and D are black-box (specification-based) techniques."}, {"ch": 4, "q": "Statement coverage of 100% guarantees that:", "o": ["Every possible input has been tested", "Every executable statement in the code has been executed at least once", "Every decision outcome has been exercised", "All boundaries have been tested"], "c": 1, "e": "Correct: B. 100% statement coverage means every executable statement has run at least once. It does not test every input (A), does not guarantee every decision outcome (that is decision/branch coverage, C), and is unrelated to boundary testing (D)."}, {"ch": 4, "q": "Which coverage is generally stronger and requires more test cases?", "o": ["Statement coverage is stronger than decision coverage", "Decision coverage is stronger than statement coverage", "They are always equal", "Neither relates to the number of test cases"], "c": 1, "e": "Correct: B. Decision (branch) coverage is stronger: achieving 100% decision coverage guarantees 100% statement coverage, but not vice versa, and it generally needs more test cases."}, {"ch": 5, "q": "Which of the following is typically defined in a test plan?", "o": ["The exact defects that will be found", "The scope, objectives, approach, resources and schedule of testing", "The source code of the application", "The marketing strategy for the release"], "c": 1, "e": "Correct: B. A test plan describes the scope, objectives, approach, resources, schedule and entry/exit criteria for testing. It cannot predict specific defects (A), does not contain source code (C), and has nothing to do with marketing (D)."}, {"ch": 5, "q": "What are exit criteria (definition of done) used for?", "o": ["To decide when testing can start", "To decide when a test level or activity is complete", "To assign defects to developers", "To measure code complexity"], "c": 1, "e": "Correct: B. Exit criteria (or a definition of done) define when a test activity or level is considered complete, e.g. coverage achieved, no open critical defects. Entry criteria decide when testing can start (A). C and D are unrelated."}, {"ch": 5, "q": "During risk-based testing, how should test effort be prioritised?", "o": ["Equally across all features", "By the alphabetical order of features", "According to the likelihood and impact of failure", "By the order features were developed"], "c": 2, "e": "Correct: C. Risk-based testing allocates effort according to risk, which combines the likelihood of failure and the impact if it fails. Equal or arbitrary ordering (A, B, D) ignores risk."}, {"ch": 5, "q": "A tester finds that a payment fails only when the order total is exactly 1000. Which piece of information is MOST important to include in the defect report to help reproduce it?", "o": ["The tester's favourite browser theme", "The exact input (order total = 1000) and the steps to reproduce", "The number of other defects found that day", "The tester's years of experience"], "c": 1, "e": "Correct: B. A good defect report includes the exact input and steps so the defect can be reproduced. The other options add no value for reproduction."}, {"ch": 5, "q": "Severity and priority of a defect are best described as:", "o": ["The same thing measured twice", "Severity = impact on the system; priority = urgency of the fix", "Severity = urgency; priority = who found it", "Both are set only by the developer"], "c": 1, "e": "Correct: B. Severity reflects the impact of the defect on the system; priority reflects how urgently it should be fixed. They are different and can differ (e.g. a low-severity typo on the home page may be high priority)."}, {"ch": 6, "q": "Which is a potential risk of introducing a test automation tool?", "o": ["Tests can be run more often", "Underestimating the effort to maintain the automated tests", "Repetitive tasks can be automated", "Human error in execution is reduced"], "c": 1, "e": "Correct: B. A common risk is underestimating the cost of maintaining automated tests as the application changes. A, C and D are benefits of tool support, not risks."}, {"ch": 6, "q": "Which type of tool would help a tester generate a large set of realistic input data for testing?", "o": ["A test management tool", "A test data preparation tool", "A static analysis tool", "A performance testing tool"], "c": 1, "e": "Correct: B. Test data preparation tools generate or manipulate test data. Test management tools (A) organise testware, static analysis tools (C) examine code, and performance tools (D) generate load."}].map((x, idx) => ({ ...x, id: idx }));
+    const chapMeta = {
+      1: "Fundamentals of Testing", 2: "Testing Throughout the SDLC",
+      3: "Static Testing", 4: "Test Techniques",
+      5: "Managing Test Activities", 6: "Test Tools" };
+    const chapters = [
+      { title: "1. Fundamentals of Testing", weight: "~8 questions", topics: "What testing is, the seven principles, the test process, error/defect/failure, testing psychology.", href: "Manual.html", link: "Manual course · module 01" },
+      { title: "2. Testing Throughout the SDLC", weight: "~5 questions", topics: "Test levels and types, SDLC models, confirmation and regression testing, maintenance testing.", href: "Manual.html", link: "Manual course · module 02" },
+      { title: "3. Static Testing", weight: "~5 questions", topics: "Reviews (informal, walkthrough, technical, inspection), static analysis, the review process and roles.", href: "Manual.html", link: "Manual course · modules 01 & 08" },
+      { title: "4. Test Techniques", weight: "~11 questions", topics: "Black-box (EP, BVA, decision tables, state transition), white-box (statement, branch), experience-based.", href: "Manual.html", link: "Manual course · module 04" },
+      { title: "5. Managing Test Activities", weight: "~9 questions", topics: "Test planning, risk-based testing, estimation, monitoring, defect management, configuration management.", href: "Manual.html", link: "Manual courses · modules 03, 06 & 07" },
+      { title: "6. Test Tools", weight: "~2 questions", topics: "Tool categories, benefits and risks of automation, selecting and introducing tools.", href: "PWHub.html", link: "Automation paths" }
+    ];
+
+    const chaps = [1, 2, 3, 4, 5, 6];
+    const inChap = (ch) => Q.filter((x) => ch === 0 || x.ch === ch);
+    const chapChips = [{ n: 0, label: "All" }].concat(chaps.map((n) => ({ n, label: "Ch " + n }))).map((o) => {
+      const on = st.chap === o.n;
+      return { label: o.label, count: String(inChap(o.n).length), pick: () => this.setState({ chap: o.n, i: 0 }),
+        style: "min-height:44px;padding:8px 14px;border-radius:999px;cursor:pointer;font:600 14px IBM Plex Sans,sans-serif;border:1.5px solid #16181D;display:flex;align-items:center;gap:8px;" + (on ? "background:#16181D;color:#F4F1EA;" : "background:transparent;color:#16181D;"),
+        countStyle: "font:600 11px JetBrains Mono,monospace;padding:2px 7px;border-radius:999px;" + (on ? "background:#7EE2A8;color:#16181D;" : "background:#E3DED3;color:#4A4E57;") };
+    });
+
+    const list = inChap(st.chap);
+    const n = list.length;
+    const idx = n ? Math.min(st.i, n - 1) : 0;
+    const cur = n ? list[idx] : { q: "", o: [], c: 0, e: "", ch: 0 };
+    const picked = st.answers[cur.id];
+    const answered = picked !== undefined;
+    const letters = ["A", "B", "C", "D"];
+    const choices = (cur.o || []).map((text, i) => {
+      const isCorrect = i === cur.c;
+      const isPicked = picked === i;
+      let look = "background:#FFFFFF;border:1.5px solid #DDD7CB;color:#16181D;";
+      let letterBg = "background:#F0ECE3;color:#4A4E57;";
+      let mark = "";
+      if (answered) {
+        if (isCorrect) { look = "background:#DCEFE3;border:1.5px solid #7FC8A0;color:#16181D;"; letterBg = "background:#1F7A52;color:#fff;"; mark = "✓"; }
+        else if (isPicked) { look = "background:#FCE7DD;border:1.5px solid #F0A088;color:#16181D;"; letterBg = "background:#C4502A;color:#fff;"; mark = "✗"; }
+        else { look = "background:#FFFFFF;border:1.5px solid #E7E1D5;color:#6A6E77;"; }
+      }
+      return { text, letter: letters[i], mark,
+        pick: () => { if (!answered) this.setState({ answers: { ...st.answers, [cur.id]: i } }); },
+        style: "display:flex;align-items:center;gap:14px;min-height:56px;padding:14px 18px;border-radius:14px;cursor:" + (answered ? "default" : "pointer") + ";font:15px IBM Plex Sans,sans-serif;text-align:left;" + look,
+        letterStyle: "flex-shrink:0;width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font:700 14px IBM Plex Sans,sans-serif;" + letterBg };
+    });
+
+    const correct = picked === cur.c;
+    const answeredCount = Object.keys(st.answers).length;
+    const score = Object.entries(st.answers).filter(([id, a]) => Q[Number(id)].c === a).length;
+    const go = (d) => this.setState({ i: n ? (idx + d + n) % n : 0 });
+
+    const tips = [
+      "Read every option before answering; ISTQB questions often have two plausible ones.",
+      "Watch for 'NOT', 'BEST', 'MOST' and 'EXCEPT'; they change the answer.",
+      "Learn the exact definitions: error vs defect vs failure, verification vs validation, severity vs priority.",
+      "For technique questions, know which technique fits which situation (combinations → decision table, states → state transition).",
+      "Time yourself: about 1.5 minutes per question. Flag hard ones and return to them.",
+      "No penalty for wrong answers, so never leave a question blank.",
+      "Do the official sample exams until you consistently score above 80%."
+    ].map((text, i) => ({ n: String(i + 1), text }));
+
+    return {
+      practiceTotal: String(Q.length), chapters, chapChips,
+      examTitle: st.chap === 0 ? "All chapters" : chapMeta[st.chap],
+      hasQ: n > 0, cur: { ...cur, chapLabel: "Chapter " + cur.ch + " · " + (chapMeta[cur.ch] || "") },
+      qNum: String(idx + 1), qTotal: String(n), choices, answered,
+      verdict: correct ? "Correct" : "Not quite",
+      verdictStyle: "border-radius:14px;padding:20px 22px;display:flex;flex-direction:column;gap:8px;" + (correct ? "background:#DCEFE3;color:#174F37;" : "background:#FCE7DD;color:#7A2E14;"),
+      score: String(score), answeredCount: String(answeredCount),
+      progressText: answeredCount + " of " + Q.length + " answered",
+      prev: () => go(-1), next: () => go(1),
+      reset: () => this.setState({ answers: {}, i: 0 }),
+      tips
+    };
+  }
+}
+
+var __TPL=`<div style="width: 1440px; height: 3600px; box-sizing: border-box; display: flex; flex-direction: column; background: #F4F1EA; font-family: 'IBM Plex Sans', system-ui, sans-serif; color: #16181D;">
+
+<section style="background: #DCEBF2; padding: 56px 80px 60px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 40px; align-items: end;">
+<div style="grid-column: span 7; display: flex; flex-direction: column; gap: 18px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #1B5E7E;">certification · ISTQB Foundation (CTFL)</span>
+<h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 66px; line-height: 0.98; letter-spacing: -0.03em; color: #0B2E3D;">Pass the Foundation exam.</h1>
+<p style="margin: 0; font-size: 18px; line-height: 1.6; color: #23596E; max-width: 660px;">A chapter-by-chapter guide, an interactive practice exam with worked explanations, and links to the official free sample papers.</p>
+</div>
+<div style="grid-column: span 5; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;">
+<div style="background: #FFFFFF; border-radius: 16px; padding: 16px 18px; display: flex; flex-direction: column; gap: 2px;"><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 34px; font-weight: 800; color: #1B5E7E;">40</span><span style="font-size: 13px; color: #23596E;">questions in the real exam</span></div>
+<div style="background: #FFFFFF; border-radius: 16px; padding: 16px 18px; display: flex; flex-direction: column; gap: 2px;"><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 34px; font-weight: 800; color: #1B5E7E;">65%</span><span style="font-size: 13px; color: #23596E;">to pass (26 of 40)</span></div>
+<div style="background: #FFFFFF; border-radius: 16px; padding: 16px 18px; display: flex; flex-direction: column; gap: 2px;"><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 34px; font-weight: 800; color: #1B5E7E;">60 min</span><span style="font-size: 13px; color: #23596E;">75 min if not your first language</span></div>
+<div style="background: #16181D; border-radius: 16px; padding: 16px 18px; display: flex; flex-direction: column; gap: 2px;"><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 34px; font-weight: 800; color: #7EE2A8;">{{practiceTotal}}</span><span style="font-size: 13px; color: #A9AEBA;">practice questions here</span></div>
+</div>
+</section>
+
+<!-- SYLLABUS -->
+<section style="padding: 64px 80px 40px; display: flex; flex-direction: column; gap: 28px;">
+<div style="display: flex; flex-direction: column; gap: 12px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #1B5E7E;">01 / the syllabus</span>
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 44px; letter-spacing: -0.02em;">Six chapters, and where to learn each</h2>
+<p style="margin: 0; font-size: 16px; color: #5C606A; max-width: 820px;">The Foundation syllabus (CTFL v3.1) has six chapters. Your Manual testing course covers most of it; the links show where. Question weights are approximate.</p>
+</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px;">
+<sc-for list="{{chapters}}" as="c" hint-placeholder-count="6">
+<div style="background: #FFFFFF; border: 1px solid #DDD7CB; border-radius: 20px; padding: 26px; display: flex; flex-direction: column; gap: 12px;">
+<div style="display: flex; justify-content: space-between; align-items: baseline;">
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 22px; font-weight: 800;">{{c.title}}</span>
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #1B5E7E; background: #DCEBF2; padding: 5px 10px; border-radius: 999px;">{{c.weight}}</span>
+</div>
+<span style="font-size: 15px; line-height: 1.6; color: #4A4E57;">{{c.topics}}</span>
+<a href="{{c.href}}" style="margin-top: auto; font-weight: 600; font-size: 14px; color: #1B5E7E; text-decoration: none;">{{c.link}} →</a>
+</div>
+</sc-for>
+</div>
+</section>
+
+<!-- PRACTICE EXAM -->
+<section style="padding: 40px 80px 48px; display: flex; flex-direction: column; gap: 24px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 30px;">
+<div style="display: flex; flex-direction: column; gap: 12px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #1B5E7E;">02 / practice exam</span>
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 44px; letter-spacing: -0.02em;">{{examTitle}}</h2>
+</div>
+<div style="display: flex; gap: 10px; align-items: center;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #4A4E57;">score {{score}} / {{answeredCount}}</span>
+<button onClick="{{reset}}" style="min-height: 44px; padding: 10px 18px; border-radius: 10px; border: 1.5px solid #16181D; background: transparent; cursor: pointer; font: 600 14px 'IBM Plex Sans', sans-serif;">Reset</button>
+</div>
+</div>
+<div style="display: flex; gap: 8px; flex-wrap: wrap;">
+<sc-for list="{{chapChips}}" as="c" hint-placeholder-count="7"><button onClick="{{c.pick}}" style="{{c.style}}">{{c.label}} <span style="{{c.countStyle}}">{{c.count}}</span></button></sc-for>
+</div>
+
+<sc-if value="{{hasQ}}" hint-placeholder-val="{{ true }}">
+<div style="background: #FFFFFF; border: 1px solid #DDD7CB; border-radius: 24px; padding: 40px; display: flex; flex-direction: column; gap: 24px;">
+<div style="display: flex; justify-content: space-between; align-items: center;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #1B5E7E; background: #DCEBF2; padding: 6px 12px; border-radius: 999px;">{{cur.chapLabel}}</span>
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #6A6E77;">question {{qNum}} of {{qTotal}}</span>
+</div>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 26px; font-weight: 700; line-height: 1.3;">{{cur.q}}</span>
+<div style="display: flex; flex-direction: column; gap: 12px;">
+<sc-for list="{{choices}}" as="ch" hint-placeholder-count="4">
+<button onClick="{{ch.pick}}" style="{{ch.style}}"><span style="{{ch.letterStyle}}">{{ch.letter}}</span><span style="text-align: left; line-height: 1.5;">{{ch.text}}</span><span style="margin-left: auto;">{{ch.mark}}</span></button>
+</sc-for>
+</div>
+<sc-if value="{{answered}}" hint-placeholder-val="{{ true }}">
+<div style="{{verdictStyle}}">
+<span style="font-weight: 700; font-size: 16px;">{{verdict}}</span>
+<span style="font-size: 15px; line-height: 1.65;">{{cur.e}}</span>
+</div>
+</sc-if>
+<div style="display: flex; justify-content: space-between; align-items: center;">
+<button onClick="{{prev}}" style="min-height: 48px; padding: 12px 22px; border-radius: 12px; border: 1.5px solid #16181D; background: transparent; cursor: pointer; font: 600 15px 'IBM Plex Sans', sans-serif;">← Previous</button>
+<span style="font-size: 14px; color: #6A6E77;">{{progressText}}</span>
+<button onClick="{{next}}" style="min-height: 48px; padding: 12px 22px; border-radius: 12px; border: none; background: #1B5E7E; color: #FFFFFF; cursor: pointer; font: 600 15px 'IBM Plex Sans', sans-serif;">Next →</button>
+</div>
+</div>
+</sc-if>
+</section>
+
+<!-- STUDY TIPS + OFFICIAL -->
+<section style="flex-grow: 1; padding: 40px 80px 90px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 32px;">
+<div style="grid-column: span 7; display: flex; flex-direction: column; gap: 16px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #1B5E7E;">03 / exam-day strategy</span>
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 36px; letter-spacing: -0.02em;">How to pass</h2>
+<div style="display: flex; flex-direction: column; gap: 10px;">
+<sc-for list="{{tips}}" as="t" hint-placeholder-count="7">
+<div style="background: #FFFFFF; border: 1px solid #DDD7CB; border-radius: 14px; padding: 16px 18px; display: flex; gap: 14px; align-items: flex-start;"><span style="flex-shrink: 0; width: 28px; height: 28px; border-radius: 8px; background: #DCEBF2; color: #1B5E7E; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px;">{{t.n}}</span><span style="font-size: 15px; line-height: 1.55; color: #34373F;">{{t.text}}</span></div>
+</sc-for>
+</div>
+</div>
+<div style="grid-column: span 5; display: flex; flex-direction: column; gap: 16px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #1B5E7E;">04 / official resources</span>
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 36px; letter-spacing: -0.02em;">Free &amp; official</h2>
+<a href="https://www.istqb.org/certifications/certified-tester-foundation-level-ctfl-v4-0/" style="text-decoration: none; background: #16181D; color: #F4F1EA; border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 6px;"><span style="font-weight: 600;">ISTQB CTFL syllabus &amp; sample exams</span><span style="font-size: 14px; color: #A9AEBA;">The official syllabus and free sample question papers with answer keys.</span></a>
+<a href="https://www.istqb.org/" style="text-decoration: none; background: #FFFFFF; border: 1px solid #DDD7CB; border-radius: 16px; padding: 18px; display: flex; justify-content: space-between; align-items: center;"><span style="display: flex; flex-direction: column; gap: 2px;"><span style="font-weight: 600;">istqb.org</span><span style="font-size: 13px; color: #6A6E77;">Find an exam provider in your country</span></span><span>↗</span></a>
+<div style="background: #F6E7B8; border-radius: 16px; padding: 18px; font-size: 14px; line-height: 1.6; color: #5E4513;">These practice questions are original and written in the ISTQB style to help you learn. They are not real exam questions, which are confidential. Always study the official syllabus and sample exams too.</div>
+</div>
+</section>
+</div>`;
+window.__mountDC(__TPL, Component);
+</script>
+</body>
+</html>

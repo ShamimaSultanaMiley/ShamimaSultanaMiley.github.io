@@ -1,0 +1,429 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440">
+<title>Tech Radar — QA &amp; AI News</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap">
+<style>html,body{margin:0;background:#F4F1EA;font-family:'IBM Plex Sans',system-ui,sans-serif} #app > div{margin:0 auto}</style>
+</head>
+<body>
+
+<style>
+.snav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:16px 40px;background:#16181D;color:#F4F1EA;font-family:'IBM Plex Sans',sans-serif;flex-wrap:wrap;gap:12px}
+.snav a{color:#F4F1EA;text-decoration:none}
+.snav .brand{display:flex;align-items:center;gap:10px;font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:18px}
+.snav .brand span.logo{width:34px;height:34px;border-radius:9px;background:#7EE2A8;color:#16181D;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:14px}
+.snav ul{list-style:none;display:flex;gap:6px;margin:0;padding:0;align-items:center;flex-wrap:wrap}
+.snav > ul > li{position:relative}
+.snav > ul > li > a,.snav > ul > li > span{display:block;padding:9px 14px;border-radius:9px;font-size:15px;font-weight:500;cursor:pointer;white-space:nowrap}
+.snav > ul > li:hover > a,.snav > ul > li:hover > span,.snav .cur{background:#2A2D35}
+.snav .caret{font-size:11px;opacity:.7;margin-left:4px}
+.snav .drop{position:absolute;top:100%;left:0;min-width:220px;background:#1E2129;border:1px solid #2E323C;border-radius:12px;padding:8px;display:none;flex-direction:column;gap:2px;box-shadow:0 18px 40px -16px rgba(0,0,0,.6)}
+.snav > ul > li:hover .drop{display:flex}
+.snav .drop a{padding:9px 12px;border-radius:8px;font-size:14px;color:#D8DAE0}
+.snav .drop a:hover{background:#2A2D35;color:#fff}
+.snav .drop .grp{font-family:'JetBrains Mono',monospace;font-size:11px;color:#8A8F9C;text-transform:uppercase;letter-spacing:.06em;padding:8px 12px 2px}
+.snav .cta{padding:9px 18px;border-radius:999px;background:#1F7A52;color:#fff;font-weight:600}
+.snav .menubtn{display:none;background:none;border:1.5px solid #3A3E48;color:#F4F1EA;border-radius:9px;padding:8px 12px;font-size:15px;cursor:pointer}
+@media(max-width:1100px){
+  .snav .menubtn{display:block}
+  .snav > ul{display:none;flex-direction:column;align-items:stretch;width:100%;order:3}
+  .snav.open > ul{display:flex}
+  .snav .drop{position:static;display:flex;border:none;box-shadow:none;background:transparent;padding:0 0 6px 14px}
+  .snav > ul > li:hover .drop{display:flex}
+}
+</style>
+<nav class="snav" id="snav">
+<a class="brand" href="index.html"><span class="logo">S✓</span>Shamima Sultana</a>
+<button class="menubtn" onclick="document.getElementById('snav').classList.toggle('open')">Menu ☰</button>
+<ul>
+<li><a href="index.html" class="">Home</a></li>
+<li><span class="">About <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="about.html">Intro &amp; journey</a>
+    <a href="skills.html">Skills</a>
+    <a href="certifications.html">Certifications</a>
+    <a href="research.html">Research</a>
+    <a href="achievements.html">Achievements</a>
+  </div></li>
+<li><span class="">Work <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="projects.html">Projects</a>
+  </div></li>
+<li><span class="">Learn <span class="caret">▾</span></span>
+  <div class="drop">
+    <span class="grp">Automation</span>
+    <a href="PWHub.html">Playwright path</a>
+    <a href="Selenium.html">Selenium with Java</a>
+    <a href="MobileTest.html">Mobile testing</a>
+    <span class="grp">Performance</span>
+    <a href="K6Hub.html">k6</a>
+    <a href="JMeter.html">JMeter</a>
+    <span class="grp">Data &amp; APIs</span>
+    <a href="SQLHub.html">SQL</a>
+    <a href="API.html">API testing</a>
+    <span class="grp">Core &amp; specialised</span>
+    <a href="Manual.html">Manual testing</a>
+    <a href="AITest.html">AI / LLM testing</a>
+    <a href="DevTools.html">DevTools</a>
+    <a href="Git.html">Git &amp; GitHub</a>
+    <a href="A11y.html">Accessibility</a>
+    <a href="Security.html">Security</a>
+  </div></li>
+<li><span class="">Writing <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="K6Hub.html">Tutorials &amp; articles</a>
+  </div></li>
+<li><span class="cur">More <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="News.html">News</a>
+    <a href="Interview.html">Interview prep</a>
+    <a href="ISTQB.html">ISTQB prep</a>
+  </div></li>
+<li><a class="cta" href="mailto:shamimasultanamiley605@gmail.com">Contact</a></li>
+</ul>
+</nav>
+
+<div id="app"></div>
+<script>/* Minimal renderer: replaces Claude's canvas engine so pages run anywhere. */
+(function(){
+  function resolve(scopes, path){
+    path=path.trim();
+    var parts=path.split('.'), head=parts[0], base, found=false;
+    for(var i=scopes.length-1;i>=0;i--){ if(scopes[i] && Object.prototype.hasOwnProperty.call(scopes[i],head)){ base=scopes[i][head]; found=true; break; } }
+    if(!found) return undefined;
+    for(var j=1;j<parts.length;j++){ if(base==null) return undefined; base=base[parts[j]]; }
+    return base;
+  }
+  function subst(str, scopes){
+    return str.replace(/\{\{([^}]+)\}\}/g, function(_,e){ var v=resolve(scopes,e); return v==null?'':String(v); });
+  }
+  function firstExpr(str){ var m=str.match(/\{\{([^}]+)\}\}/); return m?m[1].trim():null; }
+  function processNode(node, scopes, out){
+    if(node.nodeType===3){ // text
+      var t=node.nodeValue;
+      if(t.indexOf('{{')>=0) out.push(document.createTextNode(subst(t,scopes)));
+      else out.push(document.createTextNode(t));
+      return;
+    }
+    if(node.nodeType!==1){ return; }
+    var tag=node.tagName.toLowerCase();
+    if(tag==='sc-for'){
+      var listExpr=firstExpr(node.getAttribute('list')||'');
+      var as=node.getAttribute('as');
+      var arr=listExpr?resolve(scopes,listExpr):null;
+      if(Array.isArray(arr)){
+        for(var k=0;k<arr.length;k++){
+          var sc=scopes.concat([{__k:as, [as]:arr[k]}]);
+          for(var c=0;c<node.childNodes.length;c++) processNode(node.childNodes[c], sc, out);
+        }
+      }
+      return;
+    }
+    if(tag==='sc-if'){
+      var valExpr=firstExpr(node.getAttribute('value')||'');
+      var cond=valExpr?resolve(scopes,valExpr):false;
+      if(cond){ for(var c2=0;c2<node.childNodes.length;c2++) processNode(node.childNodes[c2], scopes, out); }
+      return;
+    }
+    var el=document.createElement(tag);
+    for(var a=0;a<node.attributes.length;a++){
+      var at=node.attributes[a], name=at.name, val=at.value;
+      if(name.indexOf('hint-')===0) continue;
+      if(name==='onclick'){ var h=firstExpr(val); (function(expr){ el.addEventListener('click', function(ev){ var fn=resolve(scopes,expr); if(typeof fn==='function') fn(ev); }); })(h); continue; }
+      if(name==='onchange'){ var h2=firstExpr(val); (function(expr){ el.addEventListener('input', function(ev){ var fn=resolve(scopes,expr); if(typeof fn==='function') fn(ev); }); })(h2); continue; }
+      var sv=val.indexOf('{{')>=0?subst(val,scopes):val;
+      if(name==='value' && (tag==='input'||tag==='textarea')){ el.value=sv; el.setAttribute('value',sv); }
+      else el.setAttribute(name, sv);
+    }
+    var kids=[];
+    for(var cc=0;cc<node.childNodes.length;cc++) processNode(node.childNodes[cc], scopes, kids);
+    for(var ki=0;ki<kids.length;ki++) el.appendChild(kids[ki]);
+    out.push(el);
+  }
+  window.__mountDC=function(templateHTML, ComponentClass){
+    var tplRoot=document.createElement('div'); tplRoot.innerHTML=templateHTML;
+    var mount=document.getElementById('app');
+    var comp=new ComponentClass({});
+    function doRender(){
+      var vals;
+      try{ vals=comp.renderVals(); }catch(e){ console.error('render error',e); return; }
+      var frag=document.createDocumentFragment();
+      var buf=[];
+      for(var i=0;i<tplRoot.childNodes.length;i++) processNode(tplRoot.childNodes[i], [vals], buf);
+      for(var b=0;b<buf.length;b++) frag.appendChild(buf[b]);
+      // preserve focus in search/textarea across re-render
+      var active=document.activeElement, sel=null, id=null;
+      mount.innerHTML=''; mount.appendChild(frag);
+    }
+    comp.setState=function(s){ Object.assign(comp.state, s); doRender(); };
+    doRender();
+  };
+  window.DCLogic=function(){};
+})();
+</script>
+<script>
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { cat: 'All', q: '', view: 'cards', saved: {} };
+  }
+  renderVals() {
+    const st = this.state;
+    const CAT = {
+      'QA & Testing': ['#1F7A52', '#DCEFE3'],
+      'Performance': ['#6C4DF5', '#ECE8FF'],
+      'AI in testing': ['#C4502A', '#FCE7DD'],
+      'AI tools': ['#0F6E78', '#D5F1F3']
+    };
+    const N = [
+      { id: 'pw-ai', cat: 'AI in testing', date: '2026-06-15', title: 'Playwright now ships its own AI test agents and MCP server',
+        summary: 'Playwright\u2019s 2026 tooling adds a planner / generator / healer set of test agents and an official MCP server, so AI coding assistants can drive a real browser through the accessibility tree instead of screenshots.',
+        why: 'AI can draft and repair tests, but a human still reviews them. Knowing how these agents work, and where they fail, is fast becoming a core automation skill.',
+        source: 'QASkills', url: 'https://qaskills.sh/blog/whats-new-playwright-2026', featured: true },
+      { id: 'se-449', cat: 'QA & Testing', date: '2026-09-09', title: 'Selenium 4.49 continues the push to WebDriver BiDi',
+        summary: 'The latest Selenium release fixes a run of BiDi bugs across languages, makes Python raise typed errors for BiDi failures, and fixes a Grid error when downloading files with spaces in their names.',
+        why: 'BiDi brings Playwright-style features (network events, console logs) to Selenium. Worth tracking if your team still runs Selenium suites.',
+        source: 'selenium.dev', url: 'https://www.selenium.dev/blog/2026/selenium-4-49-released/' },
+      { id: 'se-448', cat: 'QA & Testing', date: '2026-08-27', title: 'Selenium Grid file upload and download now work on Kubernetes and Docker',
+        summary: 'Selenium 4.48 makes file upload and download work for Kubernetes, Docker and relay sessions in Grid, and fixes a silent hang in the Ruby bindings.',
+        why: 'File upload tests on containerised Grids were a long-standing pain point. This removes a common reason for skipped tests.',
+        source: 'selenium.dev', url: 'https://www.selenium.dev/blog/2026/selenium-4-48-released/' },
+      { id: 'pw-160', cat: 'QA & Testing', date: '2026-05-11', title: 'Playwright 1.60 folds HAR recording into tracing',
+        summary: 'Network HAR capture now starts and stops through the tracing API, so network data sits alongside your traces, and ARIA snapshot assertions work directly on a page.',
+        why: 'One recording setup instead of two, and accessibility-tree assertions that survive CSS changes.',
+        source: 'TestDino', url: 'https://testdino.com/blog/playwright-1-60-release' },
+      { id: 'pw-161', cat: 'QA & Testing', date: '2026-07-24', title: 'Playwright 1.61 and 1.62 land, with a Node version gotcha',
+        summary: 'Two more Playwright releases arrived in June and July. Some teams on 1.61 hit config-loading errors on Node 22.15 to 22.18; upgrading Node fixed it.',
+        why: 'When an upgrade breaks CI, check the Node version before rewriting config. Pin versions and upgrade on purpose.',
+        source: 'GitHub', url: 'https://github.com/Azure/playwright-workspaces/issues/64' },
+      { id: 'k6-2', cat: 'Performance', date: '2026-05-12', title: 'k6 2.0: assertions API, extension catalog and AI-assisted testing',
+        summary: 'Grafana\u2019s k6 2.0 adds a Playwright-inspired assertions API, a catalog of official and community extensions, new CLI extensions including agent and MCP, and removes long-deprecated APIs.',
+        why: 'If you learned k6 1.x, check which old commands and options were removed before upgrading your scripts.',
+        source: 'Grafana Labs', url: 'https://grafana.com/blog/k6-2-0-release/' },
+      { id: 'k6-feat', cat: 'Performance', date: '2026-08-12', title: 'k6 adds feature flags, cloud test listing and TLS certificate fetching',
+        summary: 'A newer k6 release introduces opt-in feature flags (starting with native histograms), a k6 cloud test list command, an option to fetch missing intermediate TLS certificates, and labels for Prometheus output.',
+        why: 'The TLS option fixes a classic "works in the browser, fails in k6" problem on some HTTPS test servers.',
+        source: 'GitHub', url: 'https://github.com/grafana/k6/releases' },
+      { id: 'k6-secrets', cat: 'Performance', date: '2026-04-08', title: 'Grafana Cloud k6 gets built-in secrets management',
+        summary: 'Tokens and credentials can now be stored centrally in Grafana Cloud and injected into load tests at runtime, instead of living in scripts.',
+        why: 'Keeps passwords out of Git, which is exactly the habit the k6 course teaches with __ENV.',
+        source: 'Grafana Labs', url: 'https://grafana.com/whats-new/2026-04-08-manage-and-use-secrets-in-grafana-cloud-k6/' },
+      { id: 'opus55', cat: 'AI tools', date: '2026-09-22', title: 'Claude Opus 5.5 becomes the default model in Claude Code',
+        summary: 'Anthropic\u2019s new Opus 5.5 model shipped on 22 September, and Claude Code switched to it as the default Opus model.',
+        why: 'Newer models write and review test code better, but always run what they generate before trusting it.',
+        source: 'Morph', url: 'https://www.morphllm.com/best-ai-coding-agents-2026' },
+      { id: 'tools-shift', cat: 'AI tools', date: '2026-09-03', title: 'AI coding tool shake-up: Q Developer sunsets, Copilot moves to credits',
+        summary: 'Amazon Q Developer closed new sign-ups in May and will shut down in April 2027, Google ended individual Gemini Code Assist plans in June, and GitHub Copilot switched to credit-based billing.',
+        why: 'If your team relies on one of these for writing tests, plan the migration early.',
+        source: 'AI Weekly', url: 'https://aiweekly.co/learning-ai/generative-ai/best-ai-coding-tools-compared' },
+      { id: 'kiro', cat: 'AI tools', date: '2026-05', title: 'AWS launches Kiro, a spec-driven AI IDE',
+        summary: 'Kiro replaces Amazon Q Developer. Before writing code it generates requirements documents and designs, then builds from them.',
+        why: 'Spec-first tools produce written requirements you can turn straight into test cases.',
+        source: 'Shakudo', url: 'https://www.shakudo.io/blog/best-ai-coding-assistants' },
+      { id: 'cursor', cat: 'AI tools', date: '2026-08-14', title: 'SpaceX completes its acquisition of Cursor',
+        summary: 'The $60B deal closed on 14 August, making the Cursor AI editor a wholly owned subsidiary.',
+        why: 'Big ownership changes can shift pricing and data policies. Worth watching if your team uses Cursor.',
+        source: 'LogRocket', url: 'https://blog.logrocket.com/ai-dev-tool-power-rankings/' },
+      { id: 'devin', cat: 'AI tools', date: '2026-06', title: 'Windsurf is renamed Devin Desktop',
+        summary: 'Cognition rebranded the Windsurf editor as Devin Desktop, bringing it under its Devin AI engineer product.',
+        why: 'Another sign that editors and autonomous agents are merging into one product category.',
+        source: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Cognition_AI' },
+      { id: 'qodo', cat: 'AI in testing', date: '2026-03-30', title: 'Code verification startup Qodo raises $70M',
+        summary: 'Qodo raised new funding to focus on verifying AI-written code, as more of the world\u2019s code is generated by AI.',
+        why: 'Investors are betting that testing and verification become more valuable as AI writes more code. Good news for QA careers.',
+        source: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Qodo' },
+      { id: 'agents-hybrid', cat: 'AI in testing', date: '2026-07-15', title: 'Agentic testing: best for exploration, scripts still win for regression',
+        summary: 'Current guidance on AI test agents: use them for smoke tests, exploratory sessions and drafting coverage, keep scripted tests for stable, precise regression, and keep a human approval step for risky flows.',
+        why: 'A balanced answer to "will AI replace testers?" that works well in interviews.',
+        source: 'SoftwareTestPilot', url: 'https://softwaretestpilot.com/blog/ai-in-testing/agentic-ai-testing-with-mcp' }
+    ];
+    const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const fmt = (d) => { const [y, m, dd] = d.split('-'); return (dd ? Number(dd) + ' ' : '') + MON[Number(m) - 1] + ' ' + y; };
+    const catStyle = (c) => 'font:600 11px JetBrains Mono,monospace;padding:5px 10px;border-radius:999px;text-transform:uppercase;letter-spacing:.04em;background:' + CAT[c][1] + ';color:' + CAT[c][0] + ';';
+    const f = N.find((n) => n.featured);
+    const feat = { ...f, dateLabel: fmt(f.date), catStyle: 'font:600 11px JetBrains Mono,monospace;padding:5px 10px;border-radius:999px;text-transform:uppercase;letter-spacing:.04em;background:#F08A62;color:#16181D;' };
+
+    const rest = N.filter((n) => !n.featured);
+    const savedN = rest.filter((n) => st.saved[n.id]).length;
+    const labels = ['All', 'QA & Testing', 'Performance', 'AI in testing', 'AI tools', 'Saved'];
+    const countOf = (l) => l === 'All' ? rest.length : l === 'Saved' ? savedN : rest.filter((n) => n.cat === l).length;
+    const chips = labels.map((l) => {
+      const on = st.cat === l;
+      return { label: l, count: String(countOf(l)), pick: () => this.setState({ cat: l }),
+        style: 'min-height:44px;padding:8px 14px;border-radius:999px;cursor:pointer;font:600 14px IBM Plex Sans,sans-serif;border:1.5px solid #16181D;display:flex;align-items:center;gap:8px;' + (on ? 'background:#16181D;color:#F4F1EA;' : 'background:transparent;color:#16181D;'),
+        countStyle: 'font:600 11px JetBrains Mono,monospace;padding:2px 7px;border-radius:999px;' + (on ? 'background:#F08A62;color:#16181D;' : 'background:#E3DED3;color:#4A4E57;') };
+    });
+    const q = st.q.trim().toLowerCase();
+    const list = rest
+      .filter((n) => st.cat === 'All' || (st.cat === 'Saved' ? st.saved[n.id] : n.cat === st.cat))
+      .filter((n) => !q || (n.title + ' ' + n.summary + ' ' + n.cat + ' ' + n.source).toLowerCase().includes(q))
+      .sort((a, b) => (a.date < b.date ? 1 : -1));
+    const items = list.map((n) => {
+      const sv = !!st.saved[n.id];
+      return { ...n, dateLabel: fmt(n.date), catStyle: catStyle(n.cat),
+        band: 'height:6px;background:' + CAT[n.cat][0] + ';',
+        dot: 'width:14px;height:14px;border-radius:50%;flex-shrink:0;background:' + CAT[n.cat][0] + ';box-shadow:0 0 0 4px ' + CAT[n.cat][1] + ';',
+        pressed: sv ? 'true' : 'false', saveLabel: sv ? '★ Saved' : '☆ Save',
+        toggle: () => this.setState({ saved: { ...st.saved, [n.id]: !sv } }),
+        saveStyle: 'min-height:36px;padding:6px 12px;border-radius:999px;cursor:pointer;font:600 13px IBM Plex Sans,sans-serif;' + (sv ? 'background:#F6E7B8;color:#8A5A00;border:1.5px solid #E8B64C;' : 'background:transparent;color:#4A4E57;border:1.5px solid #DDD7CB;') };
+    });
+    const views = [['cards', 'Cards'], ['timeline', 'Timeline']].map(([id, label]) => ({ label, pick: () => this.setState({ view: id }),
+      style: 'min-height:38px;padding:6px 14px;border-radius:8px;border:none;cursor:pointer;font:600 14px IBM Plex Sans,sans-serif;' + (st.view === id ? 'background:#FFFFFF;color:#16181D;box-shadow:0 1px 3px rgba(0,0,0,.12);' : 'background:transparent;color:#5C606A;') }));
+
+    const dot = (c) => 'width:10px;height:10px;border-radius:50%;background:' + c + ';';
+    const tracker = [
+      { tool: 'Playwright', ver: '1.62', when: 'released 24 Jul 2026', url: 'https://github.com/testdino-hq/playwright-releases', dot: dot('#1F7A52') },
+      { tool: 'Selenium', ver: '4.49', when: 'released 9 Sep 2026', url: 'https://www.selenium.dev/blog/2026/selenium-4-49-released/', dot: dot('#1F7A52') },
+      { tool: 'k6', ver: '2.x', when: '2.0 in May; latest release 12 Aug 2026', url: 'https://github.com/grafana/k6/releases', dot: dot('#6C4DF5') },
+      { tool: 'Grafana', ver: '13.2.2', when: 'released 15 Sep 2026', url: 'https://en.wikipedia.org/wiki/Grafana', dot: dot('#6C4DF5') }
+    ];
+    const sources = [
+      { name: 'Playwright releases', what: 'GitHub release notes', url: 'https://github.com/microsoft/playwright/releases' },
+      { name: 'Selenium blog', what: 'Every Selenium release', url: 'https://www.selenium.dev/blog/' },
+      { name: 'k6 releases', what: 'GitHub release notes', url: 'https://github.com/grafana/k6/releases' },
+      { name: 'Grafana what\u2019s new', what: 'Grafana and k6 cloud features', url: 'https://grafana.com/whats-new/' },
+      { name: 'Ministry of Testing', what: 'QA community and articles', url: 'https://www.ministryoftesting.com/' },
+      { name: 'TestGuild', what: 'Automation podcasts and news', url: 'https://testguild.com/' }
+    ];
+    const emptyLabel = st.cat === 'Saved' && !q ? 'Nothing saved yet. Tap \u2606 Save on any story to keep it here.' : 'No stories match. Try another word or category.';
+
+    return { feat, chips, items, views, tracker, sources,
+      isCards: st.view === 'cards' && list.length > 0, isTimeline: st.view === 'timeline' && list.length > 0,
+      empty: list.length === 0, emptyLabel,
+      countLabel: list.length + (list.length === 1 ? ' story' : ' stories') + ', newest first',
+      q: st.q, onSearch: (e) => this.setState({ q: e.target.value }) };
+  }
+}
+
+var __TPL=`<div style="width: 1440px; height: 4300px; box-sizing: border-box; display: flex; flex-direction: column; background: #F4F1EA; font-family: 'IBM Plex Sans', system-ui, sans-serif; color: #16181D;">
+
+<!-- MASTHEAD -->
+<section style="background: #16181D; color: #F4F1EA; padding: 40px 80px 56px; display: flex; flex-direction: column; gap: 28px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 40px; border-bottom: 1px solid #3A3E48; padding-bottom: 28px;">
+<div style="display: flex; flex-direction: column; gap: 10px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #F08A62;">tech radar · QA, performance &amp; AI tools</span>
+<h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 112px; line-height: 0.9; letter-spacing: -0.045em;">What's new<span style="color: #F08A62;">.</span></h1>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px; align-items: flex-end; text-align: right;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #8A8F9C;">last updated</span>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 28px; font-weight: 700;">24 Sep 2026</span>
+<span style="font-size: 14px; color: #A9AEBA;">Hand-picked releases and trends worth a tester's time.</span>
+</div>
+</div>
+
+<!-- featured -->
+<a href="{{feat.url}}" style="text-decoration: none; color: #F4F1EA; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 40px; align-items: center;">
+<div style="grid-column: span 7; display: flex; flex-direction: column; gap: 16px;">
+<div style="display: flex; gap: 10px; align-items: center;"><span style="{{feat.catStyle}}">{{feat.cat}}</span><span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #8A8F9C;">{{feat.dateLabel}} · featured</span></div>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 52px; font-weight: 800; line-height: 1.02; letter-spacing: -0.02em;">{{feat.title}}</span>
+<span style="font-size: 18px; line-height: 1.6; color: #C9CDD6; max-width: 720px;">{{feat.summary}}</span>
+<span style="font-weight: 600; color: #F08A62;">Read on {{feat.source}} ↗</span>
+</div>
+<div style="grid-column: span 5; background: #1E2129; border: 1px solid #2E323C; border-radius: 22px; padding: 28px; display: flex; flex-direction: column; gap: 14px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #7EE2A8;">why it matters to testers</span>
+<span style="font-size: 17px; line-height: 1.65; color: #E4E6EB;">{{feat.why}}</span>
+</div>
+</a>
+</section>
+
+<!-- RELEASE TRACKER -->
+<section style="padding: 56px 80px 8px; display: flex; flex-direction: column; gap: 18px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-end;">
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 30px; font-weight: 800;">Release tracker</span>
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #6A6E77;">latest versions we know of, as of 24 Sep 2026</span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px;">
+<sc-for list="{{tracker}}" as="tr" hint-placeholder-count="4">
+<a href="{{tr.url}}" style="text-decoration: none; background: #FFFFFF; border: 1px solid #DDD7CB; border-radius: 18px; padding: 20px 22px; display: flex; flex-direction: column; gap: 8px;">
+<div style="display: flex; justify-content: space-between; align-items: center;"><span style="font-weight: 600; font-size: 15px;">{{tr.tool}}</span><span style="{{tr.dot}}"></span></div>
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 30px; font-weight: 600; letter-spacing: -0.02em;">{{tr.ver}}</span>
+<span style="font-size: 13px; color: #5C606A;">{{tr.when}}</span>
+</a>
+</sc-for>
+</div>
+</section>
+
+<!-- CONTROLS -->
+<section style="padding: 48px 80px 20px; display: flex; flex-direction: column; gap: 18px;">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 24px;">
+<div style="display: flex; gap: 8px; flex-wrap: wrap;">
+<sc-for list="{{chips}}" as="c" hint-placeholder-count="6">
+<button onClick="{{c.pick}}" style="{{c.style}}">{{c.label}} <span style="{{c.countStyle}}">{{c.count}}</span></button>
+</sc-for>
+</div>
+<div style="display: flex; gap: 10px; align-items: center;">
+<label style="display: flex; align-items: center; gap: 10px; background: #FFFFFF; border: 1.5px solid #16181D; border-radius: 12px; padding: 0 14px; width: 280px; height: 46px; box-sizing: border-box;">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4A4E57" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>
+<input type="search" value="{{q}}" onChange="{{onSearch}}" placeholder="Search news" aria-label="Search news" style="flex-grow: 1; border: none; outline: none; background: transparent; font: 15px 'IBM Plex Sans', sans-serif; color: #16181D;">
+</label>
+<div style="display: flex; gap: 4px; background: #EAE5DA; padding: 4px; border-radius: 12px;">
+<sc-for list="{{views}}" as="v" hint-placeholder-count="2"><button onClick="{{v.pick}}" style="{{v.style}}">{{v.label}}</button></sc-for>
+</div>
+</div>
+</div>
+<span style="font-size: 14px; color: #5C606A;">{{countLabel}}</span>
+</section>
+
+<!-- CARDS VIEW -->
+<sc-if value="{{isCards}}" hint-placeholder-val="{{ true }}">
+<section style="padding: 0 80px 40px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px;">
+<sc-for list="{{items}}" as="n" hint-placeholder-count="9">
+<article style="background: #FFFFFF; border: 1px solid #DDD7CB; border-radius: 20px; overflow: hidden; display: flex; flex-direction: column;">
+<div style="{{n.band}}"></div>
+<div style="padding: 22px 24px 24px; display: flex; flex-direction: column; gap: 12px; flex-grow: 1;">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 10px;">
+<span style="{{n.catStyle}}">{{n.cat}}</span>
+<button onClick="{{n.toggle}}" aria-pressed="{{n.pressed}}" aria-label="Save for later" style="{{n.saveStyle}}">{{n.saveLabel}}</button>
+</div>
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #6A6E77;">{{n.dateLabel}}</span>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 22px; font-weight: 700; line-height: 1.2;">{{n.title}}</span>
+<span style="font-size: 15px; line-height: 1.6; color: #4A4E57;">{{n.summary}}</span>
+<div style="background: #F4F1EA; border-radius: 12px; padding: 12px 14px; font-size: 14px; line-height: 1.55; color: #34373F;"><strong style="color: #16181D;">For testers:</strong> {{n.why}}</div>
+<a href="{{n.url}}" style="margin-top: auto; font-weight: 600; font-size: 14px; color: #C4502A; text-decoration: none;">Read on {{n.source}} ↗</a>
+</div>
+</article>
+</sc-for>
+</section>
+</sc-if>
+
+<!-- TIMELINE VIEW -->
+<sc-if value="{{isTimeline}}" hint-placeholder-val="{{ false }}">
+<section style="padding: 0 80px 40px; display: flex; flex-direction: column; gap: 0;">
+<sc-for list="{{items}}" as="n" hint-placeholder-count="9">
+<div style="display: grid; grid-template-columns: 150px 28px minmax(0, 1fr); gap: 20px; align-items: stretch;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #4A4E57; padding-top: 22px; text-align: right;">{{n.dateLabel}}</span>
+<div style="display: flex; flex-direction: column; align-items: center;"><span style="width: 2px; height: 22px; background: #DDD7CB;"></span><span style="{{n.dot}}"></span><span style="width: 2px; flex-grow: 1; background: #DDD7CB;"></span></div>
+<div style="padding: 14px 0 22px; display: flex; flex-direction: column; gap: 6px; border-bottom: 1px solid #E7E1D5;">
+<div style="display: flex; gap: 10px; align-items: center;"><span style="{{n.catStyle}}">{{n.cat}}</span><button onClick="{{n.toggle}}" aria-pressed="{{n.pressed}}" aria-label="Save for later" style="{{n.saveStyle}}">{{n.saveLabel}}</button></div>
+<a href="{{n.url}}" style="text-decoration: none; font-family: 'Bricolage Grotesque', sans-serif; font-size: 22px; font-weight: 700;">{{n.title}} ↗</a>
+<span style="font-size: 15px; line-height: 1.6; color: #4A4E57; max-width: 900px;">{{n.summary}}</span>
+</div>
+</div>
+</sc-for>
+</section>
+</sc-if>
+
+<sc-if value="{{empty}}" hint-placeholder-val="{{ false }}">
+<section style="padding: 0 80px 40px;"><div style="background: #FFFFFF; border: 1px dashed #C9C1B1; border-radius: 20px; padding: 40px; text-align: center; font-size: 16px; color: #5C606A;">{{emptyLabel}}</div></section>
+</sc-if>
+
+<!-- SOURCES -->
+<section style="flex-grow: 1; padding: 48px 80px 90px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 32px;">
+<div style="grid-column: span 5; display: flex; flex-direction: column; gap: 12px;">
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 30px; font-weight: 800;">Where these come from</span>
+<span style="font-size: 16px; line-height: 1.65; color: #4A4E57;">Every story links to its original source. These are the feeds worth following if you want the news first.</span>
+</div>
+<div style="grid-column: span 7; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px;">
+<sc-for list="{{sources}}" as="s" hint-placeholder-count="6">
+<a href="{{s.url}}" style="text-decoration: none; background: #FFFFFF; border: 1px solid #DDD7CB; border-radius: 14px; padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; gap: 10px;"><span style="display: flex; flex-direction: column; gap: 2px;"><span style="font-weight: 600; font-size: 15px;">{{s.name}}</span><span style="font-size: 13px; color: #6A6E77;">{{s.what}}</span></span><span>↗</span></a>
+</sc-for>
+</div>
+</section>
+</div>`;
+window.__mountDC(__TPL, Component);
+</script>
+</body>
+</html>

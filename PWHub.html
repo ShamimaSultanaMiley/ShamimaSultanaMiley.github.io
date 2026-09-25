@@ -1,0 +1,426 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440">
+<title>Playwright — Automation Learning Path</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap">
+<style>html,body{margin:0;background:#F4F1EA;font-family:'IBM Plex Sans',system-ui,sans-serif} #app > div{margin:0 auto}</style>
+</head>
+<body>
+
+<style>
+.snav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:16px 40px;background:#16181D;color:#F4F1EA;font-family:'IBM Plex Sans',sans-serif;flex-wrap:wrap;gap:12px}
+.snav a{color:#F4F1EA;text-decoration:none}
+.snav .brand{display:flex;align-items:center;gap:10px;font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:18px}
+.snav .brand span.logo{width:34px;height:34px;border-radius:9px;background:#7EE2A8;color:#16181D;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:14px}
+.snav ul{list-style:none;display:flex;gap:6px;margin:0;padding:0;align-items:center;flex-wrap:wrap}
+.snav > ul > li{position:relative}
+.snav > ul > li > a,.snav > ul > li > span{display:block;padding:9px 14px;border-radius:9px;font-size:15px;font-weight:500;cursor:pointer;white-space:nowrap}
+.snav > ul > li:hover > a,.snav > ul > li:hover > span,.snav .cur{background:#2A2D35}
+.snav .caret{font-size:11px;opacity:.7;margin-left:4px}
+.snav .drop{position:absolute;top:100%;left:0;min-width:220px;background:#1E2129;border:1px solid #2E323C;border-radius:12px;padding:8px;display:none;flex-direction:column;gap:2px;box-shadow:0 18px 40px -16px rgba(0,0,0,.6)}
+.snav > ul > li:hover .drop{display:flex}
+.snav .drop a{padding:9px 12px;border-radius:8px;font-size:14px;color:#D8DAE0}
+.snav .drop a:hover{background:#2A2D35;color:#fff}
+.snav .drop .grp{font-family:'JetBrains Mono',monospace;font-size:11px;color:#8A8F9C;text-transform:uppercase;letter-spacing:.06em;padding:8px 12px 2px}
+.snav .cta{padding:9px 18px;border-radius:999px;background:#1F7A52;color:#fff;font-weight:600}
+.snav .menubtn{display:none;background:none;border:1.5px solid #3A3E48;color:#F4F1EA;border-radius:9px;padding:8px 12px;font-size:15px;cursor:pointer}
+@media(max-width:1100px){
+  .snav .menubtn{display:block}
+  .snav > ul{display:none;flex-direction:column;align-items:stretch;width:100%;order:3}
+  .snav.open > ul{display:flex}
+  .snav .drop{position:static;display:flex;border:none;box-shadow:none;background:transparent;padding:0 0 6px 14px}
+  .snav > ul > li:hover .drop{display:flex}
+}
+</style>
+<nav class="snav" id="snav">
+<a class="brand" href="index.html"><span class="logo">S✓</span>Shamima Sultana</a>
+<button class="menubtn" onclick="document.getElementById('snav').classList.toggle('open')">Menu ☰</button>
+<ul>
+<li><a href="index.html" class="">Home</a></li>
+<li><span class="">About <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="about.html">Intro &amp; journey</a>
+    <a href="skills.html">Skills</a>
+    <a href="certifications.html">Certifications</a>
+    <a href="research.html">Research</a>
+    <a href="achievements.html">Achievements</a>
+  </div></li>
+<li><span class="">Work <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="projects.html">Projects</a>
+  </div></li>
+<li><span class="cur">Learn <span class="caret">▾</span></span>
+  <div class="drop">
+    <span class="grp">Automation</span>
+    <a href="PWHub.html">Playwright path</a>
+    <a href="Selenium.html">Selenium with Java</a>
+    <a href="MobileTest.html">Mobile testing</a>
+    <span class="grp">Performance</span>
+    <a href="K6Hub.html">k6</a>
+    <a href="JMeter.html">JMeter</a>
+    <span class="grp">Data &amp; APIs</span>
+    <a href="SQLHub.html">SQL</a>
+    <a href="API.html">API testing</a>
+    <span class="grp">Core &amp; specialised</span>
+    <a href="Manual.html">Manual testing</a>
+    <a href="AITest.html">AI / LLM testing</a>
+    <a href="DevTools.html">DevTools</a>
+    <a href="Git.html">Git &amp; GitHub</a>
+    <a href="A11y.html">Accessibility</a>
+    <a href="Security.html">Security</a>
+  </div></li>
+<li><span class="">Writing <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="K6Hub.html">Tutorials &amp; articles</a>
+  </div></li>
+<li><span class="">More <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="News.html">News</a>
+    <a href="Interview.html">Interview prep</a>
+    <a href="ISTQB.html">ISTQB prep</a>
+  </div></li>
+<li><a class="cta" href="mailto:shamimasultanamiley605@gmail.com">Contact</a></li>
+</ul>
+</nav>
+
+<div id="app"></div>
+<script>/* Minimal renderer: replaces Claude's canvas engine so pages run anywhere. */
+(function(){
+  function resolve(scopes, path){
+    path=path.trim();
+    var parts=path.split('.'), head=parts[0], base, found=false;
+    for(var i=scopes.length-1;i>=0;i--){ if(scopes[i] && Object.prototype.hasOwnProperty.call(scopes[i],head)){ base=scopes[i][head]; found=true; break; } }
+    if(!found) return undefined;
+    for(var j=1;j<parts.length;j++){ if(base==null) return undefined; base=base[parts[j]]; }
+    return base;
+  }
+  function subst(str, scopes){
+    return str.replace(/\{\{([^}]+)\}\}/g, function(_,e){ var v=resolve(scopes,e); return v==null?'':String(v); });
+  }
+  function firstExpr(str){ var m=str.match(/\{\{([^}]+)\}\}/); return m?m[1].trim():null; }
+  function processNode(node, scopes, out){
+    if(node.nodeType===3){ // text
+      var t=node.nodeValue;
+      if(t.indexOf('{{')>=0) out.push(document.createTextNode(subst(t,scopes)));
+      else out.push(document.createTextNode(t));
+      return;
+    }
+    if(node.nodeType!==1){ return; }
+    var tag=node.tagName.toLowerCase();
+    if(tag==='sc-for'){
+      var listExpr=firstExpr(node.getAttribute('list')||'');
+      var as=node.getAttribute('as');
+      var arr=listExpr?resolve(scopes,listExpr):null;
+      if(Array.isArray(arr)){
+        for(var k=0;k<arr.length;k++){
+          var sc=scopes.concat([{__k:as, [as]:arr[k]}]);
+          for(var c=0;c<node.childNodes.length;c++) processNode(node.childNodes[c], sc, out);
+        }
+      }
+      return;
+    }
+    if(tag==='sc-if'){
+      var valExpr=firstExpr(node.getAttribute('value')||'');
+      var cond=valExpr?resolve(scopes,valExpr):false;
+      if(cond){ for(var c2=0;c2<node.childNodes.length;c2++) processNode(node.childNodes[c2], scopes, out); }
+      return;
+    }
+    var el=document.createElement(tag);
+    for(var a=0;a<node.attributes.length;a++){
+      var at=node.attributes[a], name=at.name, val=at.value;
+      if(name.indexOf('hint-')===0) continue;
+      if(name==='onclick'){ var h=firstExpr(val); (function(expr){ el.addEventListener('click', function(ev){ var fn=resolve(scopes,expr); if(typeof fn==='function') fn(ev); }); })(h); continue; }
+      if(name==='onchange'){ var h2=firstExpr(val); (function(expr){ el.addEventListener('input', function(ev){ var fn=resolve(scopes,expr); if(typeof fn==='function') fn(ev); }); })(h2); continue; }
+      var sv=val.indexOf('{{')>=0?subst(val,scopes):val;
+      if(name==='value' && (tag==='input'||tag==='textarea')){ el.value=sv; el.setAttribute('value',sv); }
+      else el.setAttribute(name, sv);
+    }
+    var kids=[];
+    for(var cc=0;cc<node.childNodes.length;cc++) processNode(node.childNodes[cc], scopes, kids);
+    for(var ki=0;ki<kids.length;ki++) el.appendChild(kids[ki]);
+    out.push(el);
+  }
+  window.__mountDC=function(templateHTML, ComponentClass){
+    var tplRoot=document.createElement('div'); tplRoot.innerHTML=templateHTML;
+    var mount=document.getElementById('app');
+    var comp=new ComponentClass({});
+    function doRender(){
+      var vals;
+      try{ vals=comp.renderVals(); }catch(e){ console.error('render error',e); return; }
+      var frag=document.createDocumentFragment();
+      var buf=[];
+      for(var i=0;i<tplRoot.childNodes.length;i++) processNode(tplRoot.childNodes[i], [vals], buf);
+      for(var b=0;b<buf.length;b++) frag.appendChild(buf[b]);
+      // preserve focus in search/textarea across re-render
+      var active=document.activeElement, sel=null, id=null;
+      mount.innerHTML=''; mount.appendChild(frag);
+    }
+    comp.setState=function(s){ Object.assign(comp.state, s); doRender(); };
+    doRender();
+  };
+  window.DCLogic=function(){};
+})();
+</script>
+<script>
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { loc: 0, mod: 0, done: {} };
+  }
+  renderVals() {
+    const st = this.state;
+    // ---- curriculum ----
+    const N = (t) => ({ t, n: true });
+    const M = [
+      { stage: 'Foundations', title: 'Python Foundations', status: 'live', href: 'PyPW.html', cta: 'Open module',
+        goal: 'Exactly the Python you need to write and maintain automation code.',
+        topics: ['Variables, data types, f-strings', 'Lists, dicts, tuples, sets, comprehensions', 'Loops and conditionals', 'Functions: defaults, *args, **kwargs, lambda', 'Modules, packages, __init__.py, imports', 'venv, pip, requirements.txt (poetry / uv)', 'Exceptions and custom exceptions', 'Context managers (with)', 'Generators and yield', 'Decorators', 'Files: pathlib, JSON, CSV, YAML, Excel', 'Type hints', 'logging module', 'Environment variables and python-dotenv', 'Regex with re', 'datetime, random, Faker', 'async / await basics'] },
+      { stage: 'Foundations', title: 'OOP for Test Automation', status: 'live', href: 'OOPPW.html', cta: 'Open module',
+        goal: 'Object-oriented programming taught through page objects and frameworks.',
+        topics: ['Classes, objects, __init__, self', 'Instance vs class attributes', 'Encapsulation: private locators, public actions', 'Inheritance with BasePage', 'Polymorphism', 'Abstraction with abc and @abstractmethod', 'Composition: header, table, modal components', '@property, @staticmethod, @classmethod', 'dataclasses for test data', 'DRY, KISS, Single Responsibility, SOLID basics'] },
+      { stage: 'Playwright', title: 'Playwright Architecture', status: 'live', href: 'Arch.html', cta: 'Open module',
+        goal: 'The right mental model before writing Playwright code.',
+        topics: ['Client-server model: Python → driver → browser', 'Playwright → Browser → Context → Page → Locator', 'BrowserContext isolation', 'Chromium, Firefox, WebKit, branded channels', 'Sync vs async API', 'Playwright vs Selenium'] },
+      { stage: 'Playwright', title: 'Playwright Core', status: 'live', href: 'PWCore.html', cta: 'Open module',
+        goal: 'The everyday APIs for interacting with web pages.',
+        topics: ['Installation and playwright install', 'Launch options: headed, slow_mo, viewport, channel', 'Navigation and load states', 'Auto-waiting and actionability', 'Locators: role, label, placeholder, text, test id', 'Chaining, filter, nth, strict mode', 'Actions: click, fill, press, check, select, hover, drag, upload', 'Reading data from the page', 'iframes, popups, dialogs, downloads, Shadow DOM', 'Timeouts', 'codegen, Inspector, Trace Viewer', 'Screenshots, video, tracing', 'Emulation: devices, locale, timezone, geolocation', N('Keyboard, mouse and clipboard edge cases')] },
+      { stage: 'Playwright', title: 'Assertions & Verification', status: 'new', href: 'Assert.html', cta: 'Open module',
+        goal: 'How to prove a test passed: every kind of check, and how to keep checks reliable.',
+        note: 'New module. Assertions were one topic in the base plan; they deserve their own module.',
+        topics: ['What an assertion is', 'assert vs expect and auto-retry', 'Page assertions: URL and title', 'State: visible, hidden, enabled, checked', 'Text: to_have_text vs to_contain_text', 'Values, attributes, classes, count', 'Negative assertions', 'Timeouts and custom messages', 'Soft assertions with pytest-check', 'API response assertions', 'Assertion anti-patterns'].map(N) },
+      { stage: 'Test runner, data & evidence', title: 'pytest', status: 'live', href: 'PWPytest.html', cta: 'Open module',
+        goal: 'Structure, run and scale Playwright tests with pytest.',
+        topics: ['Test discovery and naming', 'Plain assert vs expect', 'Fixtures and scopes', 'yield teardown and fixture dependency', 'conftest.py', 'pytest-playwright built-in fixtures', 'CLI: --headed, --browser, --base-url, --tracing', 'Parametrization', 'Markers: smoke, regression, skip, xfail', 'Hooks: pytest_runtest_makereport', 'Plugins: xdist, rerunfailures'] },
+      { stage: 'Test runner, data & evidence', title: 'Network and API', status: 'live', href: 'PWNet.html', cta: 'Open module',
+        goal: 'Control the network layer and combine API and UI testing.',
+        topics: ['page.route: mock, block, modify', 'expect_response and expect_request', 'APIRequestContext: GET, POST, PUT, DELETE', 'Hybrid tests: API setup, UI check', 'Log in once with storage_state', N('HAR record and replay'), N('Contract checks on JSON responses')] },
+      { stage: 'Test runner, data & evidence', title: 'Reporting & Evidence', status: 'new', href: 'Reports.html', cta: 'Open module',
+        goal: 'Turn test runs into reports people actually read: pytest-html, Allure, traces and CI artifacts.',
+        note: 'New module. Reporting was one plugin line in the base plan; Allure alone needs a full module.',
+        topics: ['Why reports matter and who reads them', 'Console output and useful flags', 'JUnit XML for CI', 'pytest-html self-contained reports', 'Screenshots, video, traces on failure', 'Failure screenshots via a hook', 'Allure setup and allure serve', 'Allure labels: epic, feature, story, severity', 'Allure steps and attachments', 'History, trends, environment, categories', 'Publishing: CI artifacts, GitHub Pages, ReportPortal, Slack'].map(N) },
+      { stage: 'Framework & scale', title: 'Framework Architecture', status: 'live', href: 'PWFramework.html', cta: 'Open module',
+        goal: 'Combine everything into a clean, scalable, maintainable framework.',
+        note: 'Includes the Page Object Model walkthrough, linked at the end of the module.',
+        topics: ['Layers: tests, flows, pages, core, utils', 'Page Object Model with BasePage and components', 'Flow / business layer', 'Config for dev, QA and staging', 'Test data: static, generated, API-seeded', 'Fixture architecture and auth state', 'Central logging and reporting', 'Custom exceptions and clear failures'] },
+      { stage: 'Framework & scale', title: 'Running at Scale', status: 'live', href: 'PWScale.html', cta: 'Open module',
+        goal: 'Run the framework reliably in parallel and in CI/CD.',
+        topics: ['Parallel runs with pytest -n auto', 'Test independence for safe parallelism', 'Retries vs fixing flakiness', 'Git: branches, .gitignore, pull requests', 'CI/CD with GitHub Actions or Jenkins', 'Docker with the official Playwright image', N('Scheduled nightly runs'), N('Splitting a suite across CI machines')] },
+      { stage: 'Mastery', title: 'Beyond Functional Testing', status: 'new', href: 'PWBeyond.html', cta: 'Open module',
+        goal: 'The extra skills that make an automation engineer stand out.',
+        note: 'New module, grown out of the optional extras in the base plan.',
+        topics: ['Test design: what to automate, the test pyramid', 'Visual regression testing', 'Accessibility checks with axe-core', 'Database validation behind the UI', 'Cross-browser and mobile matrix', 'Performance timing, then the k6 path', 'AI-assisted tools: codegen, Playwright MCP'].map(N) },
+      { stage: 'Mastery', title: 'Playwright + AI: MCP & Test Agents', status: 'new', href: 'PWAI.html', cta: 'Open module',
+        goal: 'From installation to a real project: AI assistants, the Playwright MCP server, and the planner / generator / healer agents.',
+        note: 'New module. The Test Agents write TypeScript today; the MCP server works with Python projects too.',
+        topics: ['What Playwright + AI means', 'How the agent loop works', 'Python or TypeScript?', 'Prerequisites', 'Codegen without AI', 'Add the Playwright MCP server', 'First AI browser session', 'Teach the AI your rules', 'Initialise the agents', 'The seed test', 'Planner', 'Generator', 'Healer', 'A daily workflow', 'Safety, privacy and cost', 'CI and the agents', 'Practice project'].map(N) },
+      { stage: 'Mastery', title: 'Best Practices & Anti-Patterns', status: 'live', href: 'PWBest.html', cta: 'Open module',
+        goal: 'Habits that keep a suite fast, stable and readable.',
+        topics: ['User-facing locators over XPath', 'No time.sleep()', 'One behaviour per test, no dependencies', 'Assertions in tests, not page objects', 'No hardcoded credentials or URLs', 'Page methods return values or the next page', N('Flaky test triage checklist'), N('Code review checklist for test code'), N('Common Playwright interview questions')] },
+      { stage: 'Capstone', title: 'Capstone Project', status: 'live', href: 'PWCapstone.html', cta: 'Start the capstone', num: '★',
+        goal: 'One complete end-to-end flow on a demo site using the full framework.',
+        topics: ['Pick a demo site (saucedemo or the-internet)', 'Build the Module 09 framework', 'Seed data by API, verify in the UI', N('Allure report with steps and screenshots'), N('Run in GitHub Actions on every push'), N('Write it up as a portfolio case study')] }
+    ];
+    const tagOf = { live: ['LIVE', '#1F7A52', '#FFFFFF'], new: ['NEW · LIVE', '#E8B64C', '#16181D'], partial: ['PARTLY LIVE', '#DCEFE3', '#1F7A52'], planned: ['PLANNED', '#EAE5DA', '#5C606A'] };
+    const tagStyle = (s) => 'flex-shrink:0;font:600 11px JetBrains Mono,monospace;padding:4px 8px;border-radius:999px;background:' + tagOf[s][1] + ';color:' + tagOf[s][2] + ';';
+    let total = 0, doneAll = 0;
+    const norm = M.map((m, i) => {
+      const topics = m.topics.map((t, j) => {
+        const text = typeof t === 'string' ? t : t.t; const isNew = typeof t !== 'string';
+        const key = i + '-' + j; const done = !!st.done[key];
+        return { text, isNew, key, done };
+      });
+      const d = topics.filter((t) => t.done).length;
+      total += topics.length; doneAll += d;
+      return { ...m, topics, d };
+    });
+    const mods = norm.map((m, i) => {
+      const on = i === st.mod;
+      return { title: m.title, stage: m.stage, stageStart: i === 0 || norm[i - 1].stage !== m.stage,
+        num: m.num || String(i + 1).padStart(2, '0'), tag: tagOf[m.status][0], tagStyle: tagStyle(m.status),
+        countLabel: m.d + ' / ' + m.topics.length + ' topics',
+        pick: () => this.setState({ mod: i }),
+        style: 'display:flex;align-items:center;gap:14px;min-height:60px;padding:10px 14px;border-radius:14px;cursor:pointer;font-family:IBM Plex Sans,sans-serif;transition:all .15s;' + (on ? 'background:#16181D;color:#F4F1EA;border:1.5px solid #16181D;transform:translateX(6px);' : 'background:#FFFFFF;color:#16181D;border:1.5px solid #DDD7CB;'),
+        numStyle: 'flex-shrink:0;width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font:700 15px JetBrains Mono,monospace;' + (m.d === m.topics.length ? 'background:#1F7A52;color:#fff;' : on ? 'background:#7EE2A8;color:#16181D;' : 'background:#F0ECE3;color:#4A4E57;') };
+    });
+    const m = norm[st.mod];
+    const pBg = { live: '#1F7A52', new: '#16181D', partial: '#1F7A52', planned: '#4A4E57' }[m.status];
+    const pctM = Math.round((m.d / m.topics.length) * 100);
+    const sel = { title: m.title, goal: m.goal, note: m.note || '', hasNote: !!m.note,
+      kicker: (m.num ? 'capstone' : 'module ' + String(st.mod + 1).padStart(2, '0')) + ' · ' + m.stage,
+      tag: tagOf[m.status][0], tagStyle: tagStyle(m.status),
+      live: !!m.href, href: m.href || '#top', cta: m.cta || 'Open',
+      doneLabel: m.d + ' of ' + m.topics.length + ' done',
+      barStyle: 'height:100%;border-radius:999px;background:' + (m.status === 'new' ? '#E8B64C' : '#7EE2A8') + ';width:' + pctM + '%;transition:width .3s;',
+      topics: m.topics.map((t) => ({ text: t.text, isNew: t.isNew, mark: t.done ? '✓' : '', pressed: t.done ? 'true' : 'false',
+        toggle: () => this.setState({ done: { ...st.done, [t.key]: !st.done[t.key] } }),
+        style: 'display:flex;align-items:center;gap:12px;min-height:52px;padding:10px 14px;border-radius:12px;cursor:pointer;font:15px IBM Plex Sans,sans-serif;' + (t.done ? 'background:#DCEFE3;color:#174F37;border:1.5px solid #7FC8A0;' : 'background:#FFFFFF;color:#16181D;border:1.5px solid #DDD7CB;'),
+        boxStyle: 'flex-shrink:0;width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;font:700 13px IBM Plex Sans,sans-serif;' + (t.done ? 'background:#1F7A52;color:#fff;' : 'border:1.5px solid #9A958A;') })) };
+    const panelStyle = 'display:flex;flex-direction:column;gap:18px;border-radius:24px;padding:32px;color:#FFFFFF;background:' + pBg + ';';
+    const pct = total ? Math.round((doneAll / total) * 100) : 0;
+
+    // ---- locator picker ----
+    const locs = [
+      { name: 'get_by_role', rank: 'use first', target: 'button', code: 'page.get_by_role("button", name="Sign in").click()', why: 'Finds elements the way users and screen readers see them: by role and visible name.', when: 'Best default. Survives class and ID changes.' },
+      { name: 'get_by_label', rank: 'forms', target: 'input', code: 'page.get_by_label("Username").fill("qa1")', why: 'Finds an input through the label text next to it.', when: 'Use for form fields that have a proper label.' },
+      { name: 'get_by_text', rank: 'text', target: 'link', code: 'page.get_by_text("Forgot password?").click()', why: 'Finds an element by the text it shows.', when: 'Good for non-interactive text and simple links.' },
+      { name: 'get_by_test_id', rank: 'stable', target: 'heading', code: '# <h2 data-testid="login-title">\npage.get_by_test_id("login-title")', why: 'Finds an element by a data-testid attribute developers add for testing.', when: 'Use when role or text is ambiguous, if your team adds test IDs.' },
+      { name: 'locator("css")', rank: 'last resort', target: 'input', code: 'page.locator("#username").fill("qa1")', why: 'Plain CSS or XPath selectors.', when: 'Breaks easily when the markup changes. Use only when nothing above works.' }
+    ];
+    const cur = locs[st.loc];
+    const tone = (r) => r === 'use first' ? 'background:#1F7A52;color:#fff;' : r === 'last resort' ? 'background:#FCE7DD;color:#C4502A;' : 'background:#EAE5DA;color:#4A4E57;';
+    const items = locs.map((l, i) => {
+      const on = i === st.loc;
+      return { ...l, pick: () => this.setState({ loc: i }),
+        style: 'display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:56px;padding:12px 18px;border-radius:14px;cursor:pointer;text-align:left;' + (on ? 'background:#16181D;color:#F4F1EA;border:1.5px solid #16181D;' : 'background:#FFFFFF;color:#16181D;border:1.5px solid #DDD7CB;'),
+        rankStyle: 'font:600 11px JetBrains Mono,monospace;padding:4px 8px;border-radius:999px;text-transform:uppercase;' + tone(l.rank) };
+    });
+    const ring = 'outline:3px solid #2BB673;outline-offset:3px;background:#DCEFE3;';
+    const t = cur.target;
+    const hi = {
+      heading: 'font:700 20px Bricolage Grotesque,sans-serif;border-radius:6px;padding:2px 4px;align-self:flex-start;' + (t === 'heading' ? ring : ''),
+      label: 'font-size:13px;color:#4A4E57;border-radius:4px;padding:1px 2px;align-self:flex-start;' + (t === 'input' && cur.name === 'get_by_label' ? 'background:#F6E7B8;' : ''),
+      input: 'display:block;padding:10px 12px;border:1.5px solid #DDD7CB;border-radius:8px;font-size:14px;' + (t === 'input' ? ring : ''),
+      button: 'display:block;text-align:center;padding:12px;border-radius:8px;background:#16181D;color:#fff;font-weight:600;' + (t === 'button' ? 'outline:3px solid #2BB673;outline-offset:3px;' : ''),
+      link: 'font-size:14px;color:#1F7A52;text-decoration:underline;border-radius:4px;padding:2px;align-self:flex-start;' + (t === 'link' ? ring : '')
+    };
+
+    return { mods, sel, panelStyle,
+      overallLabel: doneAll + ' / ' + total + ' topics · ' + pct + '%',
+      overallStyle: 'height:100%;border-radius:999px;background:#1F7A52;transition:width .3s;width:' + pct + '%;',
+      locs: items, cur, hi };
+  }
+}
+
+var __TPL=`<div style="width: 1440px; height: 3300px; box-sizing: border-box; display: flex; flex-direction: column; background: #F4F1EA; font-family: 'IBM Plex Sans', system-ui, sans-serif; color: #16181D;">
+
+<!-- HERO -->
+<section style="background: #1F7A52; color: #FFFFFF; padding: 56px 80px 80px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 40px; align-items: center;">
+<div style="grid-column: span 7; display: flex; flex-direction: column; gap: 22px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #BFE6CF;"><a href="index.html" style="color: #BFE6CF; text-decoration: none;">articles</a> / <span style="color: #FFFFFF;">playwright</span></span>
+<h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 120px; line-height: 0.88; letter-spacing: -0.045em;">Playwright</h1>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.15;">UI automation with Python, from zero to page objects.</span>
+<p style="margin: 0; font-size: 18px; line-height: 1.65; color: #D6F0E0; max-width: 600px;">Playwright drives a real browser the way a user would. From the Python you need, through assertions, reporting and framework design, to running tests in CI. Twelve modules and a capstone project.</p>
+<a href="PyPW.html" style="align-self: flex-start; text-decoration: none; padding: 16px 26px; border-radius: 12px; background: #16181D; color: #FFFFFF; font-weight: 600; font-size: 16px;">Start with module 01 →</a>
+</div>
+<div style="grid-column: span 5; background: #16181D; border-radius: 24px; padding: 26px 28px; font-family: 'JetBrains Mono', monospace; font-size: 14px; line-height: 1.9; color: #D8DAE0; transform: rotate(1.5deg); box-shadow: 0 30px 50px -24px rgba(0,0,0,0.5);">
+<div style="color: #8A8F9C;"># tests/test_login.py</div>
+<div><span style="color: #C792EA;">def</span> <span style="color: #7EE2A8;">test_login</span>(page):</div>
+<div>    page.goto(<span style="color: #F0C674;">"/login"</span>)</div>
+<div>    page.get_by_label(<span style="color: #F0C674;">"Username"</span>).fill(<span style="color: #F0C674;">"qa1"</span>)</div>
+<div>    page.get_by_role(<span style="color: #F0C674;">"button"</span>, name=<span style="color: #F0C674;">"Sign in"</span>).click()</div>
+<div>    expect(page).to_have_url(<span style="color: #F0C674;">"/dashboard"</span>)</div>
+<div style="margin-top: 8px; color: #7EE2A8;">1 passed in 2.1s</div>
+</div>
+</section>
+
+<!-- CURRICULUM -->
+<section style="padding: 88px 80px 72px; display: flex; flex-direction: column; gap: 36px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 40px;">
+<div style="display: flex; flex-direction: column; gap: 14px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #1F7A52;">the full curriculum</span>
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 52px; letter-spacing: -0.02em;">13 modules and a capstone</h2>
+<p style="margin: 0; font-size: 17px; line-height: 1.6; color: #4A4E57; max-width: 720px;">Numbered in the order to learn them. Pick a module to see its topics, and tick them off as you go.</p>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px; min-width: 300px;">
+<div style="display: flex; justify-content: space-between; font-size: 14px;"><span style="font-weight: 600;">Your progress</span><span style="font-family: 'JetBrains Mono', monospace; color: #1F7A52;">{{overallLabel}}</span></div>
+<div style="height: 10px; border-radius: 999px; background: #E3DED3; overflow: hidden;"><div style="{{overallStyle}}"></div></div>
+<div style="display: flex; gap: 14px; font-size: 12px; color: #5C606A;">
+<span style="display: flex; align-items: center; gap: 6px;"><span style="width: 10px; height: 10px; border-radius: 3px; background: #1F7A52;"></span>live</span>
+<span style="display: flex; align-items: center; gap: 6px;"><span style="width: 10px; height: 10px; border-radius: 3px; background: #E8B64C;"></span>new, beyond the base plan</span>
+<span style="display: flex; align-items: center; gap: 6px;"><span style="width: 10px; height: 10px; border-radius: 3px; background: #C9C1B1;"></span>planned</span>
+</div>
+</div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 28px;">
+<div style="grid-column: span 5; display: flex; flex-direction: column; gap: 8px;">
+<sc-for list="{{mods}}" as="m" hint-placeholder-count="13">
+<sc-if value="{{m.stageStart}}" hint-placeholder-val="{{ false }}">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #6A6E77; text-transform: uppercase; letter-spacing: 0.08em; padding: 14px 4px 2px;">{{m.stage}}</span>
+</sc-if>
+<button onClick="{{m.pick}}" style="{{m.style}}">
+<span style="{{m.numStyle}}">{{m.num}}</span>
+<span style="display: flex; flex-direction: column; gap: 2px; flex-grow: 1; text-align: left;"><span style="font-weight: 600; font-size: 16px;">{{m.title}}</span><span style="font-size: 12px; opacity: 0.75;">{{m.countLabel}}</span></span>
+<span style="{{m.tagStyle}}">{{m.tag}}</span>
+</button>
+</sc-for>
+</div>
+
+<div style="grid-column: span 7; display: flex; flex-direction: column; gap: 20px;">
+<div style="{{panelStyle}}">
+<div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 20px;">
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; opacity: 0.8;">{{sel.kicker}}</span>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 38px; font-weight: 800; line-height: 1.05;">{{sel.title}}</span>
+</div>
+<span style="{{sel.tagStyle}}">{{sel.tag}}</span>
+</div>
+<span style="font-size: 17px; line-height: 1.6; opacity: 0.9;">{{sel.goal}}</span>
+<sc-if value="{{sel.hasNote}}" hint-placeholder-val="{{ false }}">
+<span style="font-size: 14px; line-height: 1.55; padding: 12px 14px; border-radius: 12px; background: rgba(255,255,255,0.14);">{{sel.note}}</span>
+</sc-if>
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 16px;">
+<div style="flex-grow: 1; height: 8px; border-radius: 999px; background: rgba(255,255,255,0.2); overflow: hidden;"><div style="{{sel.barStyle}}"></div></div>
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 13px;">{{sel.doneLabel}}</span>
+</div>
+<sc-if value="{{sel.live}}" hint-placeholder-val="{{ true }}">
+<a href="{{sel.href}}" style="align-self: flex-start; text-decoration: none; padding: 14px 22px; border-radius: 12px; background: #FFFFFF; color: #16181D; font-weight: 600;">{{sel.cta}} →</a>
+</sc-if>
+</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px;">
+<sc-for list="{{sel.topics}}" as="t" hint-placeholder-count="10">
+<button onClick="{{t.toggle}}" aria-pressed="{{t.pressed}}" style="{{t.style}}">
+<span style="{{t.boxStyle}}">{{t.mark}}</span>
+<span style="text-align: left; line-height: 1.4;">{{t.text}}</span>
+<sc-if value="{{t.isNew}}" hint-placeholder-val="{{ false }}"><span style="flex-shrink: 0; font: 600 10px 'JetBrains Mono', monospace; padding: 3px 6px; border-radius: 6px; background: #F6E7B8; color: #8A5A00;">NEW</span></sc-if>
+</button>
+</sc-for>
+</div>
+</div>
+</div>
+</section>
+
+<!-- LOCATOR PICKER -->
+<section style="margin: 0 80px; background: #FFFFFF; border: 1px solid #DDD7CB; border-radius: 28px; padding: 48px; display: flex; flex-direction: column; gap: 32px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 30px;">
+<div style="display: flex; flex-direction: column; gap: 12px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #1F7A52;">visualize · finding elements</span>
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 44px; letter-spacing: -0.02em;">Which locator should I use?</h2>
+</div>
+<span style="font-size: 15px; color: #5C606A;">Click a locator to see what it finds.</span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 28px;">
+<div style="grid-column: span 4; display: flex; flex-direction: column; gap: 10px;">
+<sc-for list="{{locs}}" as="l" hint-placeholder-count="5">
+<button onClick="{{l.pick}}" style="{{l.style}}">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 15px; font-weight: 600;">{{l.name}}</span>
+<span style="{{l.rankStyle}}">{{l.rank}}</span>
+</button>
+</sc-for>
+</div>
+<div style="grid-column: span 4; background: #F4F1EA; border-radius: 20px; padding: 28px; display: flex; flex-direction: column; gap: 16px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #6A6E77;">the page</span>
+<div style="background: #FFFFFF; border-radius: 14px; padding: 24px; display: flex; flex-direction: column; gap: 14px; border: 1px solid #DDD7CB;">
+<span style="{{hi.heading}}">Sign in</span>
+<div style="display: flex; flex-direction: column; gap: 6px;"><span style="{{hi.label}}">Username</span><span style="{{hi.input}}">qa1</span></div>
+<span style="{{hi.button}}">Sign in</span>
+<span style="{{hi.link}}">Forgot password?</span>
+</div>
+</div>
+<div style="grid-column: span 4; display: flex; flex-direction: column; gap: 16px;">
+<pre style="margin: 0; background: #16181D; color: #D8DAE0; border-radius: 14px; padding: 18px 20px; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; white-space: pre-wrap;">{{cur.code}}</pre>
+<span style="font-size: 16px; line-height: 1.65; color: #34373F;">{{cur.why}}</span>
+<div style="background: #DCEFE3; border-radius: 14px; padding: 14px 16px; font-size: 14px; line-height: 1.55; color: #174F37;">{{cur.when}}</div>
+</div>
+</div>
+</section>
+
+<div style="flex-grow: 1;"></div>
+</div>`;
+window.__mountDC(__TPL, Component);
+</script>
+</body>
+</html>

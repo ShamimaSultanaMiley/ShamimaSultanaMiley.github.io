@@ -1,0 +1,473 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440">
+<title>SQL for Testers — Course</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap">
+<style>html,body{margin:0;background:#F4F1EA;font-family:'IBM Plex Sans',system-ui,sans-serif} #app > div{margin:0 auto}</style>
+</head>
+<body>
+
+<style>
+.snav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:16px 40px;background:#16181D;color:#F4F1EA;font-family:'IBM Plex Sans',sans-serif;flex-wrap:wrap;gap:12px}
+.snav a{color:#F4F1EA;text-decoration:none}
+.snav .brand{display:flex;align-items:center;gap:10px;font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:18px}
+.snav .brand span.logo{width:34px;height:34px;border-radius:9px;background:#7EE2A8;color:#16181D;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:14px}
+.snav ul{list-style:none;display:flex;gap:6px;margin:0;padding:0;align-items:center;flex-wrap:wrap}
+.snav > ul > li{position:relative}
+.snav > ul > li > a,.snav > ul > li > span{display:block;padding:9px 14px;border-radius:9px;font-size:15px;font-weight:500;cursor:pointer;white-space:nowrap}
+.snav > ul > li:hover > a,.snav > ul > li:hover > span,.snav .cur{background:#2A2D35}
+.snav .caret{font-size:11px;opacity:.7;margin-left:4px}
+.snav .drop{position:absolute;top:100%;left:0;min-width:220px;background:#1E2129;border:1px solid #2E323C;border-radius:12px;padding:8px;display:none;flex-direction:column;gap:2px;box-shadow:0 18px 40px -16px rgba(0,0,0,.6)}
+.snav > ul > li:hover .drop{display:flex}
+.snav .drop a{padding:9px 12px;border-radius:8px;font-size:14px;color:#D8DAE0}
+.snav .drop a:hover{background:#2A2D35;color:#fff}
+.snav .drop .grp{font-family:'JetBrains Mono',monospace;font-size:11px;color:#8A8F9C;text-transform:uppercase;letter-spacing:.06em;padding:8px 12px 2px}
+.snav .cta{padding:9px 18px;border-radius:999px;background:#1F7A52;color:#fff;font-weight:600}
+.snav .menubtn{display:none;background:none;border:1.5px solid #3A3E48;color:#F4F1EA;border-radius:9px;padding:8px 12px;font-size:15px;cursor:pointer}
+@media(max-width:1100px){
+  .snav .menubtn{display:block}
+  .snav > ul{display:none;flex-direction:column;align-items:stretch;width:100%;order:3}
+  .snav.open > ul{display:flex}
+  .snav .drop{position:static;display:flex;border:none;box-shadow:none;background:transparent;padding:0 0 6px 14px}
+  .snav > ul > li:hover .drop{display:flex}
+}
+</style>
+<nav class="snav" id="snav">
+<a class="brand" href="index.html"><span class="logo">S✓</span>Shamima Sultana</a>
+<button class="menubtn" onclick="document.getElementById('snav').classList.toggle('open')">Menu ☰</button>
+<ul>
+<li><a href="index.html" class="">Home</a></li>
+<li><span class="">About <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="about.html">Intro &amp; journey</a>
+    <a href="skills.html">Skills</a>
+    <a href="certifications.html">Certifications</a>
+    <a href="research.html">Research</a>
+    <a href="achievements.html">Achievements</a>
+  </div></li>
+<li><span class="">Work <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="projects.html">Projects</a>
+  </div></li>
+<li><span class="cur">Learn <span class="caret">▾</span></span>
+  <div class="drop">
+    <span class="grp">Automation</span>
+    <a href="PWHub.html">Playwright path</a>
+    <a href="Selenium.html">Selenium with Java</a>
+    <a href="MobileTest.html">Mobile testing</a>
+    <span class="grp">Performance</span>
+    <a href="K6Hub.html">k6</a>
+    <a href="JMeter.html">JMeter</a>
+    <span class="grp">Data &amp; APIs</span>
+    <a href="SQLHub.html">SQL</a>
+    <a href="API.html">API testing</a>
+    <span class="grp">Core &amp; specialised</span>
+    <a href="Manual.html">Manual testing</a>
+    <a href="AITest.html">AI / LLM testing</a>
+    <a href="DevTools.html">DevTools</a>
+    <a href="Git.html">Git &amp; GitHub</a>
+    <a href="A11y.html">Accessibility</a>
+    <a href="Security.html">Security</a>
+  </div></li>
+<li><span class="">Writing <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="K6Hub.html">Tutorials &amp; articles</a>
+  </div></li>
+<li><span class="">More <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="News.html">News</a>
+    <a href="Interview.html">Interview prep</a>
+    <a href="ISTQB.html">ISTQB prep</a>
+  </div></li>
+<li><a class="cta" href="mailto:shamimasultanamiley605@gmail.com">Contact</a></li>
+</ul>
+</nav>
+
+<div id="app"></div>
+<script>/* Minimal renderer: replaces Claude's canvas engine so pages run anywhere. */
+(function(){
+  function resolve(scopes, path){
+    path=path.trim();
+    var parts=path.split('.'), head=parts[0], base, found=false;
+    for(var i=scopes.length-1;i>=0;i--){ if(scopes[i] && Object.prototype.hasOwnProperty.call(scopes[i],head)){ base=scopes[i][head]; found=true; break; } }
+    if(!found) return undefined;
+    for(var j=1;j<parts.length;j++){ if(base==null) return undefined; base=base[parts[j]]; }
+    return base;
+  }
+  function subst(str, scopes){
+    return str.replace(/\{\{([^}]+)\}\}/g, function(_,e){ var v=resolve(scopes,e); return v==null?'':String(v); });
+  }
+  function firstExpr(str){ var m=str.match(/\{\{([^}]+)\}\}/); return m?m[1].trim():null; }
+  function processNode(node, scopes, out){
+    if(node.nodeType===3){ // text
+      var t=node.nodeValue;
+      if(t.indexOf('{{')>=0) out.push(document.createTextNode(subst(t,scopes)));
+      else out.push(document.createTextNode(t));
+      return;
+    }
+    if(node.nodeType!==1){ return; }
+    var tag=node.tagName.toLowerCase();
+    if(tag==='sc-for'){
+      var listExpr=firstExpr(node.getAttribute('list')||'');
+      var as=node.getAttribute('as');
+      var arr=listExpr?resolve(scopes,listExpr):null;
+      if(Array.isArray(arr)){
+        for(var k=0;k<arr.length;k++){
+          var sc=scopes.concat([{__k:as, [as]:arr[k]}]);
+          for(var c=0;c<node.childNodes.length;c++) processNode(node.childNodes[c], sc, out);
+        }
+      }
+      return;
+    }
+    if(tag==='sc-if'){
+      var valExpr=firstExpr(node.getAttribute('value')||'');
+      var cond=valExpr?resolve(scopes,valExpr):false;
+      if(cond){ for(var c2=0;c2<node.childNodes.length;c2++) processNode(node.childNodes[c2], scopes, out); }
+      return;
+    }
+    var el=document.createElement(tag);
+    for(var a=0;a<node.attributes.length;a++){
+      var at=node.attributes[a], name=at.name, val=at.value;
+      if(name.indexOf('hint-')===0) continue;
+      if(name==='onclick'){ var h=firstExpr(val); (function(expr){ el.addEventListener('click', function(ev){ var fn=resolve(scopes,expr); if(typeof fn==='function') fn(ev); }); })(h); continue; }
+      if(name==='onchange'){ var h2=firstExpr(val); (function(expr){ el.addEventListener('input', function(ev){ var fn=resolve(scopes,expr); if(typeof fn==='function') fn(ev); }); })(h2); continue; }
+      var sv=val.indexOf('{{')>=0?subst(val,scopes):val;
+      if(name==='value' && (tag==='input'||tag==='textarea')){ el.value=sv; el.setAttribute('value',sv); }
+      else el.setAttribute(name, sv);
+    }
+    var kids=[];
+    for(var cc=0;cc<node.childNodes.length;cc++) processNode(node.childNodes[cc], scopes, kids);
+    for(var ki=0;ki<kids.length;ki++) el.appendChild(kids[ki]);
+    out.push(el);
+  }
+  window.__mountDC=function(templateHTML, ComponentClass){
+    var tplRoot=document.createElement('div'); tplRoot.innerHTML=templateHTML;
+    var mount=document.getElementById('app');
+    var comp=new ComponentClass({});
+    function doRender(){
+      var vals;
+      try{ vals=comp.renderVals(); }catch(e){ console.error('render error',e); return; }
+      var frag=document.createDocumentFragment();
+      var buf=[];
+      for(var i=0;i<tplRoot.childNodes.length;i++) processNode(tplRoot.childNodes[i], [vals], buf);
+      for(var b=0;b<buf.length;b++) frag.appendChild(buf[b]);
+      // preserve focus in search/textarea across re-render
+      var active=document.activeElement, sel=null, id=null;
+      mount.innerHTML=''; mount.appendChild(frag);
+    }
+    comp.setState=function(s){ Object.assign(comp.state, s); doRender(); };
+    doRender();
+  };
+  window.DCLogic=function(){};
+})();
+</script>
+<script>
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { m: 0, l: 0, mode: 'split', tbl: 1, o: 0, j: 0, done: {} };
+  }
+  renderVals() {
+    const st = this.state;
+    const MODS = [{"num": "01", "title": "Databases & setup", "blurb": "What a relational database is, the ShopLite practice schema, and working safely as a tester.", "lessons": [{"title": "What a relational database is", "body": "Data lives in tables. Each row is one record, each column one field. Keys connect tables so data isn't copied everywhere.", "code": "customers                    orders\n+----+--------------+        +----------+-------------+--------+\n| id | name         |        | order_id | customer_id | status |\n+----+--------------+        +----------+-------------+--------+\n|  1 | Ayesha Rahman| <----- |      101 |           1 | paid   |\n|  2 | Rafi Hasan   | <----- |      102 |           2 | shipped|\n+----+--------------+        +----------+-------------+--------+", "out": "Primary key (PK): a unique id for each row, like customers.customer_id\nForeign key (FK): a column pointing at another table's PK, like orders.customer_id", "tip": "Every screen you test is usually reading from and writing to a few of these tables.", "mistake": "Thinking the UI is the truth. The UI can show one thing while the database stores another; that's a bug you can only find with SQL.", "viz": ""}, {"title": "The ShopLite practice schema", "body": "Every example in this course uses ShopLite, a small made-up online store. Five tables, linked by keys.", "code": "customers   (customer_id PK, name, email, city, created_at)\nproducts    (product_id PK, name, category, price, stock)\norders      (order_id PK, customer_id FK, order_date,\n             status, total_amount)\norder_items (item_id PK, order_id FK, product_id FK,\n             quantity, unit_price)\npayments    (payment_id PK, order_id FK, amount,\n             method, paid_at)", "out": "customers 1 ── * orders 1 ── * order_items * ── 1 products\n                 orders 1 ── * payments\n\n(1 ── * means one-to-many)", "tip": "Draw the schema of any system you test before writing queries. It saves hours.", "mistake": "Guessing column names. Look them up: most tools show the table structure with one click.", "viz": "schema"}, {"title": "SQL dialects and tools", "body": "SQL is a standard, but each database adds its own flavour. The basics in this course work everywhere; differences are called out.", "code": "-- first 5 rows, in different databases\nSELECT * FROM orders LIMIT 5;            -- MySQL, PostgreSQL, SQLite\nSELECT TOP 5 * FROM orders;               -- SQL Server\nSELECT * FROM orders FETCH FIRST 5 ROWS ONLY;  -- Oracle, PostgreSQL", "out": "Popular tools\n  DBeaver         free, works with almost every database\n  MySQL Workbench MySQL\n  pgAdmin         PostgreSQL\n  SSMS            SQL Server\n\nPractice free: SQLite + DB Browser for SQLite", "tip": "Ask the developers which database the project uses before searching for syntax.", "mistake": "Copying a query from the internet written for another database and trusting the error message to explain why it fails.", "viz": ""}, {"title": "Safe habits for testers", "body": "Testers usually query shared environments. A few habits prevent very bad days.", "code": "-- 1. prefer a read-only account for checking data\n-- 2. SELECT first: see which rows an UPDATE/DELETE would touch\nSELECT * FROM orders WHERE order_id = 103;\n\n-- 3. wrap changes in a transaction you can undo\nBEGIN;\nUPDATE orders SET status = 'paid' WHERE order_id = 103;\n-- check, then COMMIT; or ROLLBACK;\n\n-- 4. never run anything on production without approval", "out": "Read-only account → you physically can't break data.\nTransactions → you can undo a mistake before it's saved.", "tip": "Write the WHERE clause first, then the rest of an UPDATE or DELETE.", "mistake": "An UPDATE or DELETE without WHERE. It changes every row in the table.", "viz": ""}]}, {"num": "02", "title": "Reading data", "blurb": "SELECT, filtering, sorting and handling NULL: the queries you'll write every day.", "lessons": [{"title": "SELECT and FROM", "body": "SELECT picks the columns, FROM picks the table. Aliases rename columns in the result.", "code": "SELECT name, city\nFROM customers;\n\nSELECT name AS customer_name, email\nFROM customers;\n\nSELECT * FROM products;   -- every column", "out": "customer_name  | email\n---------------+-------------------\nAyesha Rahman  | ayesha@example.com\nRafi Hasan     | rafi@example.com\nNusrat Jahan   | nusrat@example.com\nTanvir Ahmed   | tanvir@example.com\nMim Akter      | NULL", "tip": "SELECT * is fine for exploring. In saved checks and scripts, name the columns.", "mistake": "Forgetting commas between columns: SELECT name email returns name, renamed to email.", "viz": ""}, {"title": "Filtering with WHERE", "body": "WHERE keeps only the rows that match a condition. This is how you find the exact record you just created in the UI.", "code": "SELECT order_id, status, total_amount\nFROM orders\nWHERE status = 'paid';\n\n-- comparison operators\n=  <>  !=  >  <  >=  <=\n\nSELECT * FROM products WHERE price > 2000;\nSELECT * FROM products WHERE stock = 0;", "out": "order_id | status | total_amount\n---------+--------+-------------\n     101 | paid   |      5050.00\n     105 | paid   |      3400.00", "tip": "Text values go in single quotes: 'paid'. Numbers don't need quotes.", "mistake": "Double quotes for text. In most databases \"paid\" means a column named paid, not the text.", "viz": ""}, {"title": "IN, BETWEEN, LIKE and combining conditions", "body": "Shortcuts for common filters, and AND/OR to combine them. Brackets make the logic explicit.", "code": "SELECT * FROM orders WHERE status IN ('paid', 'shipped');\n\nSELECT * FROM orders\nWHERE order_date BETWEEN '2026-09-01' AND '2026-09-10';\n\nSELECT * FROM customers WHERE email LIKE '%@example.com';\nSELECT * FROM products WHERE name LIKE 'USB%';   -- starts with\n\nSELECT * FROM orders\nWHERE (status = 'paid' OR status = 'shipped')\n  AND total_amount > 5000;", "out": "%  any number of characters\n_  exactly one character\nBETWEEN includes both ends", "tip": "Always bracket OR conditions when you also use AND.", "mistake": "WHERE status = 'paid' OR status = 'shipped' AND total_amount > 5000. AND runs first, so this isn't what you meant.", "viz": ""}, {"title": "Sorting, limiting and DISTINCT", "body": "ORDER BY sorts, LIMIT takes the first few rows, DISTINCT removes duplicate rows.", "code": "-- five most expensive products\nSELECT name, price\nFROM products\nORDER BY price DESC\nLIMIT 5;\n\n-- every city that has customers, once each\nSELECT DISTINCT city FROM customers ORDER BY city;", "out": "city\n-----------\nChattogram\nDhaka\nKhulna\nSylhet", "tip": "ORDER BY created_at DESC LIMIT 1 finds the most recent record, like the order you just placed.", "mistake": "Expecting rows in a particular order without ORDER BY. Databases don't promise any order.", "viz": ""}, {"title": "NULL: the missing value", "body": "NULL means unknown or missing. It isn't zero or an empty string, and it needs special handling.", "code": "-- customers with no email\nSELECT name FROM customers WHERE email IS NULL;\n\n-- this finds nothing, ever:\nSELECT name FROM customers WHERE email = NULL;\n\n-- show a default instead of NULL\nSELECT name, COALESCE(email, 'not provided') AS email\nFROM customers;", "out": "name       | email\n-----------+-------------\nMim Akter  | not provided", "tip": "Required fields should never be NULL in the database. That's an easy, valuable check.", "mistake": "Writing = NULL. Always use IS NULL or IS NOT NULL.", "viz": ""}]}, {"num": "03", "title": "Aggregates & grouping", "blurb": "Counting, totals and summaries: the numbers behind dashboards and reports.", "lessons": [{"title": "COUNT, SUM, AVG, MIN, MAX", "body": "Aggregate functions turn many rows into one number. They're how you verify the numbers a dashboard shows.", "code": "SELECT COUNT(*)          AS orders,\n       SUM(total_amount) AS revenue,\n       AVG(total_amount) AS avg_order,\n       MIN(order_date)   AS first_order,\n       MAX(order_date)   AS last_order\nFROM orders\nWHERE status <> 'cancelled';", "out": "orders | revenue  | avg_order | first_order | last_order\n-------+----------+-----------+-------------+-----------\n     4 | 28550.00 |   7137.50 | 2026-09-01  | 2026-09-15", "tip": "Compare these with the totals on the dashboard you're testing.", "mistake": "COUNT(email) vs COUNT(*): COUNT(column) skips NULLs, COUNT(*) counts every row.", "viz": ""}, {"title": "GROUP BY", "body": "GROUP BY splits rows into groups and runs the aggregate once per group.", "code": "SELECT status, COUNT(*) AS orders, SUM(total_amount) AS amount\nFROM orders\nGROUP BY status\nORDER BY orders DESC;", "out": "status    | orders | amount\n----------+--------+---------\npaid      |      2 |  8450.00\nshipped   |      1 | 18500.00\npending   |      1 |  1600.00\ncancelled |      1 |  2300.00", "tip": "Every selected column must be either in GROUP BY or inside an aggregate.", "mistake": "Selecting customer name while grouping by city only. Most databases reject it; MySQL may return a random name.", "viz": ""}, {"title": "HAVING: filtering groups", "body": "WHERE filters rows before grouping. HAVING filters the groups after.", "code": "-- customers with more than one order\nSELECT customer_id, COUNT(*) AS orders\nFROM orders\nGROUP BY customer_id\nHAVING COUNT(*) > 1;", "out": "customer_id | orders\n------------+-------\n          1 |      2", "tip": "Rule of thumb: conditions on a single row go in WHERE, conditions on a COUNT or SUM go in HAVING.", "mistake": "Putting COUNT(*) > 1 in WHERE. Aggregates don't exist yet at that point.", "viz": "order"}, {"title": "CASE WHEN", "body": "CASE adds if/else logic to a query. Useful for labels, buckets and counting different things in one pass.", "code": "SELECT order_id, total_amount,\n       CASE\n         WHEN total_amount >= 10000 THEN 'large'\n         WHEN total_amount >= 3000  THEN 'medium'\n         ELSE 'small'\n       END AS size\nFROM orders;\n\n-- count several statuses in one row\nSELECT SUM(CASE WHEN status = 'paid' THEN 1 ELSE 0 END)    AS paid,\n       SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) AS pending\nFROM orders;", "out": "paid | pending\n-----+--------\n   2 |       1", "tip": "The second pattern turns a status breakdown into one row, which is easy to compare with a report.", "mistake": "Forgetting ELSE. Rows that match no WHEN get NULL.", "viz": ""}, {"title": "The order SQL really runs in", "body": "You write SELECT first, but the database runs FROM first. Knowing the real order explains many errors.", "code": "SELECT   status, COUNT(*) AS n     -- 5\nFROM     orders                    -- 1\nWHERE    order_date >= '2026-09-01'-- 2\nGROUP BY status                    -- 3\nHAVING   COUNT(*) > 1              -- 4\nORDER BY n DESC                    -- 6\nLIMIT    3;                        -- 7", "out": "FROM → WHERE → GROUP BY → HAVING → SELECT → ORDER BY → LIMIT\n\nThat's why an alias made in SELECT works in ORDER BY but not in WHERE.", "tip": "When a query errors, walk through it in execution order.", "mistake": "Using a SELECT alias in WHERE: WHERE n > 1 fails because SELECT hasn't run yet.", "viz": "order"}]}, {"num": "04", "title": "Joins", "blurb": "Combine tables: the single most important SQL skill for data validation.", "lessons": [{"title": "INNER JOIN", "body": "An inner join returns only rows that match in both tables.", "code": "SELECT o.order_id, c.name, o.status\nFROM orders o\nINNER JOIN customers c ON c.customer_id = o.customer_id;", "out": "order_id | name          | status\n---------+---------------+----------\n     101 | Ayesha Rahman | paid\n     102 | Rafi Hasan    | shipped\n     103 | Ayesha Rahman | pending\n     104 | Tanvir Ahmed  | cancelled\n     105 | Nusrat Jahan  | paid", "tip": "Short table aliases (o, c) keep joins readable.", "mistake": "Joining on the wrong columns, like c.customer_id = o.order_id. It runs, and the results are nonsense.", "viz": "join"}, {"title": "LEFT and RIGHT JOIN", "body": "A left join keeps every row from the left table, with NULLs where there's no match on the right.", "code": "SELECT c.name, o.order_id\nFROM customers c\nLEFT JOIN orders o ON o.customer_id = c.customer_id;", "out": "name          | order_id\n--------------+---------\nAyesha Rahman |      101\nAyesha Rahman |      103\nRafi Hasan    |      102\nNusrat Jahan  |      105\nTanvir Ahmed  |      104\nMim Akter     |     NULL   ← no orders", "tip": "RIGHT JOIN is the same, keeping every row of the right table. Most people just swap the tables and use LEFT.", "mistake": "Filtering the right table in WHERE (WHERE o.status = 'paid'). It removes the NULL rows and quietly turns your LEFT JOIN into an INNER JOIN. Put that condition in ON instead.", "viz": "join"}, {"title": "FULL OUTER JOIN", "body": "Keeps every row from both tables, matched where possible. Great for comparing two data sets.", "code": "SELECT c.customer_id, c.name, o.order_id\nFROM customers c\nFULL OUTER JOIN orders o ON o.customer_id = c.customer_id;\n\n-- MySQL has no FULL JOIN: combine two joins\nSELECT ... FROM customers c LEFT JOIN orders o ON ...\nUNION\nSELECT ... FROM customers c RIGHT JOIN orders o ON ...;", "out": "Rows only in customers → order columns NULL\nRows only in orders    → customer columns NULL", "tip": "FULL JOIN is perfect for 'compare the export file table with the source table'.", "mistake": "Assuming every database supports it. MySQL doesn't.", "viz": "join"}, {"title": "Anti-joins: finding what's missing", "body": "One of the most useful tester queries: rows with no partner. Orders pointing at a customer that doesn't exist, customers with no orders.", "code": "-- customers who never ordered\nSELECT c.name\nFROM customers c\nLEFT JOIN orders o ON o.customer_id = c.customer_id\nWHERE o.order_id IS NULL;\n\n-- orphan orders: customer is missing (a data integrity bug)\nSELECT o.order_id, o.customer_id\nFROM orders o\nLEFT JOIN customers c ON c.customer_id = o.customer_id\nWHERE c.customer_id IS NULL;", "out": "order_id | customer_id\n---------+------------\n     106 |           9     ← customer 9 doesn't exist", "tip": "Run orphan checks after delete features: deleting a parent should never leave children behind.", "mistake": "Using NOT IN with a subquery that can return NULL. It returns nothing at all; prefer LEFT JOIN ... IS NULL or NOT EXISTS.", "viz": "join"}, {"title": "Joining many tables", "body": "Follow the keys from table to table. Each join adds one more step along the path.", "code": "SELECT o.order_id, c.name, p.name AS product,\n       oi.quantity, oi.unit_price\nFROM orders o\nJOIN customers   c  ON c.customer_id = o.customer_id\nJOIN order_items oi ON oi.order_id   = o.order_id\nJOIN products    p  ON p.product_id  = oi.product_id\nWHERE o.order_id = 101;", "out": "order_id | name          | product             | quantity | unit_price\n---------+---------------+---------------------+----------+-----------\n     101 | Ayesha Rahman | Wireless Mouse      |        1 |     850.00\n     101 | Ayesha Rahman | Mechanical Keyboard |        1 |    4200.00", "tip": "This one query shows everything on an order detail page. Compare it field by field with the UI.", "mistake": "Forgetting that one order now appears once per item. Summing o.total_amount here double-counts.", "viz": ""}, {"title": "Self joins and join pitfalls", "body": "A table can join itself, and joins can multiply rows when a key isn't unique. Know both.", "code": "-- customers from the same city (self join)\nSELECT a.name, b.name AS neighbour, a.city\nFROM customers a\nJOIN customers b ON a.city = b.city AND a.customer_id < b.customer_id;\n\n-- row explosion check: joined count vs base count\nSELECT COUNT(*) FROM orders;                         -- 5\nSELECT COUNT(*) FROM orders o JOIN payments p\n  ON p.order_id = o.order_id;                        -- 7 ?", "out": "name          | neighbour    | city\n--------------+--------------+------\nAyesha Rahman | Tanvir Ahmed | Dhaka\n\n5 orders but 7 joined rows → some orders have 2 payments.\nIs that allowed (split payment) or a double-charge bug?", "tip": "When a joined count is bigger than expected, you've often found a real bug.", "mistake": "Summing after a join that multiplied rows, then reporting inflated totals.", "viz": ""}]}, {"num": "05", "title": "Subqueries, CTEs & window functions", "blurb": "Answer harder questions: duplicates, latest records, rankings and running totals.", "lessons": [{"title": "Subqueries", "body": "A query inside a query. Use it when one answer depends on another.", "code": "-- orders above the average order value\nSELECT order_id, total_amount\nFROM orders\nWHERE total_amount > (SELECT AVG(total_amount) FROM orders);\n\n-- customers who have at least one paid order\nSELECT name FROM customers c\nWHERE EXISTS (\n  SELECT 1 FROM orders o\n  WHERE o.customer_id = c.customer_id AND o.status = 'paid');", "out": "order_id | total_amount\n---------+-------------\n     102 |     18500.00", "tip": "EXISTS stops at the first match, so it's usually fast and it handles NULLs safely.", "mistake": "A subquery in = that returns more than one row. Use IN or EXISTS instead.", "viz": ""}, {"title": "CTEs with WITH", "body": "A CTE names a sub-result so a long query reads top to bottom, step by step.", "code": "WITH item_totals AS (\n  SELECT order_id, SUM(quantity * unit_price) AS items_sum\n  FROM order_items\n  GROUP BY order_id\n)\nSELECT o.order_id, o.total_amount, t.items_sum\nFROM orders o\nJOIN item_totals t ON t.order_id = o.order_id\nWHERE o.total_amount <> t.items_sum;", "out": "order_id | total_amount | items_sum\n---------+--------------+----------\n     103 |      1600.00 |   1450.00   ← total doesn't match items", "tip": "This exact query is a classic tester check: does the saved total equal the sum of its lines?", "mistake": "Rounding: compare money with a small tolerance, or ROUND both sides, if the app stores fractions.", "viz": ""}, {"title": "Finding duplicates", "body": "Duplicates are one of the most common data bugs, like double submissions from a slow Save button.", "code": "-- emails used by more than one customer\nSELECT email, COUNT(*) AS times\nFROM customers\nWHERE email IS NOT NULL\nGROUP BY email\nHAVING COUNT(*) > 1;\n\n-- the same product twice in one order\nSELECT order_id, product_id, COUNT(*)\nFROM order_items\nGROUP BY order_id, product_id\nHAVING COUNT(*) > 1;", "out": "Any row here is worth investigating.\nDouble-clicking Submit is a great way to create one on purpose.", "tip": "Pair this with a UI test: click Save twice quickly, then run the duplicate query.", "mistake": "Grouping by the id column. Ids are always unique, so nothing ever looks duplicated.", "viz": ""}, {"title": "Window functions: ROW_NUMBER and RANK", "body": "Window functions calculate across related rows without collapsing them like GROUP BY does.", "code": "-- each customer's latest order\nWITH ranked AS (\n  SELECT o.*,\n         ROW_NUMBER() OVER (PARTITION BY customer_id\n                            ORDER BY order_date DESC) AS rn\n  FROM orders o\n)\nSELECT customer_id, order_id, order_date\nFROM ranked\nWHERE rn = 1;", "out": "customer_id | order_id | order_date\n------------+----------+-----------\n          1 |      103 | 2026-09-10\n          2 |      102 | 2026-09-03\n          3 |      105 | 2026-09-15\n          4 |      104 | 2026-09-12", "tip": "ROW_NUMBER numbers 1,2,3. RANK gives ties the same number and skips (1,1,3). DENSE_RANK doesn't skip (1,1,2).", "mistake": "Forgetting PARTITION BY: you get one numbering for the whole table instead of one per customer.", "viz": ""}, {"title": "Running totals and LAG", "body": "Windows can also add up as they go, or look at the previous row.", "code": "SELECT order_date, total_amount,\n       SUM(total_amount) OVER (ORDER BY order_date) AS running_total,\n       LAG(total_amount) OVER (ORDER BY order_date) AS previous\nFROM orders\nWHERE status <> 'cancelled';", "out": "order_date | total_amount | running_total | previous\n-----------+--------------+---------------+---------\n2026-09-01 |      5050.00 |       5050.00 |     NULL\n2026-09-03 |     18500.00 |      23550.00 |  5050.00\n2026-09-10 |      1600.00 |      25150.00 | 18500.00\n2026-09-15 |      3400.00 |      28550.00 |  1600.00", "tip": "Running totals are how you check cumulative charts and balance columns in reports.", "mistake": "Expecting window functions in very old MySQL (before 8.0). They aren't there.", "viz": ""}]}, {"num": "06", "title": "Changing data", "blurb": "INSERT, UPDATE and DELETE for test setup, with transactions and constraints to keep it safe.", "lessons": [{"title": "INSERT", "body": "INSERT adds rows. Testers use it to prepare data that would take many clicks to create in the UI.", "code": "INSERT INTO customers (name, email, city, created_at)\nVALUES ('Test Buyer 01', 'buyer01@test.local', 'Dhaka', CURRENT_TIMESTAMP);\n\n-- several rows at once\nINSERT INTO products (name, category, price, stock)\nVALUES ('Webcam', 'Accessories', 3200, 20),\n       ('Headset', 'Audio', 2900, 15);", "out": "1 row inserted\n2 rows inserted", "tip": "Mark test data clearly (a 'Test' prefix or a test.local email) so it's easy to find and delete.", "mistake": "Leaving out the column list. The insert breaks the day someone adds a column.", "viz": ""}, {"title": "UPDATE", "body": "UPDATE changes existing rows. Handy for moving a record to a state you need to test, like 'shipped'.", "code": "-- always check first\nSELECT order_id, status FROM orders WHERE order_id = 103;\n\nUPDATE orders\nSET status = 'shipped'\nWHERE order_id = 103;", "out": "1 row updated\n\nIf it says more than you expected, ROLLBACK.", "tip": "Check the 'rows affected' count every time. It's your last safety net.", "mistake": "Skipping business rules. Setting a status directly may bypass logic the app runs, so the data isn't realistic.", "viz": ""}, {"title": "DELETE, TRUNCATE and DROP", "body": "Three very different ways to remove things. Interviewers love this question.", "code": "DELETE FROM customers WHERE email LIKE '%@test.local';\n-- removes matching rows, can be rolled back\n\nTRUNCATE TABLE temp_import;\n-- removes ALL rows fast, resets identity, usually can't use WHERE\n\nDROP TABLE temp_import;\n-- removes the table itself, structure and all", "out": "DELETE    rows you choose        logged, WHERE allowed\nTRUNCATE  every row              fast, no WHERE\nDROP      the whole table        gone", "tip": "Clean up only the data your tests created, using your test-data marker.", "mistake": "DELETE without WHERE on a shared database. It empties the table.", "viz": ""}, {"title": "Transactions", "body": "A transaction groups changes so they all happen or none do. It also gives you an undo button while you check.", "code": "BEGIN;   -- START TRANSACTION in MySQL\n\nUPDATE products SET stock = stock - 1 WHERE product_id = 2;\nINSERT INTO order_items (order_id, product_id, quantity, unit_price)\nVALUES (103, 2, 1, 4200);\n\nSELECT stock FROM products WHERE product_id = 2;  -- check\n\nROLLBACK;   -- undo everything above\n-- or COMMIT; to save", "out": "Stock goes back to its original value after ROLLBACK.", "tip": "Transactions are also what apps use for 'place order'. Test that a failure halfway doesn't leave half an order.", "mistake": "Forgetting that some tools auto-commit each statement unless you turn it off.", "viz": ""}, {"title": "Constraints", "body": "Constraints are rules the database enforces. Testing that the app handles them gracefully is part of your job.", "code": "CREATE TABLE customers (\n  customer_id INT PRIMARY KEY,\n  name        VARCHAR(100) NOT NULL,\n  email       VARCHAR(150) UNIQUE,\n  city        VARCHAR(50),\n  created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP\n);\n\nCREATE TABLE orders (\n  order_id     INT PRIMARY KEY,\n  customer_id  INT NOT NULL REFERENCES customers(customer_id),\n  total_amount DECIMAL(12,2) CHECK (total_amount >= 0)\n);", "out": "PRIMARY KEY  unique, not null\nFOREIGN KEY  must point at a real row\nUNIQUE       no duplicates\nNOT NULL     required\nCHECK        custom rule\nDEFAULT      value when none is given", "tip": "Test what the UI shows when a constraint fails, like registering an email that already exists. A raw database error on screen is a bug.", "mistake": "Assuming a rule is enforced because the UI checks it. If the database doesn't, an API call can bypass it.", "viz": ""}]}, {"num": "07", "title": "SQL for testers", "blurb": "Data validation techniques: prove what the app saved is correct and complete.", "lessons": [{"title": "Verify what the UI saved", "body": "After a UI action, query the database and compare every field. It catches bugs the screen hides.", "code": "-- UI: created customer 'Test Buyer 02', city Sylhet\nSELECT name, email, city, created_at\nFROM customers\nWHERE email = 'buyer02@test.local';", "out": "Check each field:\n  name        matches, including spaces and case?\n  email       lowercased as the app promises?\n  city        saved, not NULL?\n  created_at  today, in the right timezone?", "tip": "Write the expected values next to the query before you run it, just like a test case.", "mistake": "Only checking that a row exists. The bug is often in one wrong field.", "viz": ""}, {"title": "Calculations and totals", "body": "Anything the app calculates, you can recalculate in SQL and compare.", "code": "SELECT o.order_id,\n       o.total_amount                     AS saved_total,\n       SUM(oi.quantity * oi.unit_price)   AS calculated\nFROM orders o\nJOIN order_items oi ON oi.order_id = o.order_id\nGROUP BY o.order_id, o.total_amount\nHAVING o.total_amount <> SUM(oi.quantity * oi.unit_price);", "out": "Empty result → every total is right.\nAny row → a calculation bug, with the exact order to reproduce it.", "tip": "Also check discounts, tax and rounding rules the same way.", "mistake": "Comparing with the UI's rounded value instead of the stored one.", "viz": ""}, {"title": "Data integrity checks", "body": "A handful of queries you can run after any release to catch broken data.", "code": "-- 1. orphans: order items whose order is gone\nSELECT oi.* FROM order_items oi\nLEFT JOIN orders o ON o.order_id = oi.order_id\nWHERE o.order_id IS NULL;\n\n-- 2. required fields empty\nSELECT * FROM customers WHERE name IS NULL OR TRIM(name) = '';\n\n-- 3. impossible values\nSELECT * FROM products WHERE price <= 0 OR stock < 0;\n\n-- 4. paid orders with no payment\nSELECT o.order_id FROM orders o\nLEFT JOIN payments p ON p.order_id = o.order_id\nWHERE o.status = 'paid' AND p.payment_id IS NULL;", "out": "Every query should return zero rows. Save them as a reusable 'health check' script.", "tip": "Turn these into automated tests later (module 08).", "mistake": "Running integrity checks only once. Run them after every release.", "viz": ""}, {"title": "Status flows and dates", "body": "Records move through states (pending → paid → shipped). Check the states and the dates make sense together.", "code": "-- shipped without ever being paid\nSELECT o.order_id FROM orders o\nLEFT JOIN payments p ON p.order_id = o.order_id\nWHERE o.status = 'shipped' AND p.payment_id IS NULL;\n\n-- payment recorded before the order existed\nSELECT o.order_id, o.order_date, p.paid_at\nFROM orders o JOIN payments p ON p.order_id = o.order_id\nWHERE p.paid_at < o.order_date;\n\n-- statuses that shouldn't exist\nSELECT DISTINCT status FROM orders\nWHERE status NOT IN ('pending', 'paid', 'shipped', 'cancelled');", "out": "Each result row is a record that broke the workflow rules.", "tip": "Timezones: if the app shows local time but stores UTC, a late-night order can look like it's from the next day.", "mistake": "Comparing a DATE column with a TIMESTAMP and missing everything after midnight.", "viz": ""}, {"title": "Report and export reconciliation", "body": "Reports, dashboards and Excel exports must match the database. Rebuild the numbers yourself.", "code": "-- dashboard says: September revenue 28,550 from 4 orders\nSELECT COUNT(*) AS orders, SUM(total_amount) AS revenue\nFROM orders\nWHERE status <> 'cancelled'\n  AND order_date >= '2026-09-01'\n  AND order_date <  '2026-10-01';", "out": "orders | revenue\n-------+---------\n     4 | 28550.00   ✓ matches the dashboard", "tip": "Ask exactly what the report counts (cancelled? refunds? which date?). Most mismatches are definition differences.", "mistake": "Using BETWEEN '2026-09-01' AND '2026-09-30' on a timestamp column; it misses the whole last day.", "viz": ""}, {"title": "Test data setup and cleanup", "body": "Scripts that create exactly the data a test needs, and remove it afterwards, make tests repeatable.", "code": "-- setup: a customer with one pending order\nINSERT INTO customers (customer_id, name, email, city)\nVALUES (9001, 'Test Buyer 90', 'buyer90@test.local', 'Dhaka');\n\nINSERT INTO orders (order_id, customer_id, order_date, status, total_amount)\nVALUES (90001, 9001, CURRENT_DATE, 'pending', 850);\n\n-- cleanup: children first, then parents (foreign keys!)\nDELETE FROM order_items WHERE order_id >= 90000;\nDELETE FROM orders      WHERE order_id >= 90000;\nDELETE FROM customers   WHERE email LIKE '%@test.local';", "out": "A reserved id range and a test email domain make cleanup safe and exact.", "tip": "Delete child rows before parent rows, or the foreign keys will block you.", "mistake": "Sharing one test customer between many tests; one test changes it and another fails.", "viz": ""}, {"title": "Personal data and privacy", "body": "Real systems hold personal data. Treat it carefully, even in test environments.", "code": "-- mask personal data when copying to a test environment\nUPDATE customers\nSET name  = CONCAT('Customer ', customer_id),\n    email = CONCAT('user', customer_id, '@test.local');\n\n-- only select what you need\nSELECT customer_id, city FROM customers;   -- not SELECT *", "out": "Screenshots and bug reports should never contain real customers' names, emails or phone numbers.", "tip": "If you spot real personal data in a test database, report it; that's a finding too.", "mistake": "Pasting query results with personal data into public tickets or chats.", "viz": ""}]}, {"num": "08", "title": "SQL in automation", "blurb": "Run queries from Python, check the database inside Playwright tests, and test for SQL injection.", "lessons": [{"title": "Querying from Python", "body": "Python talks to databases through a driver. The pattern is the same for all of them: connect, run, fetch, close.", "code": "import sqlite3        # built in; others: psycopg (PostgreSQL),\n                      # mysql-connector-python, pyodbc (SQL Server)\n\nconn = sqlite3.connect(\"shoplite.db\")\ncur = conn.cursor()\ncur.execute(\"SELECT order_id, status FROM orders WHERE status = ?\", (\"paid\",))\nrows = cur.fetchall()     # [(101, 'paid'), (105, 'paid')]\nconn.close()", "out": "rows is a list of tuples, one per result row.", "tip": "Keep connection details in environment variables, like every other credential.", "mistake": "Building the SQL with an f-string. See the next two lessons for why.", "viz": ""}, {"title": "Parameterized queries", "body": "Pass values separately from the SQL text. The driver handles quoting, and SQL injection becomes impossible.", "code": "email = \"o'brien@test.local\"\n\n# wrong: breaks on the quote, and is injectable\ncur.execute(f\"SELECT * FROM customers WHERE email = '{email}'\")\n\n# right\ncur.execute(\"SELECT * FROM customers WHERE email = ?\", (email,))\n# placeholder style depends on the driver:\n#   sqlite3 / pyodbc: ?     psycopg / mysql: %s", "out": "The right version works for any email, including ones with quotes in them.", "tip": "Always parameterize, even in test code. Test code gets copied into real code.", "mistake": "Mixing up placeholder styles between drivers.", "viz": ""}, {"title": "A database fixture for pytest", "body": "Open the connection once per test session and share it, the same way Playwright shares a browser.", "code": "# conftest.py\nimport os, pytest, psycopg\n\n@pytest.fixture(scope=\"session\")\ndef db():\n    conn = psycopg.connect(os.environ[\"TEST_DB_URL\"])\n    yield conn\n    conn.close()\n\n@pytest.fixture\ndef query(db):\n    def run(sql, params=()):\n        with db.cursor() as cur:\n            cur.execute(sql, params)\n            return cur.fetchall()\n    return run", "out": "Any test can now ask for query and run SQL in one line.", "tip": "Give tests a read-only database user unless they really need to write.", "mistake": "Opening a new connection in every test; slow and it can exhaust the connection pool.", "viz": ""}, {"title": "UI + database checks in Playwright", "body": "Do the action in the browser, then prove the database is right. This is where UI automation and SQL meet.", "code": "def test_new_customer_is_saved(page, query):\n    email = \"buyer77@test.local\"\n    RegisterPage(page).register(\"Test Buyer 77\", email, \"Dhaka\")\n    expect(page.get_by_text(\"Welcome, Test Buyer 77\")).to_be_visible()\n\n    rows = query(\n        \"SELECT name, city FROM customers WHERE email = %s\", (email,))\n    assert rows == [(\"Test Buyer 77\", \"Dhaka\")]", "out": "One test checks both what the user sees and what was stored.", "tip": "Wait for the UI to confirm the save (expect) before querying, or you'll query too early.", "mistake": "Querying a database the app writes to asynchronously without waiting or retrying.", "viz": ""}, {"title": "Testing for SQL injection", "body": "SQL injection happens when an app puts user input straight into SQL. Testers check that inputs are handled safely.", "code": "-- a vulnerable app builds:\nSELECT * FROM customers WHERE email = '<input>';\n\n-- classic probe typed into a search or login field:\n' OR '1'='1\n\n-- becomes:\nSELECT * FROM customers WHERE email = '' OR '1'='1';\n-- every row returned", "out": "Signs of a problem: database error text on screen, unexpected extra results, or a login that succeeds.\nThe fix is always parameterized queries on the server.", "tip": "Only test systems you're authorised to test, and report findings privately, never publicly.", "mistake": "Stopping at 'no error shown'. Also check results and logs; some injection is silent.", "viz": ""}, {"title": "SQL checks in k6", "body": "With the xk6-sql extension, a load test can verify the database too, or seed data before it runs.", "code": "import sql from 'k6/x/sql';\nimport driver from 'k6/x/sql/driver/mysql';\n\nconst db = sql.open(driver, __ENV.DB_DSN);\n\nexport function teardown() {\n  const rows = db.query(\n    \"SELECT COUNT(*) AS n FROM orders WHERE customer_id >= 9000\");\n  console.log(`orders created during the test: ${rows[0].n}`);\n  db.close();\n}", "out": "Needs a custom k6 build with the extension (k6 path, module 07).", "tip": "Check the extension's README for the current import paths; they change between versions.", "mistake": "Running heavy SQL inside the default function; it slows every virtual user down.", "viz": ""}]}, {"num": "09", "title": "Performance & interview prep", "blurb": "Indexes, query plans, and the SQL questions QA interviews actually ask.", "lessons": [{"title": "Indexes", "body": "An index is like a book's index: the database finds rows without reading the whole table.", "code": "CREATE INDEX idx_orders_customer ON orders (customer_id);\nCREATE INDEX idx_orders_status_date ON orders (status, order_date);\n\n-- primary keys and UNIQUE columns are indexed automatically", "out": "Faster:  WHERE, JOIN and ORDER BY on indexed columns\nSlower:  INSERT and UPDATE (the index must be updated too)", "tip": "If a page gets slow as data grows, ask whether its query columns are indexed.", "mistake": "Wrapping an indexed column in a function (WHERE LOWER(email) = ...), which often stops the index being used.", "viz": ""}, {"title": "Reading EXPLAIN", "body": "EXPLAIN shows how the database plans to run a query. It's the first tool for 'why is this slow?'", "code": "EXPLAIN\nSELECT * FROM orders WHERE customer_id = 1;\n\n-- PostgreSQL: EXPLAIN ANALYZE also runs it and shows real timings", "out": "Before the index:   Seq Scan on orders         (reads every row)\nAfter the index:    Index Scan using idx_orders_customer", "tip": "Pair this with k6: when an endpoint is slow under load, EXPLAIN its query.", "mistake": "Running EXPLAIN ANALYZE on a DELETE or UPDATE outside a transaction; ANALYZE actually executes it.", "viz": ""}, {"title": "Interview: joins, keys and deletes", "body": "The questions asked in almost every QA interview, with short answers.", "code": "Q  INNER vs LEFT JOIN?\nA  Inner keeps matches only; left keeps every left row, NULLs if no match.\n\nQ  WHERE vs HAVING?\nA  WHERE filters rows before grouping; HAVING filters groups after.\n\nQ  PRIMARY KEY vs UNIQUE?\nA  Both unique. One PK per table, never NULL; UNIQUE can be NULL.\n\nQ  DELETE vs TRUNCATE vs DROP?\nA  Chosen rows / all rows fast / the whole table.\n\nQ  UNION vs UNION ALL?\nA  UNION removes duplicates; UNION ALL keeps them and is faster.", "out": "Practise saying each answer in one sentence, then give a tiny example.", "tip": "Say where you used it: 'I used a LEFT JOIN to find orphan records after a delete feature.'", "mistake": "Memorised definitions with no example.", "viz": ""}, {"title": "Interview: classic query puzzles", "body": "Short puzzles interviewers love. Solve them on ShopLite first, then out loud.", "code": "-- 1. second highest order total\nSELECT MAX(total_amount) FROM orders\nWHERE total_amount < (SELECT MAX(total_amount) FROM orders);\n\n-- 2. Nth highest (N = 3) with a window\nSELECT DISTINCT total_amount FROM (\n  SELECT total_amount,\n         DENSE_RANK() OVER (ORDER BY total_amount DESC) AS r\n  FROM orders) t\nWHERE r = 3;\n\n-- 3. customers with no orders   → anti-join (module 04)\n-- 4. duplicate emails           → GROUP BY ... HAVING COUNT(*) > 1\n-- 5. latest order per customer  → ROW_NUMBER (module 05)", "out": "second highest: 5050.00\nthird highest:  3400.00", "tip": "Explain your approach before writing; interviewers grade the thinking.", "mistake": "Using LIMIT 1 OFFSET 1 for 'second highest' without handling ties.", "viz": ""}, {"title": "Interview: tester scenarios", "body": "Scenario questions test how you'd use SQL on the job. Answer with a plan, then a query.", "code": "Q  A report total doesn't match the UI. How do you investigate?\nA  Rebuild the number in SQL, confirm what the report\n   includes (dates, statuses), compare step by step.\n\nQ  How do you check a 'delete customer' feature?\nA  Customer row gone (or soft-deleted flag set), no orphan\n   orders or payments left, audit log written.\n\nQ  How do you test a bulk Excel upload of 10,000 rows?\nA  COUNT rows before and after, check for duplicates,\n   spot-check first/last/middle rows field by field.", "out": "Tie answers to the domain you know, without naming specific clients or projects.", "tip": "Answering with only UI checks. Show that you verify the data layer too.", "mistake": "Naming confidential client systems in interview answers.", "viz": ""}]}];
+    const mod = MODS[st.m];
+    const cur = mod.lessons[st.l] || mod.lessons[0];
+    const key = (m, l) => m + '-' + l;
+    let total = 0, doneN = 0;
+    MODS.forEach((mm, i) => mm.lessons.forEach((_, j) => { total++; if (st.done[key(i, j)]) doneN++; }));
+    const modTabs = MODS.map((mm, i) => {
+      const on = i === st.m;
+      const d = mm.lessons.filter((_, j) => st.done[key(i, j)]).length;
+      return { num: mm.num + (d === mm.lessons.length ? ' ✓' : ''), title: mm.title, pick: () => this.setState({ m: i, l: 0 }),
+        style: 'display:flex;flex-direction:column;align-items:flex-start;gap:4px;min-height:64px;padding:10px 12px;border:none;border-radius:14px 14px 0 0;cursor:pointer;text-align:left;font:600 13px IBM Plex Sans,sans-serif;flex:1;' + (on ? 'background:#F4F1EA;color:#16181D;' : 'background:rgba(168,85,14,0.1);color:#4A2204;') };
+    });
+    const lessonNav = mod.lessons.map((ls, j) => {
+      const on = j === st.l, dn = !!st.done[key(st.m, j)];
+      return { title: ls.title, num: dn ? '✓' : String(j + 1).padStart(2, '0'), pick: () => this.setState({ l: j }),
+        style: 'display:flex;align-items:center;gap:12px;min-height:44px;padding:8px 12px;border-radius:10px;border:none;cursor:pointer;text-align:left;font:' + (on ? '600' : '400') + ' 15px IBM Plex Sans,sans-serif;' + (on ? 'background:#16181D;color:#F4F1EA;' : 'background:transparent;color:#16181D;'),
+        numStyle: 'flex-shrink:0;font:600 12px JetBrains Mono,monospace;width:28px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;' + (on ? 'background:#A8550E;color:#fff;' : dn ? 'background:#DCEFE3;color:#1F7A52;' : 'background:#EAE5DA;color:#6A6E77;') };
+    });
+    const modeDefs = [['split', 'Side by side'], ['code', 'Query'], ['out', 'Result']];
+    const modes = modeDefs.map(([id, label]) => ({ label, pick: () => this.setState({ mode: id }),
+      style: 'min-height:40px;padding:8px 14px;border-radius:8px;border:none;cursor:pointer;font:600 14px IBM Plex Sans,sans-serif;' + (st.mode === id ? 'background:#FFFFFF;color:#16181D;box-shadow:0 1px 3px rgba(0,0,0,.12);' : 'background:transparent;color:#5C606A;') }));
+    const isFirst = st.m === 0 && st.l === 0;
+    const isLast = st.m === MODS.length - 1 && st.l === mod.lessons.length - 1;
+    const go = (dir) => {
+      let m = st.m, l = st.l + dir;
+      if (l < 0) { if (m === 0) return; m -= 1; l = MODS[m].lessons.length - 1; }
+      if (l >= MODS[m].lessons.length) { if (m === MODS.length - 1) return; m += 1; l = 0; }
+      this.setState({ m, l });
+    };
+    const k = key(st.m, st.l); const isDone = !!st.done[k];
+    const pct = Math.round((doneN / total) * 100);
+
+    // schema
+    const TB = [
+      { id: 'customers', x: 0, y: 40, cols: [['customer_id', 'PK'], ['name', ''], ['email', 'UNIQUE'], ['city', ''], ['created_at', '']], rel: ['orders'], desc: 'One row per customer. Referenced by orders.customer_id.' },
+      { id: 'orders', x: 305, y: 40, cols: [['order_id', 'PK'], ['customer_id', 'FK'], ['order_date', ''], ['status', ''], ['total_amount', '']], rel: ['customers', 'order_items', 'payments'], desc: 'The heart of the schema. Each order belongs to one customer and has many items and payments.' },
+      { id: 'order_items', x: 610, y: 40, cols: [['item_id', 'PK'], ['order_id', 'FK'], ['product_id', 'FK'], ['quantity', ''], ['unit_price', '']], rel: ['orders', 'products'], desc: 'The lines of an order. Links orders to products (many-to-many through this table).' },
+      { id: 'products', x: 915, y: 40, cols: [['product_id', 'PK'], ['name', ''], ['category', ''], ['price', ''], ['stock', '']], rel: ['order_items'], desc: 'The catalogue. unit_price in order_items keeps the price at the time of sale, even if price changes later.' },
+      { id: 'payments', x: 305, y: 310, cols: [['payment_id', 'PK'], ['order_id', 'FK'], ['amount', ''], ['method', ''], ['paid_at', '']], rel: ['orders'], desc: 'Money received. One order can have several payments (split payments), which is why joins can multiply rows.' }
+    ];
+    const sel = TB[st.tbl];
+    const hot = (id) => id === sel.id ? 'on' : sel.rel.includes(id) ? 'rel' : 'off';
+    const tables = TB.map((t) => {
+      const h = hot(t.id);
+      return { name: t.id,
+        style: 'position:absolute;left:' + t.x + 'px;top:' + t.y + 'px;width:230px;border-radius:14px;overflow:hidden;display:flex;flex-direction:column;padding-bottom:8px;transition:all .2s;' + (h === 'on' ? 'background:#A8550E;color:#fff;border:2px solid #F2B57A;' : h === 'rel' ? 'background:#2A1E14;color:#F4E6D6;border:2px solid #A8550E;' : 'background:#1E2129;color:#8A8F9C;border:2px solid #2E323C;'),
+        cols: t.cols.map(([n, kk]) => ({ n, k: kk, keyStyle: 'font-size:11px;' + (kk === 'PK' ? 'color:#F2B57A;' : kk === 'FK' ? 'color:#7FD6DC;' : 'color:#8A8F9C;') })) };
+    });
+    const lc = (a, b) => (sel.id === a || sel.id === b) ? '#F2B57A' : '#3A3E48';
+    const lines = { co: lc('customers', 'orders'), oi: lc('orders', 'order_items'), ip: lc('order_items', 'products'), op: lc('orders', 'payments') };
+    const tblTabs = TB.map((t, i) => ({ label: t.id, pick: () => this.setState({ tbl: i }),
+      style: 'min-height:40px;padding:8px 12px;border-radius:10px;cursor:pointer;font:600 13px JetBrains Mono,monospace;' + (i === st.tbl ? 'background:#F2B57A;color:#16181D;border:1.5px solid #F2B57A;' : 'background:transparent;color:#F4F1EA;border:1.5px solid #3A3E48;') }));
+
+    // execution order
+    const CL = [
+      { text: "SELECT   status, COUNT(*) AS n", run: 5, name: 'SELECT', desc: 'Now the columns are picked and aliases like n are created. That is why WHERE could not use n.', rows: '1 row per remaining group, with its columns' },
+      { text: "FROM     orders", run: 1, name: 'FROM (and JOIN)', desc: 'Start with every row of the table, and any joined tables.', rows: 'all 5 orders' },
+      { text: "WHERE    order_date >= '2026-09-01'", run: 2, name: 'WHERE', desc: 'Throw away rows that fail the condition. Works on single rows only.', rows: '5 orders dated in September' },
+      { text: "GROUP BY status", run: 3, name: 'GROUP BY', desc: 'Put the remaining rows into buckets, one per status.', rows: '4 groups: paid, shipped, pending, cancelled' },
+      { text: "HAVING   COUNT(*) > 1", run: 4, name: 'HAVING', desc: 'Throw away whole groups. Aggregates like COUNT exist now.', rows: '1 group left: paid (2 orders)' },
+      { text: "ORDER BY n DESC", run: 6, name: 'ORDER BY', desc: 'Sort the result. SELECT has run, so the alias n works here.', rows: 'sorted result' },
+      { text: "LIMIT    3;", run: 7, name: 'LIMIT', desc: 'Finally, keep only the first rows.', rows: 'at most 3 rows' }
+    ];
+    const oRun = st.o + 1;
+    const oCur = CL.find((c) => c.run === oRun);
+    const clauses = CL.map((c) => {
+      const on = c.run === oRun, done = c.run < oRun;
+      return { text: c.text, run: String(c.run),
+        style: 'display:flex;align-items:center;gap:14px;padding:8px 20px;font:14px JetBrains Mono,monospace;transition:all .2s;' + (on ? 'background:rgba(242,181,122,.18);color:#FFFFFF;box-shadow:inset 3px 0 0 #F2B57A;' : done ? 'color:#A9AEBA;' : 'color:#5A5F6B;'),
+        badge: 'flex-shrink:0;width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;font:600 12px JetBrains Mono,monospace;' + (on ? 'background:#F2B57A;color:#16181D;' : done ? 'background:#3A2A1C;color:#F2B57A;' : 'background:#2A2D35;color:#8A8F9C;') };
+    });
+
+    // joins
+    const C = [[1, 'Ayesha'], [2, 'Rafi'], [3, 'Nusrat'], [4, 'Tanvir'], [5, 'Mim']];
+    const O = [[101, 1], [102, 2], [103, 1], [104, 4], [105, 3], [106, 9]];
+    const J = [
+      { label: 'INNER', sql: 'SELECT ... FROM customers c\nJOIN orders o ON o.customer_id = c.customer_id', desc: 'Only rows that match on both sides. Mim (no orders) and order 106 (no customer) disappear.' },
+      { label: 'LEFT', sql: 'SELECT ... FROM customers c\nLEFT JOIN orders o ON o.customer_id = c.customer_id', desc: 'Every customer; order columns are NULL for Mim.' },
+      { label: 'RIGHT', sql: 'SELECT ... FROM customers c\nRIGHT JOIN orders o ON o.customer_id = c.customer_id', desc: 'Every order; the customer is NULL for orphan order 106.' },
+      { label: 'FULL', sql: 'SELECT ... FROM customers c\nFULL JOIN orders o ON o.customer_id = c.customer_id', desc: 'Everything from both sides, matched where possible.' },
+      { label: 'no orders', sql: 'SELECT ... FROM customers c\nLEFT JOIN orders o ON o.customer_id = c.customer_id\nWHERE o.order_id IS NULL', desc: 'Anti-join: customers who never ordered.' },
+      { label: 'orphans', sql: 'SELECT ... FROM orders o\nLEFT JOIN customers c ON c.customer_id = o.customer_id\nWHERE c.customer_id IS NULL', desc: 'Anti-join: orders pointing at a customer that does not exist. A data integrity bug.' }
+    ];
+    const jt = J[st.j].label;
+    const matches = [];
+    C.forEach(([cid, cn]) => O.forEach(([oid, ocid]) => { if (ocid === cid) matches.push([cn, oid, ocid]); }));
+    const cNo = C.filter(([cid]) => !O.some(([, o]) => o === cid));
+    const oNo = O.filter(([, ocid]) => !C.some(([cid]) => cid === ocid));
+    let rows = [];
+    if (jt === 'INNER') rows = matches;
+    if (jt === 'LEFT') rows = matches.concat(cNo.map(([, cn]) => [cn, null, null]));
+    if (jt === 'RIGHT') rows = matches.concat(oNo.map(([oid, ocid]) => [null, oid, ocid]));
+    if (jt === 'FULL') rows = matches.concat(cNo.map(([, cn]) => [cn, null, null]), oNo.map(([oid, ocid]) => [null, oid, ocid]));
+    if (jt === 'no orders') rows = cNo.map(([, cn]) => [cn, null, null]);
+    if (jt === 'orphans') rows = oNo.map(([oid, ocid]) => [null, oid, ocid]);
+    const nullS = 'color:#6B7080;font-style:italic;';
+    const jRows = rows.map(([a, b, c]) => ({ a: a === null ? 'NULL' : a, b: b === null ? 'NULL' : String(b), c: c === null ? 'NULL' : String(c), aStyle: a === null ? nullS : 'color:#F4E6D6;', bStyle: b === null ? nullS : 'color:#F4E6D6;' }));
+    const usedC = new Set(rows.filter((r) => r[0] !== null).map((r) => r[0]));
+    const usedO = new Set(rows.filter((r) => r[1] !== null).map((r) => r[1]));
+    const rowS = (on, bad) => 'display:flex;justify-content:space-between;padding:8px 12px;border-radius:8px;font:13px JetBrains Mono,monospace;transition:all .2s;' + (on ? (bad ? 'background:#5A2718;color:#FFD9CC;' : 'background:#A8550E;color:#fff;') : 'background:#1E2129;color:#6B7080;');
+    const jLeft = C.map(([cid, cn]) => ({ id: String(cid), label: cn, style: rowS(usedC.has(cn), false) }));
+    const jRight = O.map(([oid, ocid]) => ({ id: String(oid), label: '→ ' + ocid, style: rowS(usedO.has(oid), ocid === 9) }));
+    const jTabs = J.map((x, i) => ({ label: x.label, pick: () => this.setState({ j: i }),
+      style: 'min-height:40px;padding:8px 14px;border-radius:10px;cursor:pointer;font:600 13px JetBrains Mono,monospace;' + (i === st.j ? 'background:#F2B57A;color:#16181D;border:1.5px solid #F2B57A;' : 'background:transparent;color:#F4F1EA;border:1.5px solid #3A3E48;') }));
+
+    return {
+      mod, cur, modTabs, lessonNav, modes,
+      lessonNum: String(st.l + 1), lessonTotal: String(mod.lessons.length),
+      showA: st.mode !== 'out', showB: st.mode !== 'code',
+      gridStyle: st.mode === 'split' ? 'display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;' : 'display:grid;grid-template-columns:repeat(1,minmax(0,1fr));gap:16px;',
+      prev: () => go(-1), next: () => go(1),
+      prevLabel: isFirst ? 'Start' : 'Previous', nextLabel: isLast ? 'Finished' : 'Next lesson',
+      markDone: () => this.setState({ done: { ...st.done, [k]: !isDone } }),
+      doneLabel: isDone ? '✓ Done' : 'Mark as done',
+      doneBtnStyle: 'min-height:48px;padding:12px 22px;border-radius:12px;cursor:pointer;font:600 15px IBM Plex Sans,sans-serif;' + (isDone ? 'background:#DCEFE3;color:#1F7A52;border:1.5px solid #7FC8A0;' : 'background:#FFFFFF;color:#16181D;border:1.5px solid #DDD7CB;'),
+      overallLabel: doneN + ' / ' + total + ' lessons',
+      overallStyle: 'height:100%;border-radius:999px;background:#A8550E;transition:width .3s;width:' + pct + '%;',
+      vizSchema: cur.viz === 'schema', vizOrder: cur.viz === 'order', vizJoin: cur.viz === 'join',
+      tables, lines, tblTabs, tblSel: { name: sel.id, desc: sel.desc },
+      clauses, oCur, oStepNum: String(oRun), oLabel: oRun + ' / 7',
+      oPrev: () => this.setState({ o: Math.max(0, st.o - 1) }), oNext: () => this.setState({ o: Math.min(6, st.o + 1) }),
+      jTabs, jCur: J[st.j], jRows, jCount: String(rows.length), jLeft, jRight
+    };
+  }
+}
+
+var __TPL=`<div style="width: 1440px; height: 3000px; box-sizing: border-box; display: flex; flex-direction: column; background: #F4F1EA; font-family: 'IBM Plex Sans', system-ui, sans-serif; color: #16181D;">
+
+<section style="background: #FBE9D5; padding: 48px 80px 0; display: flex; flex-direction: column; gap: 26px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 40px;">
+<div style="display: flex; flex-direction: column; gap: 14px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #8A4208;"><a href="SQLHub.html" style="color: #4A2204;">sql</a> / course · module {{mod.num}}</span>
+<h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 60px; line-height: 1; letter-spacing: -0.03em; color: #2E1503;">{{mod.title}}</h1>
+<p style="margin: 0; font-size: 18px; line-height: 1.6; color: #6B3A10; max-width: 760px;">{{mod.blurb}}</p>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px; min-width: 280px;">
+<div style="display: flex; justify-content: space-between; font-size: 14px; color: #4A2204;"><span>Course progress</span><span style="font-family: 'JetBrains Mono', monospace;">{{overallLabel}}</span></div>
+<div style="height: 8px; border-radius: 999px; background: #F2D2AE; overflow: hidden;"><div style="{{overallStyle}}"></div></div>
+<span style="font-size: 13px; color: #6B3A10;">All examples use ShopLite, a made-up online store.</span>
+</div>
+</div>
+<div style="display: flex; gap: 6px;">
+<sc-for list="{{modTabs}}" as="t" hint-placeholder-count="9">
+<button onClick="{{t.pick}}" style="{{t.style}}"><span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; opacity: 0.8;">{{t.num}}</span><span>{{t.title}}</span></button>
+</sc-for>
+</div>
+</section>
+
+<section style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 40px; padding: 56px 80px 48px;">
+<aside style="grid-column: span 3; display: flex; flex-direction: column; gap: 6px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #6A6E77; text-transform: uppercase; letter-spacing: 0.08em; padding: 0 12px 10px;">module {{mod.num}} · lessons</span>
+<sc-for list="{{lessonNav}}" as="l" hint-placeholder-count="7">
+<button onClick="{{l.pick}}" style="{{l.style}}"><span style="{{l.numStyle}}">{{l.num}}</span><span>{{l.title}}</span></button>
+</sc-for>
+</aside>
+<div style="grid-column: span 9; display: flex; flex-direction: column; gap: 22px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 20px;">
+<div style="display: flex; flex-direction: column; gap: 10px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #A8550E;">module {{mod.num}} · lesson {{lessonNum}} of {{lessonTotal}}</span>
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 44px; letter-spacing: -0.02em; line-height: 1.05;">{{cur.title}}</h2>
+</div>
+<div style="display: flex; gap: 6px; background: #EAE5DA; padding: 5px; border-radius: 12px;">
+<sc-for list="{{modes}}" as="m" hint-placeholder-count="3"><button onClick="{{m.pick}}" style="{{m.style}}">{{m.label}}</button></sc-for>
+</div>
+</div>
+<p style="margin: 0; font-size: 18px; line-height: 1.7; color: #34373F; max-width: 840px;">{{cur.body}}</p>
+<div style="{{gridStyle}}">
+<sc-if value="{{showA}}" hint-placeholder-val="{{ true }}">
+<div style="background: #16181D; border-radius: 16px; overflow: hidden;">
+<div style="padding: 12px 18px; border-bottom: 1px solid #2A2D35; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #F2B57A;">query</div>
+<pre style="margin: 0; padding: 20px; font-family: 'JetBrains Mono', monospace; font-size: 13.5px; line-height: 1.7; color: #D8DAE0; white-space: pre; overflow-x: auto;">{{cur.code}}</pre>
+</div>
+</sc-if>
+<sc-if value="{{showB}}" hint-placeholder-val="{{ true }}">
+<div style="background: #FFFFFF; border: 1px solid #DDD7CB; border-radius: 16px; overflow: hidden;">
+<div style="padding: 12px 18px; border-bottom: 1px solid #DDD7CB; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #A8550E;">result / what it means</div>
+<pre style="margin: 0; padding: 20px; font-family: 'JetBrains Mono', monospace; font-size: 13.5px; line-height: 1.7; color: #16181D; white-space: pre; overflow-x: auto;">{{cur.out}}</pre>
+</div>
+</sc-if>
+</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px;">
+<div style="display: flex; gap: 14px; background: #DCEFE3; border-radius: 16px; padding: 20px 22px; align-items: flex-start;">
+<span style="flex-shrink: 0; width: 32px; height: 32px; border-radius: 9px; background: #1F7A52; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 700;">✓</span>
+<div style="display: flex; flex-direction: column; gap: 4px;"><span style="font-weight: 600; color: #174F37;">Remember</span><span style="font-size: 15px; line-height: 1.6; color: #174F37;">{{cur.tip}}</span></div>
+</div>
+<div style="display: flex; gap: 14px; background: #FCE7DD; border-radius: 16px; padding: 20px 22px; align-items: flex-start;">
+<span style="flex-shrink: 0; width: 32px; height: 32px; border-radius: 9px; background: #C4502A; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 700;">!</span>
+<div style="display: flex; flex-direction: column; gap: 4px;"><span style="font-weight: 600; color: #7A2E14;">Common mistake</span><span style="font-size: 15px; line-height: 1.6; color: #7A2E14;">{{cur.mistake}}</span></div>
+</div>
+</div>
+<div style="display: flex; justify-content: space-between; align-items: center;">
+<button onClick="{{prev}}" style="min-height: 48px; padding: 12px 22px; border-radius: 12px; border: 1.5px solid #16181D; background: transparent; cursor: pointer; font: 600 15px 'IBM Plex Sans', sans-serif; color: #16181D;">← {{prevLabel}}</button>
+<button onClick="{{markDone}}" style="{{doneBtnStyle}}">{{doneLabel}}</button>
+<button onClick="{{next}}" style="min-height: 48px; padding: 12px 22px; border-radius: 12px; border: none; background: #A8550E; color: #FFFFFF; cursor: pointer; font: 600 15px 'IBM Plex Sans', sans-serif;">{{nextLabel}} →</button>
+</div>
+</div>
+</section>
+
+<!-- SCHEMA -->
+<sc-if value="{{vizSchema}}" hint-placeholder-val="{{ false }}">
+<section style="margin: 0 80px 64px; background: #16181D; color: #F4F1EA; border-radius: 28px; padding: 44px; display: flex; flex-direction: column; gap: 26px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 30px;">
+<div style="display: flex; flex-direction: column; gap: 10px;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #F2B57A;">visualize · the ShopLite schema</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 36px; font-weight: 800;">Five tables, four relationships</span></div>
+<div style="display: flex; gap: 6px;"><sc-for list="{{tblTabs}}" as="tt" hint-placeholder-count="5"><button onClick="{{tt.pick}}" style="{{tt.style}}">{{tt.label}}</button></sc-for></div>
+</div>
+<div style="position: relative; width: 1150px; height: 520px;">
+<svg width="1150" height="520" viewBox="0 0 1150 520" fill="none" style="position: absolute; left: 0; top: 0;">
+<path d="M230 110 L305 110" stroke="{{lines.co}}" stroke-width="2.5"></path>
+<path d="M535 110 L610 110" stroke="{{lines.oi}}" stroke-width="2.5"></path>
+<path d="M840 110 L915 110" stroke="{{lines.ip}}" stroke-width="2.5"></path>
+<path d="M420 245 L420 310" stroke="{{lines.op}}" stroke-width="2.5"></path>
+<text x="244" y="100" fill="#8A8F9C" font-family="JetBrains Mono, monospace" font-size="12">1 ─ *</text>
+<text x="549" y="100" fill="#8A8F9C" font-family="JetBrains Mono, monospace" font-size="12">1 ─ *</text>
+<text x="854" y="100" fill="#8A8F9C" font-family="JetBrains Mono, monospace" font-size="12">* ─ 1</text>
+<text x="430" y="285" fill="#8A8F9C" font-family="JetBrains Mono, monospace" font-size="12">1 ─ *</text>
+</svg>
+<sc-for list="{{tables}}" as="tb" hint-placeholder-count="5">
+<div style="{{tb.style}}">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 15px; font-weight: 600; padding: 12px 14px; border-bottom: 1px solid rgba(255,255,255,0.12);">{{tb.name}}</span>
+<sc-for list="{{tb.cols}}" as="cl" hint-placeholder-count="5">
+<div style="display: flex; justify-content: space-between; gap: 8px; padding: 5px 14px; font-family: 'JetBrains Mono', monospace; font-size: 12.5px;"><span>{{cl.n}}</span><span style="{{cl.keyStyle}}">{{cl.k}}</span></div>
+</sc-for>
+</div>
+</sc-for>
+<div style="position: absolute; left: 610px; top: 330px; width: 535px; box-sizing: border-box; background: #2A1E14; border-radius: 16px; padding: 20px 22px; display: flex; flex-direction: column; gap: 8px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 15px; color: #F2B57A;">{{tblSel.name}}</span>
+<span style="font-size: 15px; line-height: 1.6; color: #F4E6D6;">{{tblSel.desc}}</span>
+</div>
+</div>
+</section>
+</sc-if>
+
+<!-- EXECUTION ORDER -->
+<sc-if value="{{vizOrder}}" hint-placeholder-val="{{ false }}">
+<section style="margin: 0 80px 64px; background: #FFFFFF; border: 1px solid #DDD7CB; border-radius: 28px; padding: 44px; display: flex; flex-direction: column; gap: 26px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 30px;">
+<div style="display: flex; flex-direction: column; gap: 10px;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #A8550E;">visualize · written order vs run order</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 36px; font-weight: 800;">How the database reads your query</span></div>
+<div style="display: flex; gap: 10px; align-items: center;">
+<button onClick="{{oPrev}}" aria-label="Previous step" style="width: 48px; height: 48px; border-radius: 12px; border: 1.5px solid #16181D; background: transparent; cursor: pointer; font-size: 18px;">←</button>
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; min-width: 60px; text-align: center;">{{oLabel}}</span>
+<button onClick="{{oNext}}" aria-label="Next step" style="width: 48px; height: 48px; border-radius: 12px; border: none; background: #A8550E; color: #FFFFFF; cursor: pointer; font-size: 18px;">→</button>
+</div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 28px;">
+<div style="grid-column: span 6; background: #16181D; border-radius: 18px; padding: 20px 0; display: flex; flex-direction: column;">
+<sc-for list="{{clauses}}" as="cz" hint-placeholder-count="7">
+<div style="{{cz.style}}"><span style="{{cz.badge}}">{{cz.run}}</span><span style="white-space: pre;">{{cz.text}}</span></div>
+</sc-for>
+</div>
+<div style="grid-column: span 6; display: flex; flex-direction: column; gap: 14px;">
+<div style="background: #FBE9D5; border-radius: 18px; padding: 24px; display: flex; flex-direction: column; gap: 8px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #8A4208;">runs {{oStepNum}} of 7</span>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 28px; font-weight: 800; color: #2E1503;">{{oCur.name}}</span>
+<span style="font-size: 16px; line-height: 1.6; color: #4A2204;">{{oCur.desc}}</span>
+</div>
+<div style="background: #F4F1EA; border-radius: 14px; padding: 16px 18px; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #34373F;">rows left: {{oCur.rows}}</div>
+</div>
+</div>
+</section>
+</sc-if>
+
+<!-- JOIN VISUALIZER -->
+<sc-if value="{{vizJoin}}" hint-placeholder-val="{{ false }}">
+<section style="margin: 0 80px 64px; background: #16181D; color: #F4F1EA; border-radius: 28px; padding: 44px; display: flex; flex-direction: column; gap: 26px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 30px;">
+<div style="display: flex; flex-direction: column; gap: 10px;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #F2B57A;">visualize · joins on real rows</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 36px; font-weight: 800;">customers ⋈ orders</span></div>
+<div style="display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; max-width: 760px;"><sc-for list="{{jTabs}}" as="jt" hint-placeholder-count="6"><button onClick="{{jt.pick}}" style="{{jt.style}}">{{jt.label}}</button></sc-for></div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 22px; align-items: start;">
+<div style="grid-column: span 3; display: flex; flex-direction: column; gap: 6px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #8A8F9C;">customers (left)</span>
+<sc-for list="{{jLeft}}" as="r" hint-placeholder-count="5"><div style="{{r.style}}"><span>{{r.id}}</span><span>{{r.label}}</span></div></sc-for>
+</div>
+<div style="grid-column: span 3; display: flex; flex-direction: column; gap: 6px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #8A8F9C;">orders (right)</span>
+<sc-for list="{{jRight}}" as="r" hint-placeholder-count="6"><div style="{{r.style}}"><span>{{r.id}}</span><span>{{r.label}}</span></div></sc-for>
+</div>
+<div style="grid-column: span 6; display: flex; flex-direction: column; gap: 10px;">
+<pre style="margin: 0; background: #2A1E14; border-radius: 12px; padding: 14px 16px; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.6; color: #F4E6D6; white-space: pre-wrap;">{{jCur.sql}}</pre>
+<div style="background: #1E2129; border: 1px solid #2E323C; border-radius: 12px; overflow: hidden;">
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #8A8F9C; padding: 10px 14px; border-bottom: 1px solid #2E323C;"><span>customer</span><span>order_id</span><span>order.customer_id</span></div>
+<sc-for list="{{jRows}}" as="jr" hint-placeholder-count="6"><div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); font-family: 'JetBrains Mono', monospace; font-size: 13px; padding: 7px 14px;"><span style="{{jr.aStyle}}">{{jr.a}}</span><span style="{{jr.bStyle}}">{{jr.b}}</span><span style="{{jr.bStyle}}">{{jr.c}}</span></div></sc-for>
+</div>
+<span style="font-size: 15px; line-height: 1.6; color: #D8DAE0;">{{jCur.desc}} <strong style="color: #F2B57A;">{{jCount}} rows.</strong></span>
+</div>
+</div>
+</section>
+</sc-if>
+
+<div style="flex-grow: 1;"></div>
+<section style="padding: 0 80px 64px; display: flex; justify-content: space-between; align-items: center; gap: 30px;">
+<div style="display: flex; flex-direction: column; gap: 8px;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #6A6E77;">back to the path</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 30px; font-weight: 800;">SQL for testers · 9 modules</span></div>
+<a href="SQLHub.html" style="text-decoration: none; padding: 16px 26px; border-radius: 12px; background: #16181D; color: #F2B57A; font-weight: 600;">SQL path →</a>
+</section>
+</div>`;
+window.__mountDC(__TPL, Component);
+</script>
+</body>
+</html>

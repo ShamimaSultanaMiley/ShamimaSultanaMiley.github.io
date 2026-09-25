@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440">
+<title>Accessibility Testing — WCAG 2.2</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap">
+<style>html,body{margin:0;background:#F4F1EA;font-family:'IBM Plex Sans',system-ui,sans-serif} #app > div{margin:0 auto}</style>
+</head>
+<body>
+
+<style>
+.snav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:16px 40px;background:#16181D;color:#F4F1EA;font-family:'IBM Plex Sans',sans-serif;flex-wrap:wrap;gap:12px}
+.snav a{color:#F4F1EA;text-decoration:none}
+.snav .brand{display:flex;align-items:center;gap:10px;font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:18px}
+.snav .brand span.logo{width:34px;height:34px;border-radius:9px;background:#7EE2A8;color:#16181D;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:14px}
+.snav ul{list-style:none;display:flex;gap:6px;margin:0;padding:0;align-items:center;flex-wrap:wrap}
+.snav > ul > li{position:relative}
+.snav > ul > li > a,.snav > ul > li > span{display:block;padding:9px 14px;border-radius:9px;font-size:15px;font-weight:500;cursor:pointer;white-space:nowrap}
+.snav > ul > li:hover > a,.snav > ul > li:hover > span,.snav .cur{background:#2A2D35}
+.snav .caret{font-size:11px;opacity:.7;margin-left:4px}
+.snav .drop{position:absolute;top:100%;left:0;min-width:220px;background:#1E2129;border:1px solid #2E323C;border-radius:12px;padding:8px;display:none;flex-direction:column;gap:2px;box-shadow:0 18px 40px -16px rgba(0,0,0,.6)}
+.snav > ul > li:hover .drop{display:flex}
+.snav .drop a{padding:9px 12px;border-radius:8px;font-size:14px;color:#D8DAE0}
+.snav .drop a:hover{background:#2A2D35;color:#fff}
+.snav .drop .grp{font-family:'JetBrains Mono',monospace;font-size:11px;color:#8A8F9C;text-transform:uppercase;letter-spacing:.06em;padding:8px 12px 2px}
+.snav .cta{padding:9px 18px;border-radius:999px;background:#1F7A52;color:#fff;font-weight:600}
+.snav .menubtn{display:none;background:none;border:1.5px solid #3A3E48;color:#F4F1EA;border-radius:9px;padding:8px 12px;font-size:15px;cursor:pointer}
+@media(max-width:1100px){
+  .snav .menubtn{display:block}
+  .snav > ul{display:none;flex-direction:column;align-items:stretch;width:100%;order:3}
+  .snav.open > ul{display:flex}
+  .snav .drop{position:static;display:flex;border:none;box-shadow:none;background:transparent;padding:0 0 6px 14px}
+  .snav > ul > li:hover .drop{display:flex}
+}
+</style>
+<nav class="snav" id="snav">
+<a class="brand" href="index.html"><span class="logo">S✓</span>Shamima Sultana</a>
+<button class="menubtn" onclick="document.getElementById('snav').classList.toggle('open')">Menu ☰</button>
+<ul>
+<li><a href="index.html" class="">Home</a></li>
+<li><span class="">About <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="about.html">Intro &amp; journey</a>
+    <a href="skills.html">Skills</a>
+    <a href="certifications.html">Certifications</a>
+    <a href="research.html">Research</a>
+    <a href="achievements.html">Achievements</a>
+  </div></li>
+<li><span class="">Work <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="projects.html">Projects</a>
+  </div></li>
+<li><span class="cur">Learn <span class="caret">▾</span></span>
+  <div class="drop">
+    <span class="grp">Automation</span>
+    <a href="PWHub.html">Playwright path</a>
+    <a href="Selenium.html">Selenium with Java</a>
+    <a href="MobileTest.html">Mobile testing</a>
+    <span class="grp">Performance</span>
+    <a href="K6Hub.html">k6</a>
+    <a href="JMeter.html">JMeter</a>
+    <span class="grp">Data &amp; APIs</span>
+    <a href="SQLHub.html">SQL</a>
+    <a href="API.html">API testing</a>
+    <span class="grp">Core &amp; specialised</span>
+    <a href="Manual.html">Manual testing</a>
+    <a href="AITest.html">AI / LLM testing</a>
+    <a href="DevTools.html">DevTools</a>
+    <a href="Git.html">Git &amp; GitHub</a>
+    <a href="A11y.html">Accessibility</a>
+    <a href="Security.html">Security</a>
+  </div></li>
+<li><span class="">Writing <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="K6Hub.html">Tutorials &amp; articles</a>
+  </div></li>
+<li><span class="">More <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="News.html">News</a>
+    <a href="Interview.html">Interview prep</a>
+    <a href="ISTQB.html">ISTQB prep</a>
+  </div></li>
+<li><a class="cta" href="mailto:shamimasultanamiley605@gmail.com">Contact</a></li>
+</ul>
+</nav>
+
+<div id="app"></div>
+<script>/* Minimal renderer: replaces Claude's canvas engine so pages run anywhere. */
+(function(){
+  function resolve(scopes, path){
+    path=path.trim();
+    var parts=path.split('.'), head=parts[0], base, found=false;
+    for(var i=scopes.length-1;i>=0;i--){ if(scopes[i] && Object.prototype.hasOwnProperty.call(scopes[i],head)){ base=scopes[i][head]; found=true; break; } }
+    if(!found) return undefined;
+    for(var j=1;j<parts.length;j++){ if(base==null) return undefined; base=base[parts[j]]; }
+    return base;
+  }
+  function subst(str, scopes){
+    return str.replace(/\{\{([^}]+)\}\}/g, function(_,e){ var v=resolve(scopes,e); return v==null?'':String(v); });
+  }
+  function firstExpr(str){ var m=str.match(/\{\{([^}]+)\}\}/); return m?m[1].trim():null; }
+  function processNode(node, scopes, out){
+    if(node.nodeType===3){ // text
+      var t=node.nodeValue;
+      if(t.indexOf('{{')>=0) out.push(document.createTextNode(subst(t,scopes)));
+      else out.push(document.createTextNode(t));
+      return;
+    }
+    if(node.nodeType!==1){ return; }
+    var tag=node.tagName.toLowerCase();
+    if(tag==='sc-for'){
+      var listExpr=firstExpr(node.getAttribute('list')||'');
+      var as=node.getAttribute('as');
+      var arr=listExpr?resolve(scopes,listExpr):null;
+      if(Array.isArray(arr)){
+        for(var k=0;k<arr.length;k++){
+          var sc=scopes.concat([{__k:as, [as]:arr[k]}]);
+          for(var c=0;c<node.childNodes.length;c++) processNode(node.childNodes[c], sc, out);
+        }
+      }
+      return;
+    }
+    if(tag==='sc-if'){
+      var valExpr=firstExpr(node.getAttribute('value')||'');
+      var cond=valExpr?resolve(scopes,valExpr):false;
+      if(cond){ for(var c2=0;c2<node.childNodes.length;c2++) processNode(node.childNodes[c2], scopes, out); }
+      return;
+    }
+    var el=document.createElement(tag);
+    for(var a=0;a<node.attributes.length;a++){
+      var at=node.attributes[a], name=at.name, val=at.value;
+      if(name.indexOf('hint-')===0) continue;
+      if(name==='onclick'){ var h=firstExpr(val); (function(expr){ el.addEventListener('click', function(ev){ var fn=resolve(scopes,expr); if(typeof fn==='function') fn(ev); }); })(h); continue; }
+      if(name==='onchange'){ var h2=firstExpr(val); (function(expr){ el.addEventListener('input', function(ev){ var fn=resolve(scopes,expr); if(typeof fn==='function') fn(ev); }); })(h2); continue; }
+      var sv=val.indexOf('{{')>=0?subst(val,scopes):val;
+      if(name==='value' && (tag==='input'||tag==='textarea')){ el.value=sv; el.setAttribute('value',sv); }
+      else el.setAttribute(name, sv);
+    }
+    var kids=[];
+    for(var cc=0;cc<node.childNodes.length;cc++) processNode(node.childNodes[cc], scopes, kids);
+    for(var ki=0;ki<kids.length;ki++) el.appendChild(kids[ki]);
+    out.push(el);
+  }
+  window.__mountDC=function(templateHTML, ComponentClass){
+    var tplRoot=document.createElement('div'); tplRoot.innerHTML=templateHTML;
+    var mount=document.getElementById('app');
+    var comp=new ComponentClass({});
+    function doRender(){
+      var vals;
+      try{ vals=comp.renderVals(); }catch(e){ console.error('render error',e); return; }
+      var frag=document.createDocumentFragment();
+      var buf=[];
+      for(var i=0;i<tplRoot.childNodes.length;i++) processNode(tplRoot.childNodes[i], [vals], buf);
+      for(var b=0;b<buf.length;b++) frag.appendChild(buf[b]);
+      // preserve focus in search/textarea across re-render
+      var active=document.activeElement, sel=null, id=null;
+      mount.innerHTML=''; mount.appendChild(frag);
+    }
+    comp.setState=function(s){ Object.assign(comp.state, s); doRender(); };
+    doRender();
+  };
+  window.DCLogic=function(){};
+})();
+</script>
+<script>
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { m: 0, l: 0, mode: 'split', f: 0, done: {} };
+  }
+  renderVals() {
+    const st = this.state;
+    const MODS = [{"num": "01", "title": "Foundations", "blurb": "Who accessibility is for, how WCAG is organised, and the assistive technologies people use.", "lessons": [{"title": "Why accessibility matters", "body": "Accessibility means people with disabilities can use the product. It also helps everyone in difficult situations.", "code": "Permanent    blind, low vision, deaf, limited hand movement,\n             cognitive or learning disabilities\nTemporary    broken arm, eye surgery, recovering from illness\nSituational  bright sunlight, a baby in one arm, a noisy bus,\n             a slow connection, an old phone\n\nAccessibility bugs are real bugs: a checkout that can't be\nused with a keyboard is broken for every keyboard user.", "out": "Many countries require accessible public and commercial\ndigital services, and large organisations increasingly ask\nfor it in contracts.", "tip": "Treat accessibility as part of quality, not a separate 'nice to have'.", "mistake": "Thinking accessibility only affects a tiny group of users.", "viz": ""}, {"title": "WCAG 2.2: structure and levels", "body": "The Web Content Accessibility Guidelines are the global standard. Version 2.2 (2023) is the current one.", "code": "Four principles: POUR\n  Perceivable     can users perceive the content?\n  Operable        can they operate the interface?\n  Understandable  can they understand it?\n  Robust          does it work with assistive technology?\n\nGuidelines → success criteria, each with a level\n  A    minimum\n  AA   the usual target for laws and contracts\n  AAA  highest, not required for whole sites\n\nExample: 1.4.3 Contrast (Minimum), Level AA", "out": "Criteria are numbered principle.guideline.criterion.\nQuote the number in bug reports: \"Fails WCAG 1.4.3 (AA)\".", "tip": "Aim for WCAG 2.2 AA unless your requirement says otherwise.", "mistake": "Trying to meet every AAA criterion on day one.", "viz": ""}, {"title": "Assistive technologies", "body": "Test with the tools real users rely on.", "code": "Screen readers   NVDA (free, Windows), JAWS (Windows),\n                 VoiceOver (macOS / iOS, built in),\n                 TalkBack (Android, built in)\nScreen magnifier Windows Magnifier, Zoom on macOS\nVoice control    Voice Access (Android), Voice Control (Apple)\nKeyboard only    many motor-impaired and power users\nSwitch devices   one or two buttons to operate everything", "out": "Most of these rely on the same thing: correct,\nsemantic code with proper names and roles.", "tip": "Install NVDA; it's free and the most common screen reader for web testing on Windows.", "mistake": "Only testing with a mouse and your own eyesight.", "viz": ""}, {"title": "What changed in WCAG 2.2", "body": "WCAG 2.2 added nine success criteria. These are often missed because older checklists don't include them.", "code": "2.4.11 Focus Not Obscured (Minimum)   AA  focused item not hidden\n                                           behind sticky headers\n2.4.12 Focus Not Obscured (Enhanced)   AAA\n2.4.13 Focus Appearance                AAA\n2.5.7  Dragging Movements              AA  drag has a click alternative\n2.5.8  Target Size (Minimum)           AA  targets at least 24×24 px\n3.2.6  Consistent Help                 A   help in the same place\n3.3.7  Redundant Entry                 A   don't ask for the same info twice\n3.3.8  Accessible Authentication (Min) AA  no memory puzzles; allow paste\n3.3.9  Accessible Authentication (Enh) AAA\n(4.1.1 Parsing was removed as obsolete)", "out": "3.3.8 in practice: login must allow password managers\nand paste; no 'type the 3rd letter of your password'.", "tip": "Add the new AA criteria to your existing checklists.", "mistake": "Using a WCAG 2.0 checklist and missing target size and focus-obscured issues.", "viz": ""}]}, {"num": "02", "title": "Perceivable", "blurb": "Text alternatives, contrast, colour, media, zoom and reflow.", "lessons": [{"title": "Text alternatives", "body": "Every meaningful image needs a text alternative; decorative images should be hidden from screen readers.", "code": "Informative   <img src=\"chart.png\" alt=\"Sales rose 20% in March\">\nFunctional    <button aria-label=\"Search\"><svg …/><\/button>\nDecorative    <img src=\"swirl.png\" alt=\"\">   (empty alt: skipped)\nComplex       chart + a data table or text summary nearby\n\nBad alt text: \"image\", \"photo123.jpg\", \"click here\"", "out": "Test: turn on a screen reader and tab to icon-only buttons.\nIf it just says 'button', the name is missing (WCAG 1.1.1, 4.1.2).", "tip": "Alt text describes the purpose, not the pixels: 'Download invoice', not 'arrow icon'.", "mistake": "Missing alt attributes, so screen readers read the file name.", "viz": ""}, {"title": "Colour contrast", "body": "Text and important UI parts must stand out enough from their background.", "code": "WCAG 1.4.3 (AA) text contrast\n  normal text          at least 4.5 : 1\n  large text           at least 3 : 1\n  (≥ 18pt, or ≥ 14pt bold)\nWCAG 1.4.11 (AA) non-text contrast\n  input borders, icons, focus rings   at least 3 : 1\n\nTools: DevTools colour picker (shows ratio),\n       Colour Contrast Analyser (TPGi, free), axe, Lighthouse", "out": "Light grey placeholder text on white is the most\ncommon failure, often around 2.5 : 1.", "tip": "Check hover, focus, disabled and error states too, not just default.", "mistake": "Judging contrast by eye on a bright monitor.", "viz": ""}, {"title": "Use of colour", "body": "Colour can't be the only way information is shown.", "code": "Fails 1.4.1\n  Required fields shown only in red\n  Status: green dot = approved, red dot = rejected (no text)\n  Links only distinguishable by colour inside text\nPasses\n  Red + an icon + the word \"Rejected\"\n  Error text below the field, not just a red border", "out": "Test with DevTools → Rendering → Emulate vision deficiencies\n(e.g. achromatopsia): can you still tell the states apart?", "tip": "Status badges in dashboards are a frequent failure; always add text.", "mistake": "Charts where lines differ only by colour.", "viz": ""}, {"title": "Audio and video", "body": "Media needs text versions for people who can't hear or see it.", "code": "Pre-recorded video with speech   captions (1.2.2, A)\nPre-recorded audio only          transcript (1.2.1, A)\nVideo with important visuals     audio description (1.2.5, AA)\nAuto-playing media > 3 s         pause / stop / volume control (1.4.2, A)", "out": "Check captions are accurate and in sync, not just\nauto-generated and full of errors.", "tip": "Training and onboarding videos are often forgotten.", "mistake": "Accepting auto-captions without reviewing them.", "viz": ""}, {"title": "Zoom, reflow and text spacing", "body": "Low-vision users zoom in a lot. Content must still work.", "code": "1.4.4 Resize Text (AA)     200% zoom: nothing cut off or overlapping\n1.4.10 Reflow (AA)         at 320 CSS px wide (= 400% zoom at 1280px),\n                           no horizontal scrolling for normal content\n1.4.12 Text Spacing (AA)   still works with bigger line/letter spacing\n\nTest: Ctrl + to 200% and 400%, or DevTools device width 320px", "out": "Common failures: sticky headers covering half the screen,\ntext in fixed-height boxes getting cut off, buttons overlapping.", "tip": "Combine with 2.4.11: at high zoom, focus often hides behind sticky headers.", "mistake": "Only testing at 100% zoom.", "viz": ""}]}, {"num": "03", "title": "Operable", "blurb": "Keyboard, focus, timing, motion and target size.", "lessons": [{"title": "Keyboard access", "body": "Everything that works with a mouse must work with a keyboard. Step through a keyboard-only test below.", "code": "Keys\n  Tab / Shift+Tab   move between interactive elements\n  Enter             activate links and buttons\n  Space             buttons, checkboxes, scroll\n  Arrow keys        radio groups, menus, tabs, sliders\n  Esc               close dialogs and menus\n\n2.1.1 Keyboard (A): every function reachable\n2.1.2 No Keyboard Trap (A): you can always Tab away", "out": "Custom widgets (div 'buttons', custom dropdowns, date pickers)\nare where keyboard access usually breaks.", "tip": "Unplug the mouse (or don't touch it) for one full journey per release.", "mistake": "Clickable divs with no tabindex and no key handling.", "viz": "flow"}, {"title": "Focus visible and focus order", "body": "Keyboard users must always see where they are, and move in a logical order.", "code": "2.4.7 Focus Visible (AA)        a clear focus indicator\n2.4.3 Focus Order (A)           order follows the visual/reading order\n2.4.11 Focus Not Obscured (AA)  focused item not fully hidden\n                                (sticky header, cookie banner, chat widget)\nDialogs\n  focus moves into the dialog when it opens\n  Tab stays inside while it's open\n  focus returns to the trigger when it closes", "out": "outline: none in CSS with no replacement style is one of\nthe most common accessibility bugs on the web.", "tip": "Test dialogs carefully: focus management is often wrong.", "mistake": "Focus jumping to the page footer after closing a modal.", "viz": ""}, {"title": "Skip links, headings and landmarks", "body": "Help keyboard and screen-reader users jump to the content they need.", "code": "2.4.1 Bypass Blocks (A)   a 'Skip to main content' link,\n                          or proper landmarks and headings\nHeadings   one h1, then h2/h3 in a logical outline\nLandmarks  <header> <nav> <main> <aside> <footer>\n2.4.2 Page Titled (A)      each page has a descriptive <title>\n\nNVDA shortcuts: H = next heading, D = next landmark,\n                Insert + F7 = list of headings/links/landmarks", "out": "A page where every heading is a styled <div> is invisible\nto screen-reader navigation.", "tip": "Check headings with a browser extension (e.g. HeadingsMap) or the NVDA elements list.", "mistake": "Choosing heading levels for font size instead of structure.", "viz": ""}, {"title": "Target size and dragging", "body": "New in WCAG 2.2: targets big enough to hit, and alternatives to dragging.", "code": "2.5.8 Target Size (Minimum) (AA)\n  interactive targets at least 24 × 24 CSS px,\n  or enough spacing around smaller ones\n  (exceptions: inline text links, native browser controls)\n2.5.7 Dragging Movements (AA)\n  drag-and-drop also possible with single clicks/taps\n  e.g. Kanban card: drag OR a 'Move to…' menu", "out": "Tiny icon buttons in table rows (edit, delete)\noften fail 2.5.8.", "tip": "Measure targets in DevTools: select the element, check its box size.", "mistake": "Drag-only file upload areas with no 'Browse' button.", "viz": ""}, {"title": "Timing and motion", "body": "Give users enough time and control over moving content.", "code": "2.2.1 Timing Adjustable (A)\n  session timeout warns and lets the user extend it\n2.2.2 Pause, Stop, Hide (A)\n  carousels, auto-scrolling news, animations > 5 s\n2.3.1 Three Flashes (A)\n  nothing flashes more than 3 times per second\n2.3.3 Animation from Interactions (AAA)\n  respect prefers-reduced-motion", "out": "A tender form that times out after 10 minutes and\nloses everything fails 2.2.1 for slow typists.", "tip": "Test session timeout warnings with the keyboard and a screen reader.", "mistake": "Auto-rotating carousels with no pause button.", "viz": ""}]}, {"num": "04", "title": "Understandable & robust", "blurb": "Language, forms, errors, help, login, and semantic code with correct ARIA.", "lessons": [{"title": "Forms: labels and instructions", "body": "Every input needs a visible label that's programmatically connected to it.", "code": "Good\n  <label for=\"email\">Email<\/label>\n  <input id=\"email\" type=\"email\" autocomplete=\"email\">\nBad\n  placeholder only (disappears while typing)\n  label text not connected to the input\n\n3.3.2 Labels or Instructions (A)\n1.3.5 Identify Input Purpose (AA): autocomplete attributes\n3.1.1 Language of Page (A): <html lang=\"en\"> / lang=\"bn\"", "out": "Test: click the label text. If the cursor jumps into the\nfield, the label is connected.", "tip": "Playwright's get_by_label only works when labels are connected, so it doubles as an accessibility check.", "mistake": "Placeholder text used as the only label.", "viz": ""}, {"title": "Errors and help", "body": "Tell users what went wrong, where, and how to fix it.", "code": "3.3.1 Error Identification (A)   the error is described in text\n3.3.3 Error Suggestion (AA)      how to fix it: \"Use DD/MM/YYYY\"\n3.3.4 Error Prevention (AA)      review/confirm for legal or\n                                 financial submissions (e.g. bids)\n3.2.6 Consistent Help (A)        help link in the same place\n3.3.7 Redundant Entry (A)        don't re-ask for info already given\n4.1.3 Status Messages (AA)       \"3 results found\", \"Saved\"\n                                 announced via aria-live", "out": "For long multi-step forms (like tender submissions),\n3.3.4 and 3.3.7 are especially important.", "tip": "Test that errors are announced by the screen reader, not just shown in red.", "mistake": "'Invalid input' with no hint about what's wrong.", "viz": ""}, {"title": "Accessible authentication", "body": "Login must not depend on memory or puzzles alone (WCAG 3.3.8, AA).", "code": "Must allow\n  password managers (autocomplete, no blocking)\n  paste into password and code fields\n  an alternative to cognitive CAPTCHAs\nFails\n  \"Enter characters 2, 5 and 7 of your password\"\n  one-time-code fields that block paste\n  image puzzles with no other option", "out": "Blocking paste is also bad security practice:\nit pushes people toward weaker passwords.", "tip": "Test login with a password manager and with pasted OTP codes.", "mistake": "Treating paste-blocking as a security feature.", "viz": ""}, {"title": "Semantic HTML, name-role-value and ARIA", "body": "Assistive technology needs to know what each element is, what it's called and its state (4.1.2, A).", "code": "Native first\n  <button> not <div onclick>\n  <a href> for navigation, <button> for actions\n  <select>, <input type=\"checkbox\"> before custom widgets\nFirst rule of ARIA: don't use ARIA if a native element works\nWhen needed\n  aria-label=\"Close\"          name for icon buttons\n  aria-expanded=\"true/false\"  state of menus/accordions\n  aria-invalid, aria-describedby for form errors\n  role=\"dialog\" aria-modal=\"true\" for modals", "out": "No ARIA is better than wrong ARIA: role=\"button\" on a div\nwithout keyboard support makes things worse.", "tip": "Check name, role and state in DevTools → Accessibility pane.", "mistake": "Adding ARIA attributes everywhere to 'make it accessible'.", "viz": ""}]}, {"num": "05", "title": "Testing tools & methods", "blurb": "Automated scanners, screen readers, keyboard tests and contrast tools.", "lessons": [{"title": "Automated scanners", "body": "Scanners find many issues quickly, but only a part of them.", "code": "axe DevTools (browser extension)   precise, few false positives\nWAVE (browser extension)           visual overlay of issues\nLighthouse (Chrome DevTools)       quick score + issues\nAccessibility Insights (Microsoft) guided manual checks too\n\nWhat they catch: missing alt/labels, contrast, ARIA errors,\n                 missing lang, duplicate IDs, empty buttons\nWhat they miss:  keyboard traps, focus order, meaningful alt text,\n                 correct reading order, understandable errors", "out": "Automated tools typically find roughly a third of issues.\nThe rest needs manual and assistive-technology testing.", "tip": "Run a scanner first to clear the easy issues, then test manually.", "mistake": "Reporting 'Lighthouse 100, fully accessible'.", "viz": ""}, {"title": "Screen reader testing with NVDA", "body": "Learn a few NVDA commands and test one journey per release.", "code": "Start/stop           Ctrl + Alt + N  /  Insert + Q\nStop speaking        Ctrl\nRead all             Insert + ↓\nNext heading         H   (1–6 for levels)\nNext landmark        D\nNext form field      F      Next button  B     Next link  K\nElements list        Insert + F7\nBrowse ↔ focus mode  Insert + Space\nTab / Shift+Tab      interactive elements", "out": "Listen for: every control has a meaningful name, role and\nstate ('Accept terms, checkbox, not checked'), errors are\nannounced, dialogs are announced when they open.", "tip": "Turn the screen off (or look away) for part of the test to experience it honestly.", "mistake": "Testing with the screen reader but still navigating with the mouse.", "viz": ""}, {"title": "A manual test script", "body": "A repeatable checklist for one page or journey.", "code": "1. Scanner (axe): fix / log automatic issues\n2. Keyboard only: reach and use everything, visible focus,\n   logical order, no traps, dialogs managed\n3. Zoom 200% and 400% (reflow), text spacing\n4. Screen reader: headings, landmarks, forms, errors, status\n5. Contrast: text, icons, focus, all states\n6. Colour-independence: vision deficiency emulation\n7. Target sizes and dragging alternatives\n8. Media: captions, transcripts, no auto-play", "out": "Record results per WCAG criterion: pass / fail / not\napplicable. That becomes your accessibility report.", "tip": "Test the most-used journeys first: login, search, main form, checkout/submit.", "mistake": "Only scanning the home page.", "viz": ""}]}, {"num": "06", "title": "Automation, reporting & process", "blurb": "Automated a11y checks in CI, strong bug reports, and building accessibility into the team.", "lessons": [{"title": "Automated checks in Playwright and Selenium", "body": "Add axe-core scans to your existing UI tests.", "code": "# Python + Playwright  (pip install axe-playwright-python)\nfrom axe_playwright_python.sync_playwright import Axe\n\ndef test_checkout_has_no_serious_a11y_issues(page):\n    page.goto(\"/checkout\")\n    results = Axe().run(page)\n    assert results.violations_count == 0, results.generate_report()\n\n// Java + Selenium: Deque's axe-core Selenium integration\n//   Results r = new AxeBuilder().analyze(driver);\n//   assertTrue(r.getViolations().isEmpty());", "out": "Start by failing only on critical/serious issues,\nthen tighten as the backlog shrinks.", "tip": "Scan key pages in several states: empty form, errors shown, dialog open.", "mistake": "Scanning only the initial page load.", "viz": ""}, {"title": "Writing accessibility bug reports", "body": "Link the bug to the standard and to the people it affects.", "code": "Title    'Delete' icon buttons in the vendor table have no\n         accessible name\nWCAG     4.1.2 Name, Role, Value (A); 2.5.8 Target Size (AA)\nImpact   Screen-reader users hear 'button' ×20 and can't tell\n         which vendor they'd delete. Targets are 16×16 px.\nSteps    1. NVDA on  2. Open Vendors  3. Tab to the Actions column\nExpected 'Delete vendor Rahman Traders, button'\nActual   'button'\nFix hint aria-label=\"Delete vendor {name}\", target ≥ 24×24 px", "out": "Severity: judge by impact on users. A blocked task for\nscreen-reader users is high, even if it's 'just a label'.", "tip": "Include the assistive technology and browser used (e.g. NVDA 2025 + Chrome).", "mistake": "Vague reports like 'page not accessible'.", "viz": ""}, {"title": "Accessibility in the team process", "body": "Accessibility is cheapest when it's built in, not tested in at the end.", "code": "Design     contrast, focus styles, target sizes, error patterns\n           reviewed in the design stage\nStories    acceptance criteria include keyboard + screen reader\nDefinition of done\n           axe clean on new screens, keyboard tested\nCI         axe scan on key journeys\nRelease    manual screen-reader check of changed journeys\nReporting  an accessibility conformance report (e.g. VPAT/ACR)\n           when customers ask for it", "out": "Shift left: a missing label caught in design review\ncosts minutes; after release it costs a hotfix.", "tip": "Add one accessibility question to every refinement meeting.", "mistake": "Leaving accessibility as a one-time audit before launch.", "viz": ""}]}, {"num": "07", "title": "Interview & career", "blurb": "Talk about accessibility testing with confidence.", "lessons": [{"title": "Accessibility interview questions", "body": "Short answers you can build on.", "code": "Q What is WCAG and which level do you test to?\nA The W3C accessibility standard, now 2.2; usually level AA.\nQ What does POUR mean?\nA Perceivable, Operable, Understandable, Robust.\nQ How do you test accessibility?\nA Scanner first (axe), then keyboard-only, zoom/reflow,\n  screen reader (NVDA/VoiceOver), contrast, and a report\n  mapped to WCAG criteria.\nQ Can automation cover accessibility?\nA Only part of it; keyboard, focus order and meaning need\n  manual and assistive-technology testing.\nQ Give an example of a WCAG 2.2 addition.\nA 2.5.8 Target Size (Minimum): targets at least 24×24 px.", "out": "Show an accessibility audit of a public demo site in your\nportfolio: findings mapped to WCAG, with screenshots.", "tip": "Mention both manual and automated techniques, plus how you'd fit them into sprints.", "mistake": "Saying accessibility is only about blind users.", "viz": ""}]}];
+    const FLOW = [{"name": "Start", "desc": "Load the page and put the mouse away. Press Tab once.", "next": "Is there a 'Skip to main content' link first?", "code": "Tab → \"Skip to main content\"  (2.4.1)"}, {"name": "Visible focus", "desc": "Every Tab press should show a clear focus indicator you can see immediately.", "next": "Next: check the order.", "code": "Focus ring visible on every element?  (2.4.7)"}, {"name": "Logical order", "desc": "Focus should follow the reading order: header, navigation, main content, footer.", "next": "Next: use each control.", "code": "Order matches the visual layout?  (2.4.3)"}, {"name": "Operate", "desc": "Activate links and buttons with Enter, checkboxes with Space, menus and tabs with arrows.", "next": "Next: open a dialog.", "code": "Every mouse action possible by keyboard?  (2.1.1)"}, {"name": "Dialogs", "desc": "Focus moves into the dialog, stays inside while it's open, Esc closes it, and focus returns to the trigger.", "next": "Next: check nothing traps or hides focus.", "code": "Open → Tab inside → Esc → focus back on trigger"}, {"name": "No traps", "desc": "You can always Tab away from every component (maps, editors, embedded widgets).", "next": "Next: check sticky elements.", "code": "Can leave every widget?  (2.1.2)"}, {"name": "Not obscured", "desc": "Focused items aren't hidden behind sticky headers, cookie banners or chat bubbles, especially at 200% zoom.", "next": "Log failures with the WCAG number.", "code": "Focused item visible at 200% zoom?  (2.4.11)"}];
+    const A = '#6A1B9A', AD = '#D1A7F0';
+    const mod = MODS[st.m];
+    const cur = mod.lessons[st.l] || mod.lessons[0];
+    const key = (m, l) => m + '-' + l;
+    let total = 0, doneN = 0;
+    MODS.forEach((mm, i) => mm.lessons.forEach((_, j) => { total++; if (st.done[key(i, j)]) doneN++; }));
+    const modTabs = MODS.map((mm, i) => {
+      const on = i === st.m;
+      const d = mm.lessons.filter((_, j) => st.done[key(i, j)]).length;
+      return { num: mm.num + (d === mm.lessons.length ? ' ✓' : ''), title: mm.title, pick: () => this.setState({ m: i, l: 0 }),
+        style: 'display:flex;flex-direction:column;align-items:flex-start;gap:4px;min-height:64px;padding:10px 12px;border:none;border-radius:14px 14px 0 0;cursor:pointer;text-align:left;font:600 13px IBM Plex Sans,sans-serif;flex:1;' + (on ? 'background:#F4F1EA;color:#16181D;' : 'background:rgba(0,0,0,0.06);color:#2A0A3E;') };
+    });
+    const lessonNav = mod.lessons.map((ls, j) => {
+      const on = j === st.l, dn = !!st.done[key(st.m, j)];
+      return { title: ls.title, num: dn ? '✓' : String(j + 1).padStart(2, '0'), pick: () => this.setState({ l: j }),
+        style: 'display:flex;align-items:center;gap:12px;min-height:44px;padding:8px 12px;border-radius:10px;border:none;cursor:pointer;text-align:left;font:' + (on ? '600' : '400') + ' 15px IBM Plex Sans,sans-serif;' + (on ? 'background:#16181D;color:#F4F1EA;' : 'background:transparent;color:#16181D;'),
+        numStyle: 'flex-shrink:0;font:600 12px JetBrains Mono,monospace;width:28px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;' + (on ? 'background:' + A + ';color:#fff;' : dn ? 'background:#DCEFE3;color:#1F7A52;' : 'background:#EAE5DA;color:#6A6E77;') };
+    });
+    const modeDefs = [['split', 'Side by side'], ['code', 'Check'], ['out', 'Explained']];
+    const modes = modeDefs.map(([id, label]) => ({ label, pick: () => this.setState({ mode: id }),
+      style: 'min-height:40px;padding:8px 14px;border-radius:8px;border:none;cursor:pointer;font:600 14px IBM Plex Sans,sans-serif;' + (st.mode === id ? 'background:#FFFFFF;color:#16181D;box-shadow:0 1px 3px rgba(0,0,0,.12);' : 'background:transparent;color:#5C606A;') }));
+    const isFirst = st.m === 0 && st.l === 0;
+    const isLast = st.m === MODS.length - 1 && st.l === mod.lessons.length - 1;
+    const go = (dir) => {
+      let m = st.m, l = st.l + dir;
+      if (l < 0) { if (m === 0) return; m -= 1; l = MODS[m].lessons.length - 1; }
+      if (l >= MODS[m].lessons.length) { if (m === MODS.length - 1) return; m += 1; l = 0; }
+      this.setState({ m, l });
+    };
+    const k = key(st.m, st.l); const isDone = !!st.done[k];
+    const pct = Math.round((doneN / total) * 100);
+    const fi = Math.min(st.f, FLOW.length - 1);
+    const fSteps = FLOW.map((s, i) => ({ num: String(i + 1), name: s.name, pick: () => this.setState({ f: i }),
+      style: 'display:flex;flex-direction:column;align-items:flex-start;gap:2px;min-height:52px;padding:8px 14px;border-radius:12px;cursor:pointer;font:600 14px IBM Plex Sans,sans-serif;text-align:left;' + (i === fi ? 'background:' + AD + ';color:#16181D;border:1.5px solid ' + AD + ';' : i < fi ? 'background:#2A2D35;color:#F4F1EA;border:1.5px solid #3A3E48;' : 'background:transparent;color:#A9AEBA;border:1.5px solid #3A3E48;') }));
+    return {
+      mod, cur, modTabs, lessonNav, modes,
+      lessonNum: String(st.l + 1), lessonTotal: String(mod.lessons.length),
+      showA: st.mode !== 'out', showB: st.mode !== 'code',
+      gridStyle: st.mode === 'split' ? 'display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;' : 'display:grid;grid-template-columns:repeat(1,minmax(0,1fr));gap:16px;',
+      prev: () => go(-1), next: () => go(1),
+      prevLabel: isFirst ? 'Start' : 'Previous', nextLabel: isLast ? 'Finished' : 'Next lesson',
+      markDone: () => this.setState({ done: { ...st.done, [k]: !isDone } }),
+      doneLabel: isDone ? '✓ Done' : 'Mark as done',
+      doneBtnStyle: 'min-height:48px;padding:12px 22px;border-radius:12px;cursor:pointer;font:600 15px IBM Plex Sans,sans-serif;' + (isDone ? 'background:#DCEFE3;color:#1F7A52;border:1.5px solid #7FC8A0;' : 'background:#FFFFFF;color:#16181D;border:1.5px solid #DDD7CB;'),
+      overallLabel: doneN + ' / ' + total + ' lessons',
+      overallStyle: 'height:100%;border-radius:999px;background:' + A + ';transition:width .3s;width:' + pct + '%;',
+      vizFlow: cur.viz === 'flow', fSteps, fCur: FLOW[fi], fLabel: (fi + 1) + ' / ' + FLOW.length,
+      fPrev: () => this.setState({ f: Math.max(0, fi - 1) }), fNext: () => this.setState({ f: Math.min(FLOW.length - 1, fi + 1) })
+    };
+  }
+}
+
+var __TPL=`<div style="width: 1440px; height: 2900px; box-sizing: border-box; display: flex; flex-direction: column; background: #F4F1EA; font-family: 'IBM Plex Sans', system-ui, sans-serif; color: #16181D;">
+
+<section style="background: #F0E4F8; padding: 48px 80px 0; display: flex; flex-direction: column; gap: 26px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 40px;">
+<div style="display: flex; flex-direction: column; gap: 14px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #553071;">accessibility testing · module {{mod.num}}</span>
+<h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 56px; line-height: 1; letter-spacing: -0.03em; color: #2A0A3E;">{{mod.title}}</h1>
+<p style="margin: 0; font-size: 18px; line-height: 1.6; color: #553071; max-width: 760px;">{{mod.blurb}}</p>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px; min-width: 300px;">
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 22px; font-weight: 800; color: #2A0A3E;">Accessibility testing (WCAG 2.2)</span>
+<div style="display: flex; justify-content: space-between; font-size: 14px; color: #2A0A3E;"><span>Course progress</span><span style="font-family: 'JetBrains Mono', monospace;">{{overallLabel}}</span></div>
+<div style="height: 8px; border-radius: 999px; background: rgba(0,0,0,0.1); overflow: hidden;"><div style="{{overallStyle}}"></div></div>
+<span style="font-size: 13px; color: #553071;">Criteria numbers refer to WCAG 2.2.</span>
+</div>
+</div>
+<div style="display: flex; gap: 6px;">
+<sc-for list="{{modTabs}}" as="t" hint-placeholder-count="9">
+<button onClick="{{t.pick}}" style="{{t.style}}"><span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; opacity: 0.8;">{{t.num}}</span><span>{{t.title}}</span></button>
+</sc-for>
+</div>
+</section>
+
+<section style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 40px; padding: 56px 80px 48px;">
+<aside style="grid-column: span 3; display: flex; flex-direction: column; gap: 6px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #6A6E77; text-transform: uppercase; letter-spacing: 0.08em; padding: 0 12px 10px;">module {{mod.num}} · lessons</span>
+<sc-for list="{{lessonNav}}" as="l" hint-placeholder-count="7">
+<button onClick="{{l.pick}}" style="{{l.style}}"><span style="{{l.numStyle}}">{{l.num}}</span><span>{{l.title}}</span></button>
+</sc-for>
+</aside>
+<div style="grid-column: span 9; display: flex; flex-direction: column; gap: 22px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 20px;">
+<div style="display: flex; flex-direction: column; gap: 10px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #6A1B9A;">module {{mod.num}} · lesson {{lessonNum}} of {{lessonTotal}}</span>
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 44px; letter-spacing: -0.02em; line-height: 1.05;">{{cur.title}}</h2>
+</div>
+<div style="display: flex; gap: 6px; background: #EAE5DA; padding: 5px; border-radius: 12px;">
+<sc-for list="{{modes}}" as="m" hint-placeholder-count="3"><button onClick="{{m.pick}}" style="{{m.style}}">{{m.label}}</button></sc-for>
+</div>
+</div>
+<p style="margin: 0; font-size: 18px; line-height: 1.7; color: #34373F; max-width: 840px;">{{cur.body}}</p>
+<div style="{{gridStyle}}">
+<sc-if value="{{showA}}" hint-placeholder-val="{{ true }}">
+<div style="background: #16181D; border-radius: 16px; overflow: hidden;">
+<div style="padding: 12px 18px; border-bottom: 1px solid #2A2D35; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #D1A7F0;">what to check / code</div>
+<pre style="margin: 0; padding: 20px; font-family: 'JetBrains Mono', monospace; font-size: 13.5px; line-height: 1.7; color: #D8DAE0; white-space: pre-wrap;">{{cur.code}}</pre>
+</div>
+</sc-if>
+<sc-if value="{{showB}}" hint-placeholder-val="{{ true }}">
+<div style="background: #FFFFFF; border: 1px solid #DDD7CB; border-radius: 16px; overflow: hidden;">
+<div style="padding: 12px 18px; border-bottom: 1px solid #DDD7CB; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #6A1B9A;">how to test / why</div>
+<pre style="margin: 0; padding: 20px; font-family: 'JetBrains Mono', monospace; font-size: 13.5px; line-height: 1.7; color: #16181D; white-space: pre-wrap;">{{cur.out}}</pre>
+</div>
+</sc-if>
+</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px;">
+<div style="display: flex; gap: 14px; background: #DCEFE3; border-radius: 16px; padding: 20px 22px; align-items: flex-start;">
+<span style="flex-shrink: 0; width: 32px; height: 32px; border-radius: 9px; background: #1F7A52; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 700;">✓</span>
+<div style="display: flex; flex-direction: column; gap: 4px;"><span style="font-weight: 600; color: #174F37;">Remember</span><span style="font-size: 15px; line-height: 1.6; color: #174F37;">{{cur.tip}}</span></div>
+</div>
+<div style="display: flex; gap: 14px; background: #FCE7DD; border-radius: 16px; padding: 20px 22px; align-items: flex-start;">
+<span style="flex-shrink: 0; width: 32px; height: 32px; border-radius: 9px; background: #C4502A; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 700;">!</span>
+<div style="display: flex; flex-direction: column; gap: 4px;"><span style="font-weight: 600; color: #7A2E14;">Common mistake</span><span style="font-size: 15px; line-height: 1.6; color: #7A2E14;">{{cur.mistake}}</span></div>
+</div>
+</div>
+<div style="display: flex; justify-content: space-between; align-items: center;">
+<button onClick="{{prev}}" style="min-height: 48px; padding: 12px 22px; border-radius: 12px; border: 1.5px solid #16181D; background: transparent; cursor: pointer; font: 600 15px 'IBM Plex Sans', sans-serif; color: #16181D;">← {{prevLabel}}</button>
+<button onClick="{{markDone}}" style="{{doneBtnStyle}}">{{doneLabel}}</button>
+<button onClick="{{next}}" style="min-height: 48px; padding: 12px 22px; border-radius: 12px; border: none; background: #6A1B9A; color: #FFFFFF; cursor: pointer; font: 600 15px 'IBM Plex Sans', sans-serif;">{{nextLabel}} →</button>
+</div>
+</div>
+</section>
+
+<sc-if value="{{vizFlow}}" hint-placeholder-val="{{ false }}">
+<section style="margin: 0 80px 64px; background: #16181D; color: #F4F1EA; border-radius: 28px; padding: 44px; display: flex; flex-direction: column; gap: 26px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 30px;">
+<div style="display: flex; flex-direction: column; gap: 10px;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #D1A7F0;">visualize · a keyboard-only test</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 36px; font-weight: 800;">Walk a page with the Tab key</span></div>
+<div style="display: flex; gap: 10px; align-items: center;">
+<button onClick="{{fPrev}}" aria-label="Previous step" style="width: 48px; height: 48px; border-radius: 12px; border: 1.5px solid #3A3E48; background: transparent; color: #F4F1EA; cursor: pointer; font-size: 18px;">←</button>
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; min-width: 60px; text-align: center;">{{fLabel}}</span>
+<button onClick="{{fNext}}" aria-label="Next step" style="width: 48px; height: 48px; border-radius: 12px; border: none; background: #D1A7F0; color: #16181D; cursor: pointer; font-size: 18px;">→</button>
+</div>
+</div>
+<div style="display: flex; gap: 8px; flex-wrap: wrap;">
+<sc-for list="{{fSteps}}" as="fs" hint-placeholder-count="7"><button onClick="{{fs.pick}}" style="{{fs.style}}"><span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; opacity: 0.75;">{{fs.num}}</span><span>{{fs.name}}</span></button></sc-for>
+</div>
+<div style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 24px;">
+<div style="grid-column: span 6; background: #D1A7F0; color: #16181D; border-radius: 20px; padding: 26px; display: flex; flex-direction: column; gap: 10px;">
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 28px; font-weight: 800;">{{fCur.name}}</span>
+<span style="font-size: 16px; line-height: 1.6;">{{fCur.desc}}</span>
+<span style="font-size: 14px; font-weight: 600;">{{fCur.next}}</span>
+</div>
+<pre style="grid-column: span 6; margin: 0; background: #1E2129; border: 1px solid #2E323C; border-radius: 20px; padding: 22px; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #D8DAE0; white-space: pre-wrap;">{{fCur.code}}</pre>
+</div>
+</section>
+</sc-if>
+
+<div style="flex-grow: 1;"></div>
+<section style="padding: 0 80px 64px; display: flex; justify-content: space-between; align-items: center; gap: 30px;">
+<div style="display: flex; flex-direction: column; gap: 8px;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #6A6E77;">next course</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 30px; font-weight: 800;">Security testing tools</span></div>
+<a href="Security.html" style="text-decoration: none; padding: 16px 26px; border-radius: 12px; background: #16181D; color: #D1A7F0; font-weight: 600;">Start security →</a>
+</section>
+</div>`;
+window.__mountDC(__TPL, Component);
+</script>
+</body>
+</html>

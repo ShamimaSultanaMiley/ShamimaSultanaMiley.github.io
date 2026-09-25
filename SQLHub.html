@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440">
+<title>SQL for Testers — Learning Path</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap">
+<style>html,body{margin:0;background:#F4F1EA;font-family:'IBM Plex Sans',system-ui,sans-serif} #app > div{margin:0 auto}</style>
+</head>
+<body>
+
+<style>
+.snav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:16px 40px;background:#16181D;color:#F4F1EA;font-family:'IBM Plex Sans',sans-serif;flex-wrap:wrap;gap:12px}
+.snav a{color:#F4F1EA;text-decoration:none}
+.snav .brand{display:flex;align-items:center;gap:10px;font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:18px}
+.snav .brand span.logo{width:34px;height:34px;border-radius:9px;background:#7EE2A8;color:#16181D;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:14px}
+.snav ul{list-style:none;display:flex;gap:6px;margin:0;padding:0;align-items:center;flex-wrap:wrap}
+.snav > ul > li{position:relative}
+.snav > ul > li > a,.snav > ul > li > span{display:block;padding:9px 14px;border-radius:9px;font-size:15px;font-weight:500;cursor:pointer;white-space:nowrap}
+.snav > ul > li:hover > a,.snav > ul > li:hover > span,.snav .cur{background:#2A2D35}
+.snav .caret{font-size:11px;opacity:.7;margin-left:4px}
+.snav .drop{position:absolute;top:100%;left:0;min-width:220px;background:#1E2129;border:1px solid #2E323C;border-radius:12px;padding:8px;display:none;flex-direction:column;gap:2px;box-shadow:0 18px 40px -16px rgba(0,0,0,.6)}
+.snav > ul > li:hover .drop{display:flex}
+.snav .drop a{padding:9px 12px;border-radius:8px;font-size:14px;color:#D8DAE0}
+.snav .drop a:hover{background:#2A2D35;color:#fff}
+.snav .drop .grp{font-family:'JetBrains Mono',monospace;font-size:11px;color:#8A8F9C;text-transform:uppercase;letter-spacing:.06em;padding:8px 12px 2px}
+.snav .cta{padding:9px 18px;border-radius:999px;background:#1F7A52;color:#fff;font-weight:600}
+.snav .menubtn{display:none;background:none;border:1.5px solid #3A3E48;color:#F4F1EA;border-radius:9px;padding:8px 12px;font-size:15px;cursor:pointer}
+@media(max-width:1100px){
+  .snav .menubtn{display:block}
+  .snav > ul{display:none;flex-direction:column;align-items:stretch;width:100%;order:3}
+  .snav.open > ul{display:flex}
+  .snav .drop{position:static;display:flex;border:none;box-shadow:none;background:transparent;padding:0 0 6px 14px}
+  .snav > ul > li:hover .drop{display:flex}
+}
+</style>
+<nav class="snav" id="snav">
+<a class="brand" href="index.html"><span class="logo">S✓</span>Shamima Sultana</a>
+<button class="menubtn" onclick="document.getElementById('snav').classList.toggle('open')">Menu ☰</button>
+<ul>
+<li><a href="index.html" class="">Home</a></li>
+<li><span class="">About <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="about.html">Intro &amp; journey</a>
+    <a href="skills.html">Skills</a>
+    <a href="certifications.html">Certifications</a>
+    <a href="research.html">Research</a>
+    <a href="achievements.html">Achievements</a>
+  </div></li>
+<li><span class="">Work <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="projects.html">Projects</a>
+  </div></li>
+<li><span class="cur">Learn <span class="caret">▾</span></span>
+  <div class="drop">
+    <span class="grp">Automation</span>
+    <a href="PWHub.html">Playwright path</a>
+    <a href="Selenium.html">Selenium with Java</a>
+    <a href="MobileTest.html">Mobile testing</a>
+    <span class="grp">Performance</span>
+    <a href="K6Hub.html">k6</a>
+    <a href="JMeter.html">JMeter</a>
+    <span class="grp">Data &amp; APIs</span>
+    <a href="SQLHub.html">SQL</a>
+    <a href="API.html">API testing</a>
+    <span class="grp">Core &amp; specialised</span>
+    <a href="Manual.html">Manual testing</a>
+    <a href="AITest.html">AI / LLM testing</a>
+    <a href="DevTools.html">DevTools</a>
+    <a href="Git.html">Git &amp; GitHub</a>
+    <a href="A11y.html">Accessibility</a>
+    <a href="Security.html">Security</a>
+  </div></li>
+<li><span class="">Writing <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="K6Hub.html">Tutorials &amp; articles</a>
+  </div></li>
+<li><span class="">More <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="News.html">News</a>
+    <a href="Interview.html">Interview prep</a>
+    <a href="ISTQB.html">ISTQB prep</a>
+  </div></li>
+<li><a class="cta" href="mailto:shamimasultanamiley605@gmail.com">Contact</a></li>
+</ul>
+</nav>
+
+<div id="app"></div>
+<script>/* Minimal renderer: replaces Claude's canvas engine so pages run anywhere. */
+(function(){
+  function resolve(scopes, path){
+    path=path.trim();
+    var parts=path.split('.'), head=parts[0], base, found=false;
+    for(var i=scopes.length-1;i>=0;i--){ if(scopes[i] && Object.prototype.hasOwnProperty.call(scopes[i],head)){ base=scopes[i][head]; found=true; break; } }
+    if(!found) return undefined;
+    for(var j=1;j<parts.length;j++){ if(base==null) return undefined; base=base[parts[j]]; }
+    return base;
+  }
+  function subst(str, scopes){
+    return str.replace(/\{\{([^}]+)\}\}/g, function(_,e){ var v=resolve(scopes,e); return v==null?'':String(v); });
+  }
+  function firstExpr(str){ var m=str.match(/\{\{([^}]+)\}\}/); return m?m[1].trim():null; }
+  function processNode(node, scopes, out){
+    if(node.nodeType===3){ // text
+      var t=node.nodeValue;
+      if(t.indexOf('{{')>=0) out.push(document.createTextNode(subst(t,scopes)));
+      else out.push(document.createTextNode(t));
+      return;
+    }
+    if(node.nodeType!==1){ return; }
+    var tag=node.tagName.toLowerCase();
+    if(tag==='sc-for'){
+      var listExpr=firstExpr(node.getAttribute('list')||'');
+      var as=node.getAttribute('as');
+      var arr=listExpr?resolve(scopes,listExpr):null;
+      if(Array.isArray(arr)){
+        for(var k=0;k<arr.length;k++){
+          var sc=scopes.concat([{__k:as, [as]:arr[k]}]);
+          for(var c=0;c<node.childNodes.length;c++) processNode(node.childNodes[c], sc, out);
+        }
+      }
+      return;
+    }
+    if(tag==='sc-if'){
+      var valExpr=firstExpr(node.getAttribute('value')||'');
+      var cond=valExpr?resolve(scopes,valExpr):false;
+      if(cond){ for(var c2=0;c2<node.childNodes.length;c2++) processNode(node.childNodes[c2], scopes, out); }
+      return;
+    }
+    var el=document.createElement(tag);
+    for(var a=0;a<node.attributes.length;a++){
+      var at=node.attributes[a], name=at.name, val=at.value;
+      if(name.indexOf('hint-')===0) continue;
+      if(name==='onclick'){ var h=firstExpr(val); (function(expr){ el.addEventListener('click', function(ev){ var fn=resolve(scopes,expr); if(typeof fn==='function') fn(ev); }); })(h); continue; }
+      if(name==='onchange'){ var h2=firstExpr(val); (function(expr){ el.addEventListener('input', function(ev){ var fn=resolve(scopes,expr); if(typeof fn==='function') fn(ev); }); })(h2); continue; }
+      var sv=val.indexOf('{{')>=0?subst(val,scopes):val;
+      if(name==='value' && (tag==='input'||tag==='textarea')){ el.value=sv; el.setAttribute('value',sv); }
+      else el.setAttribute(name, sv);
+    }
+    var kids=[];
+    for(var cc=0;cc<node.childNodes.length;cc++) processNode(node.childNodes[cc], scopes, kids);
+    for(var ki=0;ki<kids.length;ki++) el.appendChild(kids[ki]);
+    out.push(el);
+  }
+  window.__mountDC=function(templateHTML, ComponentClass){
+    var tplRoot=document.createElement('div'); tplRoot.innerHTML=templateHTML;
+    var mount=document.getElementById('app');
+    var comp=new ComponentClass({});
+    function doRender(){
+      var vals;
+      try{ vals=comp.renderVals(); }catch(e){ console.error('render error',e); return; }
+      var frag=document.createDocumentFragment();
+      var buf=[];
+      for(var i=0;i<tplRoot.childNodes.length;i++) processNode(tplRoot.childNodes[i], [vals], buf);
+      for(var b=0;b<buf.length;b++) frag.appendChild(buf[b]);
+      // preserve focus in search/textarea across re-render
+      var active=document.activeElement, sel=null, id=null;
+      mount.innerHTML=''; mount.appendChild(frag);
+    }
+    comp.setState=function(s){ Object.assign(comp.state, s); doRender(); };
+    doRender();
+  };
+  window.DCLogic=function(){};
+})();
+</script>
+<script>
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { u: 0 };
+  }
+  renderVals() {
+    const M = [
+      ['01', 'Databases & setup', 'Tables, keys, the ShopLite schema, dialects, tools and safe habits.', '4 lessons'],
+      ['02', 'Reading data', 'SELECT, WHERE, IN / LIKE / BETWEEN, sorting, DISTINCT and NULL.', '5 lessons'],
+      ['03', 'Aggregates & grouping', 'COUNT and SUM, GROUP BY, HAVING, CASE, and the real execution order.', '5 lessons'],
+      ['04', 'Joins', 'Inner, left, full, anti-joins for missing data, multi-table and self joins.', '6 lessons'],
+      ['05', 'Subqueries, CTEs & windows', 'EXISTS, WITH, duplicates, ROW_NUMBER, running totals and LAG.', '5 lessons'],
+      ['06', 'Changing data', 'INSERT, UPDATE, DELETE vs TRUNCATE vs DROP, transactions, constraints.', '5 lessons'],
+      ['07', 'SQL for testers', 'Verify saves, totals, integrity, status flows, reports, test data, privacy.', '7 lessons'],
+      ['08', 'SQL in automation', 'Python drivers, parameterized queries, pytest fixtures, Playwright + DB, SQL injection, k6.', '6 lessons'],
+      ['09', 'Performance & interviews', 'Indexes, EXPLAIN, and the questions QA interviews really ask.', '5 lessons']
+    ];
+    const tints = ['#FBE9D5', '#FFFFFF', '#FFFFFF', '#FBE9D5', '#FFFFFF', '#FFFFFF', '#FBE9D5', '#FFFFFF', '#FFFFFF'];
+    const mods = M.map(([num, title, desc, count], i) => ({ num, title, desc, count,
+      style: 'text-decoration:none;border-radius:22px;padding:28px;display:flex;flex-direction:column;gap:12px;min-height:240px;box-sizing:border-box;border:1px solid #E7D9C6;background:' + tints[i] + ';',
+      numStyle: 'font:800 46px Bricolage Grotesque,sans-serif;line-height:1;color:' + (tints[i] === '#FFFFFF' ? '#E9C9A6' : '#D9A06B') + ';' }));
+
+    const U = [
+      { label: 'Verify saves', title: 'Verify what the UI saved', mod: '07', desc: 'After creating or editing something in the UI, read the row back and compare each field.', bug: 'The form shows "Saved", but the city was stored as NULL, or the email wasn\u2019t lowercased as promised.', sql: "SELECT name, email, city, created_at\nFROM customers\nWHERE email = 'buyer02@test.local';" },
+      { label: 'Reconcile', title: 'Reconcile reports and totals', mod: '07', desc: 'Rebuild the numbers a dashboard, report or export shows, straight from the source tables.', bug: 'The monthly revenue tile counts cancelled orders, or an order total doesn\u2019t equal the sum of its lines.', sql: "SELECT o.order_id, o.total_amount,\n       SUM(oi.quantity * oi.unit_price) AS calculated\nFROM orders o\nJOIN order_items oi ON oi.order_id = o.order_id\nGROUP BY o.order_id, o.total_amount\nHAVING o.total_amount <> SUM(oi.quantity * oi.unit_price);" },
+      { label: 'Integrity', title: 'Find broken or orphaned data', mod: '04 & 07', desc: 'Queries that should always return zero rows. Run them after every release.', bug: 'Deleting a customer leaves their orders behind, pointing at nobody.', sql: "SELECT o.order_id, o.customer_id\nFROM orders o\nLEFT JOIN customers c ON c.customer_id = o.customer_id\nWHERE c.customer_id IS NULL;" },
+      { label: 'Test data', title: 'Set up and clean up test data', mod: '06 & 07', desc: 'Create exactly the records a test needs in seconds, then remove them without touching anyone else\u2019s data.', bug: 'Not a bug finder, a time saver: no more 20 clicks to reach the state you want to test.', sql: "INSERT INTO customers (customer_id, name, email, city)\nVALUES (9001, 'Test Buyer 90', 'buyer90@test.local', 'Dhaka');\n\n-- cleanup: children first\nDELETE FROM orders    WHERE customer_id >= 9000;\nDELETE FROM customers WHERE email LIKE '%@test.local';" },
+      { label: 'Automation', title: 'Check the database from tests', mod: '08', desc: 'Automated UI tests that also prove the data layer, using a pytest fixture and a parameterized query.', bug: 'The UI looks right because it shows cached input, but nothing was actually written.', sql: "rows = query(\n    \"SELECT name, city FROM customers WHERE email = %s\",\n    (email,))\nassert rows == [(\"Test Buyer 77\", \"Dhaka\")]" }
+    ];
+    const useTabs = U.map((x, i) => ({ label: x.label, pick: () => this.setState({ u: i }),
+      style: 'min-height:44px;padding:10px 16px;border-radius:10px;border:none;cursor:pointer;font:600 14px IBM Plex Sans,sans-serif;' + (i === this.state.u ? 'background:#A8550E;color:#fff;' : 'background:transparent;color:#4A4E57;') }));
+    return { mods, useTabs, use: U[this.state.u] };
+  }
+}
+
+var __TPL=`<div style="width: 1440px; height: 2900px; box-sizing: border-box; display: flex; flex-direction: column; background: #F4F1EA; font-family: 'IBM Plex Sans', system-ui, sans-serif; color: #16181D;">
+
+<!-- HERO -->
+<section style="background: #16181D; color: #F4F1EA; padding: 56px 80px 88px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 40px; align-items: center;">
+<div style="grid-column: span 6; display: flex; flex-direction: column; gap: 22px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #8A8F9C;"><a href="index.html" style="color: #8A8F9C; text-decoration: none;">articles</a> / <span style="color: #F2B57A;">sql</span></span>
+<h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 170px; line-height: 0.85; letter-spacing: -0.05em; color: #F2B57A;">SQL</h1>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 34px; line-height: 1.15;">For testers: check what the screen can't show you.</span>
+<p style="margin: 0; font-size: 18px; line-height: 1.65; color: #A9AEBA; max-width: 560px;">The UI shows one version of the truth; the database holds the real one. Nine modules, from your first SELECT to database checks inside automated tests.</p>
+<a href="SQLCourse.html" style="align-self: flex-start; text-decoration: none; padding: 16px 26px; border-radius: 12px; background: #A8550E; color: #FFFFFF; font-weight: 600; font-size: 16px;">Start module 01 →</a>
+</div>
+<div style="grid-column: span 6; background: #1E2129; border: 1px solid #2E323C; border-radius: 24px; overflow: hidden;">
+<div style="padding: 14px 20px; border-bottom: 1px solid #2E323C; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #8A8F9C;">health_check.sql · ShopLite</div>
+<pre style="margin: 0; padding: 22px; font-family: 'JetBrains Mono', monospace; font-size: 14px; line-height: 1.8; color: #D8DAE0; white-space: pre;"><span style="color: #8A8F9C;">-- paid orders with no payment recorded</span>
+<span style="color: #F2B57A;">SELECT</span> o.order_id
+<span style="color: #F2B57A;">FROM</span>   orders o
+<span style="color: #F2B57A;">LEFT JOIN</span> payments p <span style="color: #F2B57A;">ON</span> p.order_id = o.order_id
+<span style="color: #F2B57A;">WHERE</span>  o.status = <span style="color: #7EE2A8;">'paid'</span>
+  <span style="color: #F2B57A;">AND</span>  p.payment_id <span style="color: #F2B57A;">IS NULL</span>;
+
+<span style="color: #8A8F9C;">-- 0 rows  ✓ healthy</span></pre>
+</div>
+</section>
+
+<!-- PATH -->
+<section style="padding: 88px 80px 64px; display: flex; flex-direction: column; gap: 36px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-end;">
+<div style="display: flex; flex-direction: column; gap: 14px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #A8550E;">the path</span>
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 52px; letter-spacing: -0.02em;">Nine modules, in order</h2>
+</div>
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #4A4E57;">9 modules · 48 lessons · all live</span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px;">
+<sc-for list="{{mods}}" as="m" hint-placeholder-count="9">
+<a href="SQLCourse.html" style="{{m.style}}">
+<div style="display: flex; justify-content: space-between; align-items: center;">
+<span style="{{m.numStyle}}">{{m.num}}</span>
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; padding: 5px 10px; border-radius: 999px; background: rgba(168,85,14,0.12); color: #8A4208; font-weight: 600;">{{m.count}}</span>
+</div>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 24px; font-weight: 700; line-height: 1.15;">{{m.title}}</span>
+<span style="font-size: 15px; line-height: 1.55; color: #5C606A;">{{m.desc}}</span>
+<span style="margin-top: auto; font-weight: 600; color: #A8550E;">Open module →</span>
+</a>
+</sc-for>
+</div>
+</section>
+
+<!-- USE CASES -->
+<section style="margin: 0 80px; background: #FFFFFF; border: 1px solid #DDD7CB; border-radius: 28px; padding: 48px; display: flex; flex-direction: column; gap: 30px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 30px;">
+<div style="display: flex; flex-direction: column; gap: 12px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #A8550E;">visualize · what testers use SQL for</span>
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 44px; letter-spacing: -0.02em;">Five jobs, one query each</h2>
+</div>
+<div style="display: flex; gap: 6px; background: #F0ECE3; padding: 6px; border-radius: 14px;">
+<sc-for list="{{useTabs}}" as="u" hint-placeholder-count="5"><button onClick="{{u.pick}}" style="{{u.style}}">{{u.label}}</button></sc-for>
+</div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 28px;">
+<div style="grid-column: span 5; display: flex; flex-direction: column; gap: 16px;">
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 30px; font-weight: 800;">{{use.title}}</span>
+<span style="font-size: 16px; line-height: 1.65; color: #34373F;">{{use.desc}}</span>
+<div style="background: #FCE7DD; border-radius: 14px; padding: 16px 18px; display: flex; flex-direction: column; gap: 4px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #9A3B1C;">the bug it catches</span>
+<span style="font-size: 15px; line-height: 1.55; color: #5A200C;">{{use.bug}}</span>
+</div>
+<span style="font-size: 14px; color: #6A6E77;">Covered in module {{use.mod}}.</span>
+</div>
+<pre style="grid-column: span 7; margin: 0; background: #16181D; color: #D8DAE0; border-radius: 18px; padding: 24px; font-family: 'JetBrains Mono', monospace; font-size: 13.5px; line-height: 1.75; white-space: pre; overflow-x: auto;">{{use.sql}}</pre>
+</div>
+</section>
+
+<!-- WHY -->
+<section style="flex-grow: 1; padding: 88px 80px 100px; display: flex; flex-direction: column; gap: 28px;">
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 44px; letter-spacing: -0.02em;">How it connects to the other paths</h2>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px;">
+<a href="PWHub.html" style="text-decoration: none; background: #DCEFE3; border-radius: 22px; padding: 30px; display: flex; flex-direction: column; gap: 12px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #1F7A52;">+ Playwright</span>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 24px; font-weight: 700;">UI action, then DB proof</span>
+<span style="font-size: 15px; line-height: 1.6; color: #34503F;">Click Save in the browser, then query the row it created. Module 08.</span>
+</a>
+<a href="K6Hub.html" style="text-decoration: none; background: #ECE8FF; border-radius: 22px; padding: 30px; display: flex; flex-direction: column; gap: 12px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #4B2FD1;">+ k6</span>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 24px; font-weight: 700;">Slow endpoint? EXPLAIN it</span>
+<span style="font-size: 15px; line-height: 1.6; color: #231660;">Find the query behind a slow response and check its indexes. Module 09.</span>
+</a>
+<div style="background: #F6E7B8; border-radius: 22px; padding: 30px; display: flex; flex-direction: column; gap: 12px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #8A5A00;">+ interviews</span>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 24px; font-weight: 700;">The questions they ask</span>
+<span style="font-size: 15px; line-height: 1.6; color: #5E3E00;">Joins, keys, second-highest, duplicates and tester scenarios. Module 09.</span>
+</div>
+</div>
+</section>
+</div>`;
+window.__mountDC(__TPL, Component);
+</script>
+</body>
+</html>

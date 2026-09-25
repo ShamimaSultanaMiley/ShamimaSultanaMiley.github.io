@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440">
+<title>Browser DevTools for Testers</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap">
+<style>html,body{margin:0;background:#F4F1EA;font-family:'IBM Plex Sans',system-ui,sans-serif} #app > div{margin:0 auto}</style>
+</head>
+<body>
+
+<style>
+.snav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:16px 40px;background:#16181D;color:#F4F1EA;font-family:'IBM Plex Sans',sans-serif;flex-wrap:wrap;gap:12px}
+.snav a{color:#F4F1EA;text-decoration:none}
+.snav .brand{display:flex;align-items:center;gap:10px;font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:18px}
+.snav .brand span.logo{width:34px;height:34px;border-radius:9px;background:#7EE2A8;color:#16181D;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:14px}
+.snav ul{list-style:none;display:flex;gap:6px;margin:0;padding:0;align-items:center;flex-wrap:wrap}
+.snav > ul > li{position:relative}
+.snav > ul > li > a,.snav > ul > li > span{display:block;padding:9px 14px;border-radius:9px;font-size:15px;font-weight:500;cursor:pointer;white-space:nowrap}
+.snav > ul > li:hover > a,.snav > ul > li:hover > span,.snav .cur{background:#2A2D35}
+.snav .caret{font-size:11px;opacity:.7;margin-left:4px}
+.snav .drop{position:absolute;top:100%;left:0;min-width:220px;background:#1E2129;border:1px solid #2E323C;border-radius:12px;padding:8px;display:none;flex-direction:column;gap:2px;box-shadow:0 18px 40px -16px rgba(0,0,0,.6)}
+.snav > ul > li:hover .drop{display:flex}
+.snav .drop a{padding:9px 12px;border-radius:8px;font-size:14px;color:#D8DAE0}
+.snav .drop a:hover{background:#2A2D35;color:#fff}
+.snav .drop .grp{font-family:'JetBrains Mono',monospace;font-size:11px;color:#8A8F9C;text-transform:uppercase;letter-spacing:.06em;padding:8px 12px 2px}
+.snav .cta{padding:9px 18px;border-radius:999px;background:#1F7A52;color:#fff;font-weight:600}
+.snav .menubtn{display:none;background:none;border:1.5px solid #3A3E48;color:#F4F1EA;border-radius:9px;padding:8px 12px;font-size:15px;cursor:pointer}
+@media(max-width:1100px){
+  .snav .menubtn{display:block}
+  .snav > ul{display:none;flex-direction:column;align-items:stretch;width:100%;order:3}
+  .snav.open > ul{display:flex}
+  .snav .drop{position:static;display:flex;border:none;box-shadow:none;background:transparent;padding:0 0 6px 14px}
+  .snav > ul > li:hover .drop{display:flex}
+}
+</style>
+<nav class="snav" id="snav">
+<a class="brand" href="index.html"><span class="logo">S✓</span>Shamima Sultana</a>
+<button class="menubtn" onclick="document.getElementById('snav').classList.toggle('open')">Menu ☰</button>
+<ul>
+<li><a href="index.html" class="">Home</a></li>
+<li><span class="">About <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="about.html">Intro &amp; journey</a>
+    <a href="skills.html">Skills</a>
+    <a href="certifications.html">Certifications</a>
+    <a href="research.html">Research</a>
+    <a href="achievements.html">Achievements</a>
+  </div></li>
+<li><span class="">Work <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="projects.html">Projects</a>
+  </div></li>
+<li><span class="cur">Learn <span class="caret">▾</span></span>
+  <div class="drop">
+    <span class="grp">Automation</span>
+    <a href="PWHub.html">Playwright path</a>
+    <a href="Selenium.html">Selenium with Java</a>
+    <a href="MobileTest.html">Mobile testing</a>
+    <span class="grp">Performance</span>
+    <a href="K6Hub.html">k6</a>
+    <a href="JMeter.html">JMeter</a>
+    <span class="grp">Data &amp; APIs</span>
+    <a href="SQLHub.html">SQL</a>
+    <a href="API.html">API testing</a>
+    <span class="grp">Core &amp; specialised</span>
+    <a href="Manual.html">Manual testing</a>
+    <a href="AITest.html">AI / LLM testing</a>
+    <a href="DevTools.html">DevTools</a>
+    <a href="Git.html">Git &amp; GitHub</a>
+    <a href="A11y.html">Accessibility</a>
+    <a href="Security.html">Security</a>
+  </div></li>
+<li><span class="">Writing <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="K6Hub.html">Tutorials &amp; articles</a>
+  </div></li>
+<li><span class="">More <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="News.html">News</a>
+    <a href="Interview.html">Interview prep</a>
+    <a href="ISTQB.html">ISTQB prep</a>
+  </div></li>
+<li><a class="cta" href="mailto:shamimasultanamiley605@gmail.com">Contact</a></li>
+</ul>
+</nav>
+
+<div id="app"></div>
+<script>/* Minimal renderer: replaces Claude's canvas engine so pages run anywhere. */
+(function(){
+  function resolve(scopes, path){
+    path=path.trim();
+    var parts=path.split('.'), head=parts[0], base, found=false;
+    for(var i=scopes.length-1;i>=0;i--){ if(scopes[i] && Object.prototype.hasOwnProperty.call(scopes[i],head)){ base=scopes[i][head]; found=true; break; } }
+    if(!found) return undefined;
+    for(var j=1;j<parts.length;j++){ if(base==null) return undefined; base=base[parts[j]]; }
+    return base;
+  }
+  function subst(str, scopes){
+    return str.replace(/\{\{([^}]+)\}\}/g, function(_,e){ var v=resolve(scopes,e); return v==null?'':String(v); });
+  }
+  function firstExpr(str){ var m=str.match(/\{\{([^}]+)\}\}/); return m?m[1].trim():null; }
+  function processNode(node, scopes, out){
+    if(node.nodeType===3){ // text
+      var t=node.nodeValue;
+      if(t.indexOf('{{')>=0) out.push(document.createTextNode(subst(t,scopes)));
+      else out.push(document.createTextNode(t));
+      return;
+    }
+    if(node.nodeType!==1){ return; }
+    var tag=node.tagName.toLowerCase();
+    if(tag==='sc-for'){
+      var listExpr=firstExpr(node.getAttribute('list')||'');
+      var as=node.getAttribute('as');
+      var arr=listExpr?resolve(scopes,listExpr):null;
+      if(Array.isArray(arr)){
+        for(var k=0;k<arr.length;k++){
+          var sc=scopes.concat([{__k:as, [as]:arr[k]}]);
+          for(var c=0;c<node.childNodes.length;c++) processNode(node.childNodes[c], sc, out);
+        }
+      }
+      return;
+    }
+    if(tag==='sc-if'){
+      var valExpr=firstExpr(node.getAttribute('value')||'');
+      var cond=valExpr?resolve(scopes,valExpr):false;
+      if(cond){ for(var c2=0;c2<node.childNodes.length;c2++) processNode(node.childNodes[c2], scopes, out); }
+      return;
+    }
+    var el=document.createElement(tag);
+    for(var a=0;a<node.attributes.length;a++){
+      var at=node.attributes[a], name=at.name, val=at.value;
+      if(name.indexOf('hint-')===0) continue;
+      if(name==='onclick'){ var h=firstExpr(val); (function(expr){ el.addEventListener('click', function(ev){ var fn=resolve(scopes,expr); if(typeof fn==='function') fn(ev); }); })(h); continue; }
+      if(name==='onchange'){ var h2=firstExpr(val); (function(expr){ el.addEventListener('input', function(ev){ var fn=resolve(scopes,expr); if(typeof fn==='function') fn(ev); }); })(h2); continue; }
+      var sv=val.indexOf('{{')>=0?subst(val,scopes):val;
+      if(name==='value' && (tag==='input'||tag==='textarea')){ el.value=sv; el.setAttribute('value',sv); }
+      else el.setAttribute(name, sv);
+    }
+    var kids=[];
+    for(var cc=0;cc<node.childNodes.length;cc++) processNode(node.childNodes[cc], scopes, kids);
+    for(var ki=0;ki<kids.length;ki++) el.appendChild(kids[ki]);
+    out.push(el);
+  }
+  window.__mountDC=function(templateHTML, ComponentClass){
+    var tplRoot=document.createElement('div'); tplRoot.innerHTML=templateHTML;
+    var mount=document.getElementById('app');
+    var comp=new ComponentClass({});
+    function doRender(){
+      var vals;
+      try{ vals=comp.renderVals(); }catch(e){ console.error('render error',e); return; }
+      var frag=document.createDocumentFragment();
+      var buf=[];
+      for(var i=0;i<tplRoot.childNodes.length;i++) processNode(tplRoot.childNodes[i], [vals], buf);
+      for(var b=0;b<buf.length;b++) frag.appendChild(buf[b]);
+      // preserve focus in search/textarea across re-render
+      var active=document.activeElement, sel=null, id=null;
+      mount.innerHTML=''; mount.appendChild(frag);
+    }
+    comp.setState=function(s){ Object.assign(comp.state, s); doRender(); };
+    doRender();
+  };
+  window.DCLogic=function(){};
+})();
+</script>
+<script>
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { m: 0, l: 0, mode: 'split', f: 0, done: {} };
+  }
+  renderVals() {
+    const st = this.state;
+    const MODS = [{"num": "01", "title": "Getting started", "blurb": "Open DevTools, find your way around, and set it up for testing.", "lessons": [{"title": "Opening DevTools", "body": "DevTools is built into Chrome and Edge (Firefox has its own, very similar). Every tester should be able to open it without thinking.", "code": "F12                       open / close\nCtrl + Shift + I          open (Cmd + Opt + I on Mac)\nCtrl + Shift + C          pick an element on the page\nCtrl + Shift + J          open straight to the Console\nRight-click → Inspect     open on that element", "out": "Panels you'll use most as a tester\n  Elements     the page's HTML and CSS\n  Console      errors and messages\n  Network      every request the page makes\n  Application  cookies and storage\n  Lighthouse   performance and accessibility audits", "tip": "Keep DevTools open while you test. Errors appear there before users notice anything.", "mistake": "Only opening DevTools after a bug, when the evidence has already scrolled away.", "viz": ""}, {"title": "Settings every tester should turn on", "body": "Two checkboxes stop evidence disappearing and stop old files hiding bugs.", "code": "Network panel\n  ☑ Preserve log     keep requests when the page navigates\n  ☑ Disable cache    always load fresh files (while DevTools is open)\n\nConsole panel (⚙ settings)\n  ☑ Preserve log upon navigation\n\nCommand menu (Ctrl + Shift + P)\n  type any action, e.g. \"screenshot\", \"dark\", \"dock\"", "out": "Without Preserve log, a failed login that redirects\nwipes the very request you needed to see.", "tip": "Ctrl + Shift + P is the fastest way to find any DevTools feature.", "mistake": "Testing with a cached old version and reporting a bug that's already fixed.", "viz": ""}, {"title": "The debugging path", "body": "When the screen shows a vague error, DevTools tells you what really happened. Step through the path below.", "code": "UI: \"Something went wrong. Please try again.\"\n\n1. Console  → any red errors?\n2. Network  → which request failed? (red rows)\n3. Response → what did the server actually say?\n4. Copy as cURL → reproduce it outside the browser\n5. Bug report with the real cause attached", "out": "Turns 'it doesn't work' into\n'POST /api/orders returns 500: coupon_id cannot be null'.", "tip": "Developers fix bugs much faster when you attach the failing request and response.", "mistake": "Reporting only the UI message.", "viz": "flow"}]}, {"num": "02", "title": "Elements", "blurb": "Inspect the page, find reliable locators, and test the UI without changing code.", "lessons": [{"title": "Inspecting elements", "body": "Pick any element to see its HTML, attributes and styles.", "code": "Ctrl + Shift + C, then click the Save button:\n\n<button type=\"submit\" class=\"btn btn-primary\"\n        data-testid=\"save-order\" disabled>\n  Save\n</button>\n\nWhat a tester notices\n  data-testid=\"save-order\"   → a stable locator\n  disabled                   → why the click does nothing", "out": "Hover over nodes in the Elements tree to highlight them\non the page. Arrow keys move through the tree.", "tip": "Check whether elements have data-testid or proper labels; ask developers to add them if not.", "mistake": "Guessing why a button 'doesn't work' when the disabled attribute is right there.", "viz": ""}, {"title": "Finding and testing locators", "body": "Test a selector before putting it in Playwright or Selenium code.", "code": "Elements panel → Ctrl + F → type a selector:\n  button[data-testid=\"save-order\"]      CSS\n  //button[normalize-space()=\"Save\"]    XPath\nResult: \"1 of 1\"  → unique, good\n        \"1 of 7\"  → too broad, refine it\n\nConsole:\n  document.querySelectorAll('button').length", "out": "Playwright prefers role-based locators, and DevTools\ncan show you the role and name (next lesson).", "tip": "A locator that matches exactly one element is what you want.", "mistake": "Copying long auto-generated XPaths like /html/body/div[3]/div[2]/button.", "viz": ""}, {"title": "The Accessibility pane: role and name", "body": "The Accessibility pane shows how assistive tech (and Playwright's get_by_role) sees an element.", "code": "Elements → select element → Accessibility tab\n\n  Role: button\n  Name: \"Save order\"\n  Properties: disabled: true\n\nPlaywright:\n  page.get_by_role(\"button\", name=\"Save order\")", "out": "If Name is empty, screen readers announce nothing\nuseful, and get_by_role can't find it: two bugs at once.", "tip": "Icon-only buttons often have no name. Report it as an accessibility bug.", "mistake": "Assuming the visible text is always the accessible name.", "viz": ""}, {"title": "Editing the page to test edge cases", "body": "Change text and attributes live to see how the UI copes, without asking developers for special data.", "code": "Double-click text in Elements → type a 200-character name\nRight-click → Edit as HTML\nRemove the disabled attribute from a button\nStyles pane → :hov → force :hover / :focus / :active", "out": "Long name overflows the card?  → layout bug\nButton enabled by removing 'disabled' still submits?\n  → the server must validate too (security bug if it doesn't)", "tip": "Edits vanish on reload, so screenshot the result for your bug report.", "mistake": "Reporting a visual bug you created by editing the page.", "viz": ""}]}, {"num": "03", "title": "Console", "blurb": "Read errors, filter noise, and run quick checks with JavaScript.", "lessons": [{"title": "Reading console errors", "body": "Red errors are often the real cause of a broken feature.", "code": "Uncaught TypeError: Cannot read properties of undefined\n    (reading 'price')    at cart.js:142\n\nFailed to load resource: the server responded\n    with a status of 500 ()      /api/cart\n\nAccess to fetch at 'https://api...' has been blocked\n    by CORS policy", "out": "TypeError   → a JavaScript bug on the page\n500         → the server failed (check Network)\nCORS        → server configuration problem", "tip": "Include the full error text and file:line in your bug report.", "mistake": "Ignoring console errors because 'the page still looks fine'.", "viz": ""}, {"title": "Filtering and levels", "body": "Busy apps log a lot. Filter to what matters.", "code": "Levels dropdown   Errors / Warnings / Info / Verbose\nFilter box        type a word: \"cart\", \"api\", \"-analytics\"\nSidebar           group messages by source\nClear             Ctrl + L", "out": "Errors only + Preserve log is the best setting\nwhile running a test session.", "tip": "Clear the console before reproducing a bug so only relevant messages remain.", "mistake": "Pasting 300 lines of console noise into a bug report.", "viz": ""}, {"title": "Quick checks with JavaScript", "body": "The Console runs JavaScript on the page. A few lines answer questions fast.", "code": "$0                             the element selected in Elements\n$0.value                       the value in the selected input\ndocument.title\ndocument.querySelectorAll('tr').length   count table rows\nlocalStorage.getItem('cartId')\ncopy(JSON.stringify(data))     copy anything to clipboard", "out": "Row count matches the '25 results' label?\nInput value matches what the screen shows?", "tip": "Use the Console to check, not to change data you'll then report as a bug.", "mistake": "Running scripts copied from strangers on the internet in a logged-in session.", "viz": ""}]}, {"num": "04", "title": "Network", "blurb": "See every request, find the failing one, and reproduce it.", "lessons": [{"title": "Reading the Network panel", "body": "Every request the page makes appears here, with its status, size and time.", "code": "Name          Status  Type   Size    Time\norders        200     fetch  2.1 kB  180 ms\ncoupon        500     fetch  0.3 kB   95 ms   ← red\nlogo.svg      200     svg    4.0 kB   12 ms\n\nFilter: Fetch/XHR   shows only API calls\nSearch: Ctrl + F    search inside all responses", "out": "Red rows are failed requests. Click one to see\nHeaders, Payload, Preview, Response and Timing.", "tip": "Filter to Fetch/XHR while testing features; that's where the API calls are.", "mistake": "Looking only at the first request and missing the one that failed later.", "viz": ""}, {"title": "Headers, payload and response", "body": "Click a request to see exactly what was sent and what came back.", "code": "Headers    URL, method, status, request/response headers\nPayload    the body you sent: { \"code\": \"SAVE10\", \"cartId\": 88 }\nPreview    formatted response\nResponse   raw response:\n           { \"error\": \"coupon_id cannot be null\" }\nTiming     where the time went (waiting = server)", "out": "The UI said \"Invalid coupon\", but the payload shows\nthe app sent cartId without the coupon ID.\nThat's a front-end bug, not a coupon rules problem.", "tip": "Compare the payload with what you typed. Mismatches are common bugs.", "mistake": "Blaming the backend without checking what the front end actually sent.", "viz": ""}, {"title": "Throttling and offline", "body": "Test how the app behaves on slow or no network, like many real mobile users.", "code": "Network panel → throttling dropdown\n  No throttling / Fast 4G / Slow 4G / Offline\n  Custom profiles: set your own speeds\n\nTest ideas\n  Slow 4G: is there a loading state? double-submits?\n  Offline mid-checkout: clear message? data kept?", "out": "Slow networks reveal missing spinners, buttons\nthat can be clicked twice, and timeouts.", "tip": "Turn throttling off afterwards; it stays on while DevTools is open.", "mistake": "Only testing on fast office Wi-Fi.", "viz": ""}, {"title": "Blocking requests", "body": "Block one request to test how the app handles a failed dependency.", "code": "Right-click a request → Block request URL\n(or Ctrl + Shift + P → \"Show Request blocking\")\n\nBlock /api/recommendations\n  Expected: page still works, section hidden or message shown\n  Bug if:   whole page crashes or spins forever", "out": "A quick way to test error handling without\nasking developers to break the server.", "tip": "Remember to unblock afterwards; blocks stay active for the session.", "mistake": "Forgetting a block is on and reporting everything as broken.", "viz": ""}, {"title": "Copy as cURL and HAR files", "body": "Take a request out of the browser to reproduce it, or share the whole session with a developer.", "code": "Right-click a request → Copy → Copy as cURL (bash)\n  curl 'https://shoplite.example/api/coupon' \\\n    -H 'content-type: application/json' \\\n    --data-raw '{\"code\":\"SAVE10\",\"cartId\":88}'\n\nPaste into a terminal or import into Postman\n(Postman: Import → Raw text).\n\nSave all as HAR: ⭳ icon in Network panel", "out": "cURL: reproduce one request, change inputs, retest.\nHAR: the full recording, great for tricky bugs.", "tip": "HAR files and cURL can contain tokens and cookies. Remove them before sharing (newer Chrome can export a sanitized HAR).", "mistake": "Attaching a HAR with a live session token to a public ticket.", "viz": ""}]}, {"num": "05", "title": "Application & storage", "blurb": "Cookies, local storage and sessions: test logins, carts and expiry.", "lessons": [{"title": "Cookies", "body": "Cookies often hold the login session. Viewing and deleting them lets you test session handling quickly.", "code": "Application → Storage → Cookies → your site\n\nName       Value         Expires     HttpOnly Secure\nsession    8f2a…         Session     ✓        ✓\nlang       bn            2027-01-01\n\nTest ideas\n  Delete 'session' → next click should go to login\n  Session cookie missing Secure or HttpOnly → security finding", "out": "Deleting a cookie is the fastest way to test\n'session expired' behaviour.", "tip": "HttpOnly and Secure flags on session cookies are basic security checks.", "mistake": "Clearing all browsing data when you only needed to delete one cookie.", "viz": ""}, {"title": "Local and session storage", "body": "Many apps store carts, settings and tokens in the browser's storage.", "code": "Application → Local storage / Session storage\n\nKey        Value\ncartId     88\ntheme      dark\ntoken      eyJhbGciOi…      ← worth noting\n\nTest ideas\n  Edit cartId to another number → do you see someone else's cart?\n  Clear storage → does the app recover gracefully?", "out": "localStorage survives closing the browser;\nsessionStorage is cleared when the tab closes.", "tip": "Clear site data (Application → Storage → Clear site data) to test like a brand-new user.", "mistake": "Assuming 'logout' clears everything; check storage after logging out.", "viz": ""}]}, {"num": "06", "title": "Devices & rendering", "blurb": "Test responsive layouts, touch, location, language and dark mode.", "lessons": [{"title": "Device mode", "body": "Simulate phones and tablets to test responsive layouts.", "code": "Ctrl + Shift + M   toggle device toolbar\nChoose: iPhone, Pixel, iPad… or set width × height\nRotate: portrait / landscape\nThrottling on the toolbar: Mid-tier / Low-tier mobile\n\nCheck\n  Menus collapse properly, nothing overflows sideways\n  Buttons are big enough to tap\n  Forms work with the on-screen keyboard space", "out": "Device mode simulates size and touch, not a real phone.\nStill test critical flows on real devices.", "tip": "Test the in-between widths too (e.g. 820px), where layouts often break.", "mistake": "Only testing the iPhone preset.", "viz": ""}, {"title": "Location, language and time zone", "body": "Sensors and overrides let you test location and locale features without travelling.", "code": "Ctrl + Shift + P → \"Show Sensors\"\n  Location: choose a city or enter coordinates\n  Location unavailable → test the error path\n\nLocale: Sensors → Locale, e.g. bn-BD\nTime zone: Sensors → Timezone, e.g. Asia/Dhaka", "out": "Great for 'nearest store', date formats,\ncurrency display and time-of-day bugs.", "tip": "Test around midnight in different time zones; date bugs love it.", "mistake": "Testing date features only in your own time zone.", "viz": ""}, {"title": "Dark mode, reduced motion and screenshots", "body": "Rendering options help test accessibility preferences, and the Command menu takes perfect screenshots.", "code": "Ctrl + Shift + P → \"Show Rendering\"\n  Emulate prefers-color-scheme: dark\n  Emulate prefers-reduced-motion: reduce\n  Emulate vision deficiencies (blurred, colour-blind types)\n\nScreenshots (Ctrl + Shift + P)\n  Capture full size screenshot     the whole page\n  Capture node screenshot          just the selected element", "out": "Vision deficiency emulation shows whether colour alone\ncarries meaning, like red/green status badges.", "tip": "Full-size screenshots make excellent bug evidence for long pages.", "mistake": "Cropped screenshots that hide the context of the bug.", "viz": ""}]}, {"num": "07", "title": "Performance & quality", "blurb": "Lighthouse audits, recording performance, and debugging on real phones.", "lessons": [{"title": "Lighthouse audits", "body": "Lighthouse scores a page for performance, accessibility, best practices and SEO, with specific issues to fix.", "code": "Lighthouse panel → Mode: Navigation → Device: Mobile\n☑ Performance ☑ Accessibility ☑ Best practices\n→ Analyze page load\n\nAccessibility 78\n  ✗ Buttons do not have an accessible name\n  ✗ Background and foreground colors do not have\n    sufficient contrast ratio", "out": "Each finding links to the exact elements.\nTurn failures into bug reports with screenshots.", "tip": "Run it in an Incognito window so extensions don't skew results.", "mistake": "Treating a Lighthouse score as the whole performance or accessibility story.", "viz": ""}, {"title": "Recording performance", "body": "The Performance panel records what the page does over time, showing why it feels slow.", "code": "Performance panel → ● Record → do the slow action → Stop\n\nLook for\n  Long tasks (red corners)      the page was frozen\n  Layout shifts                 content jumping around\n  Largest Contentful Paint      when the main content appeared", "out": "Browser performance = one user's experience.\nServer load = k6 (performance path). You need both.", "tip": "Record with CPU throttling (4× slowdown) to feel what low-end phones feel.", "mistake": "Recording a 2-minute session and getting lost in the data. Record just the slow action.", "viz": ""}, {"title": "Debugging on a real Android phone", "body": "Connect a real phone and use desktop DevTools on it.", "code": "1. Phone: Settings → Developer options → USB debugging ON\n2. Connect with USB\n3. Desktop Chrome: open chrome://inspect/#devices\n4. Click \"inspect\" under the phone's tab", "out": "Full DevTools (Console, Network, Elements) for the\npage open on the phone, including its errors.", "tip": "Real-device bugs (keyboard covering inputs, touch issues) show up here that device mode misses.", "mistake": "Assuming device mode behaves exactly like a real phone.", "viz": ""}]}, {"num": "08", "title": "DevTools in bug reports", "blurb": "Turn DevTools findings into bug reports developers can act on immediately.", "lessons": [{"title": "The evidence checklist", "body": "What to attach, depending on the bug.", "code": "Visual bug         full-size screenshot, device/size used\nFunctional bug     console errors + failing request\n                   (URL, status, payload, response)\nIntermittent bug   HAR file (sanitized) + time it happened\nPerformance bug    Performance recording or Lighthouse report\nMobile bug         remote-debugging console + device model", "out": "One well-chosen piece of evidence is better than ten\nscreenshots of the same screen.", "tip": "Note the exact time; developers can match it to server logs.", "mistake": "No evidence at all: 'checkout is broken, please check'.", "viz": ""}, {"title": "Example: from vague to exact", "body": "A complete bug report built from a DevTools session.", "code": "Title    Coupon rejected as invalid because the app sends\n         an empty coupon_id (POST /api/coupon → 500)\nSteps    1. Add any item to cart  2. Apply SAVE10\nExpected Discount applied\nActual   \"Invalid coupon\" shown\nDevTools Network: POST /api/coupon  500\n         Payload:  {\"code\":\"SAVE10\",\"cartId\":88,\"coupon_id\":null}\n         Response: {\"error\":\"coupon_id cannot be null\"}\n         Console:  TypeError at cart.js:142\nEvidence screenshot, cURL (token removed)", "out": "The developer knows where to look before\nopening the code.", "tip": "Put the key technical fact in the title.", "mistake": "Hiding the most useful detail at the bottom of the report.", "viz": ""}]}];
+    const FLOW = [{"name": "UI symptom", "desc": "The screen shows a vague message, or nothing happens.", "next": "Next: check the Console for errors.", "code": "\"Something went wrong. Please try again.\""}, {"name": "Console", "desc": "Look for red errors. A JavaScript error points to a front-end bug; a failed resource points to the server.", "next": "Next: find the failing request.", "code": "✗ Failed to load resource: 500  /api/coupon\n✗ TypeError at cart.js:142"}, {"name": "Network", "desc": "Filter to Fetch/XHR and find the red row that matches your action.", "next": "Next: open it and read what was sent.", "code": "POST /api/coupon   500   95 ms"}, {"name": "Payload", "desc": "Compare what the app sent with what you entered. Wrong or missing fields are front-end bugs.", "next": "Next: read the server's answer.", "code": "{ \"code\": \"SAVE10\", \"cartId\": 88,\n  \"coupon_id\": null }"}, {"name": "Response", "desc": "The raw response usually states the real error.", "next": "Next: reproduce it outside the browser.", "code": "{ \"error\": \"coupon_id cannot be null\" }"}, {"name": "cURL", "desc": "Copy as cURL, remove tokens, and confirm the same request fails in a terminal or Postman.", "next": "Next: write the report.", "code": "curl '.../api/coupon' -H 'content-type: application/json' \\\n  --data-raw '{\"code\":\"SAVE10\",\"cartId\":88,\"coupon_id\":null}'"}, {"name": "Bug report", "desc": "Title with the real cause, steps, expected vs actual, and the request, response and console error attached.", "next": "A developer can fix this without asking you a single question.", "code": "Coupon rejected: app sends empty coupon_id\n(POST /api/coupon → 500)"}];
+    const A = '#B4432F', AD = '#F4A58F';
+    const mod = MODS[st.m];
+    const cur = mod.lessons[st.l] || mod.lessons[0];
+    const key = (m, l) => m + '-' + l;
+    let total = 0, doneN = 0;
+    MODS.forEach((mm, i) => mm.lessons.forEach((_, j) => { total++; if (st.done[key(i, j)]) doneN++; }));
+    const modTabs = MODS.map((mm, i) => {
+      const on = i === st.m;
+      const d = mm.lessons.filter((_, j) => st.done[key(i, j)]).length;
+      return { num: mm.num + (d === mm.lessons.length ? ' ✓' : ''), title: mm.title, pick: () => this.setState({ m: i, l: 0 }),
+        style: 'display:flex;flex-direction:column;align-items:flex-start;gap:4px;min-height:64px;padding:10px 12px;border:none;border-radius:14px 14px 0 0;cursor:pointer;text-align:left;font:600 13px IBM Plex Sans,sans-serif;flex:1;' + (on ? 'background:#F4F1EA;color:#16181D;' : 'background:rgba(0,0,0,0.06);color:#3F130A;') };
+    });
+    const lessonNav = mod.lessons.map((ls, j) => {
+      const on = j === st.l, dn = !!st.done[key(st.m, j)];
+      return { title: ls.title, num: dn ? '✓' : String(j + 1).padStart(2, '0'), pick: () => this.setState({ l: j }),
+        style: 'display:flex;align-items:center;gap:12px;min-height:44px;padding:8px 12px;border-radius:10px;border:none;cursor:pointer;text-align:left;font:' + (on ? '600' : '400') + ' 15px IBM Plex Sans,sans-serif;' + (on ? 'background:#16181D;color:#F4F1EA;' : 'background:transparent;color:#16181D;'),
+        numStyle: 'flex-shrink:0;font:600 12px JetBrains Mono,monospace;width:28px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;' + (on ? 'background:' + A + ';color:#fff;' : dn ? 'background:#DCEFE3;color:#1F7A52;' : 'background:#EAE5DA;color:#6A6E77;') };
+    });
+    const modeDefs = [['split', 'Side by side'], ['code', 'Do this'], ['out', 'Result']];
+    const modes = modeDefs.map(([id, label]) => ({ label, pick: () => this.setState({ mode: id }),
+      style: 'min-height:40px;padding:8px 14px;border-radius:8px;border:none;cursor:pointer;font:600 14px IBM Plex Sans,sans-serif;' + (st.mode === id ? 'background:#FFFFFF;color:#16181D;box-shadow:0 1px 3px rgba(0,0,0,.12);' : 'background:transparent;color:#5C606A;') }));
+    const isFirst = st.m === 0 && st.l === 0;
+    const isLast = st.m === MODS.length - 1 && st.l === mod.lessons.length - 1;
+    const go = (dir) => {
+      let m = st.m, l = st.l + dir;
+      if (l < 0) { if (m === 0) return; m -= 1; l = MODS[m].lessons.length - 1; }
+      if (l >= MODS[m].lessons.length) { if (m === MODS.length - 1) return; m += 1; l = 0; }
+      this.setState({ m, l });
+    };
+    const k = key(st.m, st.l); const isDone = !!st.done[k];
+    const pct = Math.round((doneN / total) * 100);
+    const fi = Math.min(st.f, FLOW.length - 1);
+    const fSteps = FLOW.map((s, i) => ({ num: String(i + 1), name: s.name, pick: () => this.setState({ f: i }),
+      style: 'display:flex;flex-direction:column;align-items:flex-start;gap:2px;min-height:52px;padding:8px 14px;border-radius:12px;cursor:pointer;font:600 14px IBM Plex Sans,sans-serif;text-align:left;' + (i === fi ? 'background:' + AD + ';color:#16181D;border:1.5px solid ' + AD + ';' : i < fi ? 'background:#2A2D35;color:#F4F1EA;border:1.5px solid #3A3E48;' : 'background:transparent;color:#A9AEBA;border:1.5px solid #3A3E48;') }));
+    return {
+      mod, cur, modTabs, lessonNav, modes,
+      lessonNum: String(st.l + 1), lessonTotal: String(mod.lessons.length),
+      showA: st.mode !== 'out', showB: st.mode !== 'code',
+      gridStyle: st.mode === 'split' ? 'display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;' : 'display:grid;grid-template-columns:repeat(1,minmax(0,1fr));gap:16px;',
+      prev: () => go(-1), next: () => go(1),
+      prevLabel: isFirst ? 'Start' : 'Previous', nextLabel: isLast ? 'Finished' : 'Next lesson',
+      markDone: () => this.setState({ done: { ...st.done, [k]: !isDone } }),
+      doneLabel: isDone ? '✓ Done' : 'Mark as done',
+      doneBtnStyle: 'min-height:48px;padding:12px 22px;border-radius:12px;cursor:pointer;font:600 15px IBM Plex Sans,sans-serif;' + (isDone ? 'background:#DCEFE3;color:#1F7A52;border:1.5px solid #7FC8A0;' : 'background:#FFFFFF;color:#16181D;border:1.5px solid #DDD7CB;'),
+      overallLabel: doneN + ' / ' + total + ' lessons',
+      overallStyle: 'height:100%;border-radius:999px;background:' + A + ';transition:width .3s;width:' + pct + '%;',
+      vizFlow: cur.viz === 'flow', fSteps, fCur: FLOW[fi], fLabel: (fi + 1) + ' / ' + FLOW.length,
+      fPrev: () => this.setState({ f: Math.max(0, fi - 1) }), fNext: () => this.setState({ f: Math.min(FLOW.length - 1, fi + 1) })
+    };
+  }
+}
+
+var __TPL=`<div style="width: 1440px; height: 2900px; box-sizing: border-box; display: flex; flex-direction: column; background: #F4F1EA; font-family: 'IBM Plex Sans', system-ui, sans-serif; color: #16181D;">
+
+<section style="background: #F7E3DA; padding: 48px 80px 0; display: flex; flex-direction: column; gap: 26px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 40px;">
+<div style="display: flex; flex-direction: column; gap: 14px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #6E3322;">devtools for testers · module {{mod.num}}</span>
+<h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 56px; line-height: 1; letter-spacing: -0.03em; color: #3F130A;">{{mod.title}}</h1>
+<p style="margin: 0; font-size: 18px; line-height: 1.6; color: #6E3322; max-width: 760px;">{{mod.blurb}}</p>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px; min-width: 300px;">
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 22px; font-weight: 800; color: #3F130A;">Browser DevTools for testers</span>
+<div style="display: flex; justify-content: space-between; font-size: 14px; color: #3F130A;"><span>Course progress</span><span style="font-family: 'JetBrains Mono', monospace;">{{overallLabel}}</span></div>
+<div style="height: 8px; border-radius: 999px; background: rgba(0,0,0,0.1); overflow: hidden;"><div style="{{overallStyle}}"></div></div>
+<span style="font-size: 13px; color: #6E3322;">Shortcuts shown for Chrome / Edge on Windows.</span>
+</div>
+</div>
+<div style="display: flex; gap: 6px;">
+<sc-for list="{{modTabs}}" as="t" hint-placeholder-count="9">
+<button onClick="{{t.pick}}" style="{{t.style}}"><span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; opacity: 0.8;">{{t.num}}</span><span>{{t.title}}</span></button>
+</sc-for>
+</div>
+</section>
+
+<section style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 40px; padding: 56px 80px 48px;">
+<aside style="grid-column: span 3; display: flex; flex-direction: column; gap: 6px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #6A6E77; text-transform: uppercase; letter-spacing: 0.08em; padding: 0 12px 10px;">module {{mod.num}} · lessons</span>
+<sc-for list="{{lessonNav}}" as="l" hint-placeholder-count="7">
+<button onClick="{{l.pick}}" style="{{l.style}}"><span style="{{l.numStyle}}">{{l.num}}</span><span>{{l.title}}</span></button>
+</sc-for>
+</aside>
+<div style="grid-column: span 9; display: flex; flex-direction: column; gap: 22px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 20px;">
+<div style="display: flex; flex-direction: column; gap: 10px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #B4432F;">module {{mod.num}} · lesson {{lessonNum}} of {{lessonTotal}}</span>
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 44px; letter-spacing: -0.02em; line-height: 1.05;">{{cur.title}}</h2>
+</div>
+<div style="display: flex; gap: 6px; background: #EAE5DA; padding: 5px; border-radius: 12px;">
+<sc-for list="{{modes}}" as="m" hint-placeholder-count="3"><button onClick="{{m.pick}}" style="{{m.style}}">{{m.label}}</button></sc-for>
+</div>
+</div>
+<p style="margin: 0; font-size: 18px; line-height: 1.7; color: #34373F; max-width: 840px;">{{cur.body}}</p>
+<div style="{{gridStyle}}">
+<sc-if value="{{showA}}" hint-placeholder-val="{{ true }}">
+<div style="background: #16181D; border-radius: 16px; overflow: hidden;">
+<div style="padding: 12px 18px; border-bottom: 1px solid #2A2D35; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #F4A58F;">what to do</div>
+<pre style="margin: 0; padding: 20px; font-family: 'JetBrains Mono', monospace; font-size: 13.5px; line-height: 1.7; color: #D8DAE0; white-space: pre-wrap;">{{cur.code}}</pre>
+</div>
+</sc-if>
+<sc-if value="{{showB}}" hint-placeholder-val="{{ true }}">
+<div style="background: #FFFFFF; border: 1px solid #DDD7CB; border-radius: 16px; overflow: hidden;">
+<div style="padding: 12px 18px; border-bottom: 1px solid #DDD7CB; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #B4432F;">what you see / learn</div>
+<pre style="margin: 0; padding: 20px; font-family: 'JetBrains Mono', monospace; font-size: 13.5px; line-height: 1.7; color: #16181D; white-space: pre-wrap;">{{cur.out}}</pre>
+</div>
+</sc-if>
+</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px;">
+<div style="display: flex; gap: 14px; background: #DCEFE3; border-radius: 16px; padding: 20px 22px; align-items: flex-start;">
+<span style="flex-shrink: 0; width: 32px; height: 32px; border-radius: 9px; background: #1F7A52; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 700;">✓</span>
+<div style="display: flex; flex-direction: column; gap: 4px;"><span style="font-weight: 600; color: #174F37;">Remember</span><span style="font-size: 15px; line-height: 1.6; color: #174F37;">{{cur.tip}}</span></div>
+</div>
+<div style="display: flex; gap: 14px; background: #FCE7DD; border-radius: 16px; padding: 20px 22px; align-items: flex-start;">
+<span style="flex-shrink: 0; width: 32px; height: 32px; border-radius: 9px; background: #C4502A; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 700;">!</span>
+<div style="display: flex; flex-direction: column; gap: 4px;"><span style="font-weight: 600; color: #7A2E14;">Common mistake</span><span style="font-size: 15px; line-height: 1.6; color: #7A2E14;">{{cur.mistake}}</span></div>
+</div>
+</div>
+<div style="display: flex; justify-content: space-between; align-items: center;">
+<button onClick="{{prev}}" style="min-height: 48px; padding: 12px 22px; border-radius: 12px; border: 1.5px solid #16181D; background: transparent; cursor: pointer; font: 600 15px 'IBM Plex Sans', sans-serif; color: #16181D;">← {{prevLabel}}</button>
+<button onClick="{{markDone}}" style="{{doneBtnStyle}}">{{doneLabel}}</button>
+<button onClick="{{next}}" style="min-height: 48px; padding: 12px 22px; border-radius: 12px; border: none; background: #B4432F; color: #FFFFFF; cursor: pointer; font: 600 15px 'IBM Plex Sans', sans-serif;">{{nextLabel}} →</button>
+</div>
+</div>
+</section>
+
+<sc-if value="{{vizFlow}}" hint-placeholder-val="{{ false }}">
+<section style="margin: 0 80px 64px; background: #16181D; color: #F4F1EA; border-radius: 28px; padding: 44px; display: flex; flex-direction: column; gap: 26px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 30px;">
+<div style="display: flex; flex-direction: column; gap: 10px;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #F4A58F;">visualize · from vague error to exact cause</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 36px; font-weight: 800;">The DevTools debugging path</span></div>
+<div style="display: flex; gap: 10px; align-items: center;">
+<button onClick="{{fPrev}}" aria-label="Previous step" style="width: 48px; height: 48px; border-radius: 12px; border: 1.5px solid #3A3E48; background: transparent; color: #F4F1EA; cursor: pointer; font-size: 18px;">←</button>
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; min-width: 60px; text-align: center;">{{fLabel}}</span>
+<button onClick="{{fNext}}" aria-label="Next step" style="width: 48px; height: 48px; border-radius: 12px; border: none; background: #F4A58F; color: #16181D; cursor: pointer; font-size: 18px;">→</button>
+</div>
+</div>
+<div style="display: flex; gap: 8px; flex-wrap: wrap;">
+<sc-for list="{{fSteps}}" as="fs" hint-placeholder-count="7"><button onClick="{{fs.pick}}" style="{{fs.style}}"><span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; opacity: 0.75;">{{fs.num}}</span><span>{{fs.name}}</span></button></sc-for>
+</div>
+<div style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 24px;">
+<div style="grid-column: span 6; background: #F4A58F; color: #16181D; border-radius: 20px; padding: 26px; display: flex; flex-direction: column; gap: 10px;">
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 28px; font-weight: 800;">{{fCur.name}}</span>
+<span style="font-size: 16px; line-height: 1.6;">{{fCur.desc}}</span>
+<span style="font-size: 14px; font-weight: 600;">{{fCur.next}}</span>
+</div>
+<pre style="grid-column: span 6; margin: 0; background: #1E2129; border: 1px solid #2E323C; border-radius: 20px; padding: 22px; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #D8DAE0; white-space: pre-wrap;">{{fCur.code}}</pre>
+</div>
+</section>
+</sc-if>
+
+<div style="flex-grow: 1;"></div>
+<section style="padding: 0 80px 64px; display: flex; justify-content: space-between; align-items: center; gap: 30px;">
+<div style="display: flex; flex-direction: column; gap: 8px;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #6A6E77;">next skill</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 30px; font-weight: 800;">Git & GitHub for testers</span></div>
+<a href="Git.html" style="text-decoration: none; padding: 16px 26px; border-radius: 12px; background: #16181D; color: #F4A58F; font-weight: 600;">Start Git →</a>
+</section>
+</div>`;
+window.__mountDC(__TPL, Component);
+</script>
+</body>
+</html>

@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440">
+<title>Research — Shamima Sultana</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap">
+<style>html,body{margin:0;background:#F4F1EA;font-family:'IBM Plex Sans',system-ui,sans-serif}</style>
+</head>
+<body>
+
+<style>
+.snav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:16px 40px;background:#16181D;color:#F4F1EA;font-family:'IBM Plex Sans',sans-serif;flex-wrap:wrap;gap:12px}
+.snav a{color:#F4F1EA;text-decoration:none}
+.snav .brand{display:flex;align-items:center;gap:10px;font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:18px}
+.snav .brand span.logo{width:34px;height:34px;border-radius:9px;background:#7EE2A8;color:#16181D;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:14px}
+.snav ul{list-style:none;display:flex;gap:6px;margin:0;padding:0;align-items:center;flex-wrap:wrap}
+.snav > ul > li{position:relative}
+.snav > ul > li > a,.snav > ul > li > span{display:block;padding:9px 14px;border-radius:9px;font-size:15px;font-weight:500;cursor:pointer;white-space:nowrap}
+.snav > ul > li:hover > a,.snav > ul > li:hover > span,.snav .cur{background:#2A2D35}
+.snav .caret{font-size:11px;opacity:.7;margin-left:4px}
+.snav .drop{position:absolute;top:100%;left:0;min-width:220px;background:#1E2129;border:1px solid #2E323C;border-radius:12px;padding:8px;display:none;flex-direction:column;gap:2px;box-shadow:0 18px 40px -16px rgba(0,0,0,.6)}
+.snav > ul > li:hover .drop{display:flex}
+.snav .drop a{padding:9px 12px;border-radius:8px;font-size:14px;color:#D8DAE0}
+.snav .drop a:hover{background:#2A2D35;color:#fff}
+.snav .drop .grp{font-family:'JetBrains Mono',monospace;font-size:11px;color:#8A8F9C;text-transform:uppercase;letter-spacing:.06em;padding:8px 12px 2px}
+.snav .cta{padding:9px 18px;border-radius:999px;background:#1F7A52;color:#fff;font-weight:600}
+.snav .menubtn{display:none;background:none;border:1.5px solid #3A3E48;color:#F4F1EA;border-radius:9px;padding:8px 12px;font-size:15px;cursor:pointer}
+@media(max-width:1100px){
+  .snav .menubtn{display:block}
+  .snav > ul{display:none;flex-direction:column;align-items:stretch;width:100%;order:3}
+  .snav.open > ul{display:flex}
+  .snav .drop{position:static;display:flex;border:none;box-shadow:none;background:transparent;padding:0 0 6px 14px}
+  .snav > ul > li:hover .drop{display:flex}
+}
+</style>
+<nav class="snav" id="snav">
+<a class="brand" href="index.html"><span class="logo">S✓</span>Shamima Sultana</a>
+<button class="menubtn" onclick="document.getElementById('snav').classList.toggle('open')">Menu ☰</button>
+<ul>
+<li><a href="index.html" class="">Home</a></li>
+<li><span class="cur">About <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="about.html">Intro &amp; journey</a>
+    <a href="skills.html">Skills</a>
+    <a href="certifications.html">Certifications</a>
+    <a href="research.html">Research</a>
+    <a href="achievements.html">Achievements</a>
+  </div></li>
+<li><span class="">Work <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="projects.html">Projects</a>
+  </div></li>
+<li><span class="">Learn <span class="caret">▾</span></span>
+  <div class="drop">
+    <span class="grp">Automation</span>
+    <a href="PWHub.html">Playwright path</a>
+    <a href="Selenium.html">Selenium with Java</a>
+    <a href="MobileTest.html">Mobile testing</a>
+    <span class="grp">Performance</span>
+    <a href="K6Hub.html">k6</a>
+    <a href="JMeter.html">JMeter</a>
+    <span class="grp">Data &amp; APIs</span>
+    <a href="SQLHub.html">SQL</a>
+    <a href="API.html">API testing</a>
+    <span class="grp">Core &amp; specialised</span>
+    <a href="Manual.html">Manual testing</a>
+    <a href="AITest.html">AI / LLM testing</a>
+    <a href="DevTools.html">DevTools</a>
+    <a href="Git.html">Git &amp; GitHub</a>
+    <a href="A11y.html">Accessibility</a>
+    <a href="Security.html">Security</a>
+  </div></li>
+<li><span class="">Writing <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="K6Hub.html">Tutorials &amp; articles</a>
+  </div></li>
+<li><span class="">More <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="News.html">News</a>
+    <a href="Interview.html">Interview prep</a>
+    <a href="ISTQB.html">ISTQB prep</a>
+  </div></li>
+<li><a class="cta" href="mailto:shamimasultanamiley605@gmail.com">Contact</a></li>
+</ul>
+</nav>
+
+<div id="app"></div>
+<script>/* Minimal renderer: replaces Claude's canvas engine so pages run anywhere. */
+(function(){
+  function resolve(scopes, path){
+    path=path.trim();
+    var parts=path.split('.'), head=parts[0], base, found=false;
+    for(var i=scopes.length-1;i>=0;i--){ if(scopes[i] && Object.prototype.hasOwnProperty.call(scopes[i],head)){ base=scopes[i][head]; found=true; break; } }
+    if(!found) return undefined;
+    for(var j=1;j<parts.length;j++){ if(base==null) return undefined; base=base[parts[j]]; }
+    return base;
+  }
+  function subst(str, scopes){
+    return str.replace(/\{\{([^}]+)\}\}/g, function(_,e){ var v=resolve(scopes,e); return v==null?'':String(v); });
+  }
+  function firstExpr(str){ var m=str.match(/\{\{([^}]+)\}\}/); return m?m[1].trim():null; }
+  function processNode(node, scopes, out){
+    if(node.nodeType===3){ // text
+      var t=node.nodeValue;
+      if(t.indexOf('{{')>=0) out.push(document.createTextNode(subst(t,scopes)));
+      else out.push(document.createTextNode(t));
+      return;
+    }
+    if(node.nodeType!==1){ return; }
+    var tag=node.tagName.toLowerCase();
+    if(tag==='sc-for'){
+      var listExpr=firstExpr(node.getAttribute('list')||'');
+      var as=node.getAttribute('as');
+      var arr=listExpr?resolve(scopes,listExpr):null;
+      if(Array.isArray(arr)){
+        for(var k=0;k<arr.length;k++){
+          var sc=scopes.concat([{__k:as, [as]:arr[k]}]);
+          for(var c=0;c<node.childNodes.length;c++) processNode(node.childNodes[c], sc, out);
+        }
+      }
+      return;
+    }
+    if(tag==='sc-if'){
+      var valExpr=firstExpr(node.getAttribute('value')||'');
+      var cond=valExpr?resolve(scopes,valExpr):false;
+      if(cond){ for(var c2=0;c2<node.childNodes.length;c2++) processNode(node.childNodes[c2], scopes, out); }
+      return;
+    }
+    var el=document.createElement(tag);
+    for(var a=0;a<node.attributes.length;a++){
+      var at=node.attributes[a], name=at.name, val=at.value;
+      if(name.indexOf('hint-')===0) continue;
+      if(name==='onclick'){ var h=firstExpr(val); (function(expr){ el.addEventListener('click', function(ev){ var fn=resolve(scopes,expr); if(typeof fn==='function') fn(ev); }); })(h); continue; }
+      if(name==='onchange'){ var h2=firstExpr(val); (function(expr){ el.addEventListener('input', function(ev){ var fn=resolve(scopes,expr); if(typeof fn==='function') fn(ev); }); })(h2); continue; }
+      var sv=val.indexOf('{{')>=0?subst(val,scopes):val;
+      if(name==='value' && (tag==='input'||tag==='textarea')){ el.value=sv; el.setAttribute('value',sv); }
+      else el.setAttribute(name, sv);
+    }
+    var kids=[];
+    for(var cc=0;cc<node.childNodes.length;cc++) processNode(node.childNodes[cc], scopes, kids);
+    for(var ki=0;ki<kids.length;ki++) el.appendChild(kids[ki]);
+    out.push(el);
+  }
+  window.__mountDC=function(templateHTML, ComponentClass){
+    var tplRoot=document.createElement('div'); tplRoot.innerHTML=templateHTML;
+    var mount=document.getElementById('app');
+    var comp=new ComponentClass({});
+    function doRender(){
+      var vals;
+      try{ vals=comp.renderVals(); }catch(e){ console.error('render error',e); return; }
+      var frag=document.createDocumentFragment();
+      var buf=[];
+      for(var i=0;i<tplRoot.childNodes.length;i++) processNode(tplRoot.childNodes[i], [vals], buf);
+      for(var b=0;b<buf.length;b++) frag.appendChild(buf[b]);
+      // preserve focus in search/textarea across re-render
+      var active=document.activeElement, sel=null, id=null;
+      mount.innerHTML=''; mount.appendChild(frag);
+    }
+    comp.setState=function(s){ Object.assign(comp.state, s); doRender(); };
+    doRender();
+  };
+  window.DCLogic=function(){};
+})();
+</script>
+<script>
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { skillTab: 'Automation', certCat: 'All', job: 0, showEarly: false, paper: 0 };
+  }
+  renderVals() {
+    const st = this.state;
+
+    // journey
+    const jobs = [
+      { when: 'Nov 2024 — Present', role: 'SQA Engineer', org: 'BRAC IT', badge: 'Current', badgeStyle: 'padding:8px 14px;border-radius:999px;background:#DCEFE3;color:#1F7A52;font:600 13px JetBrains Mono,monospace;',
+        points: [
+          'Test two procurement and tendering management systems for different client organizations.',
+          'Lead QA for one project\u2019s ERP Procurement module: test planning, execution, defect tracking and release validation.',
+          'Test end-to-end workflows: supplier registration, tender creation, bid submission and evaluation, approvals, requisitions and purchase orders.',
+          'Introduced Playwright with Python and built automation scripts for regression and sanity testing.',
+          'Track defects in Jira and test execution in Zephyr, working closely with developers, BAs and product owners.'
+        ],
+        tags: ['Playwright', 'Python', 'Jira', 'Zephyr', 'Regression', 'UAT'] },
+      { when: 'May 2023 — Jul 2023', role: 'Trainee Software Engineer (AI)', org: 'ADN Diginet', badge: 'Internship', badgeStyle: 'padding:8px 14px;border-radius:999px;background:#E3E1F5;color:#4B45A1;font:600 13px JetBrains Mono,monospace;',
+        points: [
+          'Completed hands-on training in machine learning and AI, building practical projects in Python.',
+          'Worked on image processing and predictive model development.'
+        ],
+        tags: ['Python', 'Machine learning', 'Image processing'] },
+      { when: 'Sep 2018 — Jan 2023', role: 'B.Sc. in Computer Science & Engineering', org: 'East West University', badge: 'Education', badgeStyle: 'padding:8px 14px;border-radius:999px;background:#F6E7B8;color:#8A5A00;font:600 13px JetBrains Mono,monospace;',
+        points: [
+          'Major in Data Science and Artificial Intelligence.',
+          'Published two deep learning papers (IEEE CONIT 2022, Springer ICO 2023).',
+          'Competed in national and inter-university girls\u2019 programming contests.'
+        ],
+        tags: ['Data Science', 'AI', 'C++', 'Research'] }
+    ];
+    const journey = jobs.map((j, i) => {
+      const on = i === st.job;
+      return { ...j, pick: () => this.setState({ job: i }),
+        style: 'display:flex;flex-direction:column;align-items:flex-start;gap:6px;padding:22px 24px;border-radius:18px;cursor:pointer;text-align:left;font-family:IBM Plex Sans,sans-serif;transition:all .2s;' +
+          (on ? 'background:#16181D;color:#F4F1EA;border:1.5px solid #16181D;transform:translateX(8px);' : 'background:transparent;color:#16181D;border:1.5px solid #DDD7CB;') };
+    });
+
+    // skills
+    const tabLabels = ['Automation', 'Manual', 'Tools', 'Code'];
+    const skillTabs = tabLabels.map((label) => ({
+      label, pick: () => this.setState({ skillTab: label }),
+      style: 'min-height:44px;padding:10px 18px;border-radius:10px;border:none;cursor:pointer;font:600 15px IBM Plex Sans,sans-serif;' +
+        (label === st.skillTab ? 'background:#7EE2A8;color:#16181D;' : 'background:transparent;color:#A9AEBA;')
+    }));
+    const g = '#7EE2A8', o = '#F08A62', y = '#E8B64C', p = '#B7A8FF';
+    const skillSets = {
+      Automation: [
+        { kind: 'web · python', name: 'Playwright', note: 'Regression and sanity automation at work.', color: g },
+        { kind: 'web · java', name: 'Selenium WebDriver', note: 'Functional test scripts with TestNG suites.', color: g },
+        { kind: 'web · js', name: 'Cypress', note: 'End-to-end scenarios for login and booking flows.', color: g },
+        { kind: 'api', name: 'Postman + Newman', note: 'Request and response validation, automated collections.', color: g },
+        { kind: 'performance', name: 'k6', note: 'Load testing scripts in JavaScript.', color: g },
+        { kind: 'runner', name: 'pytest · TestNG', note: 'Organising and running test suites.', color: g }
+      ],
+      Manual: [
+        { kind: 'type', name: 'Functional & Regression', note: 'Protecting what already works release after release.', color: o },
+        { kind: 'type', name: 'Smoke & Sanity', note: 'Fast confidence checks on every build.', color: o },
+        { kind: 'type', name: 'Exploratory testing', note: 'Finding what the test cases missed.', color: o },
+        { kind: 'type', name: 'User Acceptance Testing', note: 'Validating flows with business users.', color: o },
+        { kind: 'artifact', name: 'Test plans & cases', note: 'Scenarios, mind maps, cases and metrics.', color: o },
+        { kind: 'domain', name: 'Procurement & tendering', note: 'Supplier management, bids, approvals, POs.', color: o }
+      ],
+      Tools: [
+        { kind: 'tracking', name: 'Jira', note: 'Defects, tasks and sprint work.', color: y },
+        { kind: 'test management', name: 'Zephyr', note: 'Test execution through the release cycle.', color: y },
+        { kind: 'docs', name: 'Confluence', note: 'Test documentation and team knowledge.', color: y },
+        { kind: 'version control', name: 'Git & GitHub', note: 'Versioned test code and reviews.', color: y },
+        { kind: 'process', name: 'Agile Scrum', note: 'Working inside sprints with the whole team.', color: y },
+        { kind: 'concepts', name: 'SDLC · STLC', note: 'Where testing fits at every stage.', color: y }
+      ],
+      Code: [
+        { kind: 'language', name: 'Python', note: 'Automation, data handling, ML projects.', color: p },
+        { kind: 'language', name: 'Java', note: 'Selenium and TestNG test code.', color: p },
+        { kind: 'language', name: 'JavaScript', note: 'k6 and Cypress scripts.', color: p },
+        { kind: 'language', name: 'SQL', note: 'Checking data behind the UI.', color: p },
+        { kind: 'language', name: 'C++', note: 'Competitive programming.', color: p },
+        { kind: 'concept', name: 'OOP', note: 'Page objects and reusable test code.', color: p }
+      ]
+    };
+
+    // certifications
+    const C = { mark: 'C', issuer: 'Coursera', logoStyle: 'width:40px;height:40px;border-radius:10px;background:#0056D2;color:#fff;display:flex;align-items:center;justify-content:center;font:700 18px Bricolage Grotesque,sans-serif;' };
+    const K = { mark: 'k', issuer: 'Kaggle', logoStyle: 'width:40px;height:40px;border-radius:10px;background:#20BEFF;color:#fff;display:flex;align-items:center;justify-content:center;font:700 20px Bricolage Grotesque,sans-serif;' };
+    const O = (mark, issuer) => ({ mark, issuer, logoStyle: 'width:40px;height:40px;border-radius:10px;background:#EAE5DA;color:#4A4E57;display:flex;align-items:center;justify-content:center;font:700 14px JetBrains Mono,monospace;' });
+    const all = [
+      { cat: 'Testing', name: 'Black-box and White-box Testing', date: 'Dec 2023', link: 'https://www.coursera.org/account/accomplishments/certificate/Z46QRK9GJ63K', ...C },
+      { cat: 'Testing', name: 'Web and Mobile Testing with Selenium', date: 'Oct 2023', link: 'https://www.coursera.org/account/accomplishments/certificate/DFVLF3BTDE5F', ...C },
+      { cat: 'Tools & Agile', name: 'Agile with Atlassian Jira', date: 'Oct 2023', link: 'https://www.coursera.org/account/accomplishments/certificate/GMTNYUREHEJJ', ...C },
+      { cat: 'Events & more', name: 'CONIT 2022 — 2nd International Conference on Intelligent Technologies', date: 'Jun 2022', link: 'https://drive.google.com/file/d/1_sZGMVXJ3FPSDIHFtZG8dG6xznBsDjIv/view', ...O('IEEE', 'IEEE Bangalore Section') },
+      { cat: 'Events & more', name: 'IEEE CS BDC Summer Symposium 2022 — Participation', date: 'Jun 2022', link: 'https://drive.google.com/file/d/1DOOYEAe9H1rWF9PAl6RGkcWkhVam_Wj8/view', ...O('IEEE', 'IEEE CS Bangladesh Chapter') },
+      { cat: 'Events & more', name: 'NDF BD Career and Debate Schooling', date: 'May 2016', link: 'https://drive.google.com/file/d/13HmwNp06tVbGs0amzm1rqpamuOZPkucC/view', ...O('NDF', 'National Debate Federation Bangladesh') },
+      { cat: 'Events & more', name: 'Basic Disaster Risk Management', date: 'Dec 2013', link: 'https://drive.google.com/file/d/13BDOSP49YxhAQwOK7x1RItP0DYZDqv-x/view', ...O('RC', 'Bangladesh Red Crescent Society') }
+    ];
+    const cats = ['All', 'Testing', 'Tools & Agile', 'Events & more'];
+    const certChips = cats.map((label) => {
+      const on = label === st.certCat;
+      const count = label === 'All' ? all.length + 1 : all.filter((c) => c.cat === label).length + (label === 'Testing' ? 1 : 0);
+      return { label, count: String(count), pick: () => this.setState({ certCat: label }),
+        style: 'min-height:44px;padding:10px 16px;border-radius:999px;cursor:pointer;font:600 15px IBM Plex Sans,sans-serif;border:1.5px solid #16181D;display:flex;align-items:center;gap:8px;' + (on ? 'background:#16181D;color:#F4F1EA;' : 'background:transparent;color:#16181D;'),
+        countStyle: 'font:600 12px JetBrains Mono,monospace;padding:2px 8px;border-radius:999px;' + (on ? 'background:#7EE2A8;color:#16181D;' : 'background:#E3DED3;color:#4A4E57;') };
+    });
+    const certs = all.filter((c) => st.certCat === 'All' || c.cat === st.certCat);
+
+    // research
+    const bar = (v, color) => 'height:100%;border-radius:999px;background:' + color + ';width:' + v + '%;';
+    const papers = [
+      { label: 'Crop disease · 2022', title: 'Disease Detection of Bangladeshi Crops Using Image Processing and Deep Learning: A Comparative Analysis',
+        tags: ['IEEE CONIT 2022', 'Deep learning', 'Computer vision'],
+        authorsA: 'Nafisha Binte Moin, Nabila Islam, ', authorsB: ', Lubaba Alam Chhoa, S. M. Ruhul Kabir Howlader, Shamim H. Ripon',
+        summary: 'Crop diseases cut food supply in an agriculture-driven country like Bangladesh. We built a dataset of four major crops with 15 classes and compared six CNN models on both colour and grayscale images.',
+        points: [
+          'Compared Xception, VGG16, ResNet152V2, InceptionResNetV2, DenseNet201 and MobileNetV2 on corn, potato, rice and wheat.',
+          'Grayscale conversion did not give a notable improvement over colour images.',
+          'A ResNet50 modified with Sharpness Aware Minimization (SAM) beat all six models on every crop.'
+        ],
+        link: 'https://ieeexplore.ieee.org/document/9847715', publisher: 'IEEE Xplore',
+        chartTitle: 'Best accuracy by crop',
+        bars: [
+          { label: 'Potato', value: '98.55%', note: 'DenseNet201', style: bar(98.55, '#7EE2A8') },
+          { label: 'Wheat', value: '98.28%', note: 'MobileNetV2', style: bar(98.28, '#7EE2A8') },
+          { label: 'Corn', value: '95.52%', note: 'DenseNet201', style: bar(95.52, '#B7A8FF') },
+          { label: 'Rice', value: '64.30%', note: 'Hardest crop to classify', style: bar(64.3, '#F08A62') }
+        ],
+        chartNote: 'Figures from the paper\u2019s abstract, before the SAM-modified model.' },
+      { label: 'COVID-19 · 2023', title: 'COVID-19 Detection from Chest X-Ray Images Using CNN Models and Deep Learning',
+        tags: ['Springer ICO 2023', 'Transfer learning', 'Medical imaging'],
+        authorsA: 'Nafisha Binte Moin, ', authorsB: ', Abdullah Al Munem, Omar Tawhid Imam, Ahmed Wasif Reza, Mohammad Shamsul Arefin',
+        summary: 'Chest X-rays are a low-cost, fast way to screen for COVID-19. We tested eleven pre-trained Keras CNNs plus our own multi-layer model to find which detects COVID-19 most reliably.',
+        points: [
+          'Used ImageNet weights for transfer learning across VGG16, VGG19, Xception, ResNet101, ResNet152, Inception, InceptionResNet, MobileNetV2, DenseNet201, NASNetLarge and EfficientNetB3.',
+          'MobileNetV2, Inception, ResNet101 and VGG16 all passed 99% accuracy; EfficientNetB3 reached only about 50%.',
+          'Our self-designed model reached 97.22% training and 96.42% validation accuracy.'
+        ],
+        link: 'https://link.springer.com/chapter/10.1007/978-3-031-50158-6_29', publisher: 'Springer',
+        chartTitle: 'Accuracy by model',
+        bars: [
+          { label: 'MobileNetV2 · Inception · ResNet101 · VGG16', value: '> 99%', note: 'Top four pre-trained models', style: bar(99.3, '#7EE2A8') },
+          { label: 'Self-designed CNN (training)', value: '97.22%', note: 'Our proposed model', style: bar(97.22, '#B7A8FF') },
+          { label: 'Self-designed CNN (validation)', value: '96.42%', note: 'Our proposed model', style: bar(96.42, '#B7A8FF') },
+          { label: 'EfficientNetB3', value: '~ 50%', note: 'Lowest result', style: bar(50, '#F08A62') }
+        ],
+        chartNote: 'Figures from the paper\u2019s abstract.' }
+    ];
+    const paperTabs = papers.map((pp, i) => ({ label: pp.label, pick: () => this.setState({ paper: i }),
+      style: 'min-height:44px;padding:10px 18px;border-radius:10px;border:none;cursor:pointer;font:600 15px IBM Plex Sans,sans-serif;' + (st.paper === i ? 'background:#4B45A1;color:#fff;' : 'background:transparent;color:#4B45A1;') }));
+
+    const early = [
+      { name: 'Manual Testing Project (Daraz)', tool: 'Manual' },
+      { name: 'Web Automation with Selenium (eBay)', tool: 'Selenium' },
+      { name: 'API Testing with Postman', tool: 'Postman' },
+      { name: 'Web Automation with Cypress (CURA)', tool: 'Cypress' },
+      { name: 'Daraz Tests with Selenium & TestNG', tool: 'TestNG' }
+    ];
+
+    return {
+      journey, cur: jobs[st.job],
+      skillTabs, skills: skillSets[st.skillTab],
+      certChips, certs, paperTabs, paper: papers[st.paper],
+      early, showEarly: st.showEarly,
+      earlyLabel: st.showEarly ? 'Hide early projects' : 'Show early projects (2023) ↓',
+      toggleEarly: () => this.setState({ showEarly: !st.showEarly })
+    };
+  }
+}
+
+var __TPL=`<div style="width:1440px;margin:0 auto;box-sizing:border-box;display:flex;flex-direction:column;background:#F4F1EA;color:#16181D;font-family:'IBM Plex Sans',system-ui,sans-serif;"><!-- RESEARCH (interactive) -->
+<section id="research" style="padding: 110px 80px 40px; display: flex; flex-direction: column; gap: 36px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 40px;">
+<div style="display: flex; flex-direction: column; gap: 14px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #4B45A1;">05 / research</span>
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 52px; letter-spacing: -0.02em;">Published research</h2>
+</div>
+<div style="display: flex; gap: 6px; background: #E3E1F5; padding: 6px; border-radius: 14px;">
+<sc-for list="{{paperTabs}}" as="pt" hint-placeholder-count="2">
+<button onClick="{{pt.pick}}" style="{{pt.style}}">{{pt.label}}</button>
+</sc-for>
+</div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 24px;">
+<div style="grid-column: span 7; background: #E3E1F5; border-radius: 26px; padding: 40px; display: flex; flex-direction: column; gap: 20px;">
+<div style="display: flex; gap: 8px; flex-wrap: wrap;">
+<sc-for list="{{paper.tags}}" as="tg" hint-placeholder-count="3">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; padding: 6px 10px; border-radius: 8px; background: #FFFFFF; color: #4B45A1;">{{tg}}</span>
+</sc-for>
+</div>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 30px; font-weight: 800; line-height: 1.15; color: #1D1A4A;">{{paper.title}}</span>
+<span style="font-size: 14px; line-height: 1.6; color: #45417A;">{{paper.authorsA}}<strong style="color: #1D1A4A;">Shamima Sultana</strong>{{paper.authorsB}}</span>
+<span style="font-size: 16px; line-height: 1.7; color: #2E2A5E;">{{paper.summary}}</span>
+<div style="display: flex; flex-direction: column; gap: 10px;">
+<sc-for list="{{paper.points}}" as="k" hint-placeholder-count="3">
+<div style="display: flex; gap: 12px; align-items: flex-start;"><span style="flex-shrink: 0; margin-top: 8px; width: 8px; height: 8px; border-radius: 50%; background: #4B45A1;"></span><span style="font-size: 15px; line-height: 1.6; color: #2E2A5E;">{{k}}</span></div>
+</sc-for>
+</div>
+<a href="{{paper.link}}" style="align-self: flex-start; margin-top: 4px; text-decoration: none; padding: 14px 22px; border-radius: 12px; background: #4B45A1; color: #FFFFFF; font-weight: 600;">Read paper on {{paper.publisher}} ↗</a>
+</div>
+<div style="grid-column: span 5; background: #16181D; color: #F4F1EA; border-radius: 26px; padding: 36px; display: flex; flex-direction: column; gap: 22px;">
+<div style="display: flex; flex-direction: column; gap: 6px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #C9C5FF;">results</span>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 24px; font-weight: 700;">{{paper.chartTitle}}</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 16px;">
+<sc-for list="{{paper.bars}}" as="bar" hint-placeholder-count="5">
+<div style="display: flex; flex-direction: column; gap: 6px;">
+<div style="display: flex; justify-content: space-between; font-size: 14px;"><span>{{bar.label}}</span><span style="font-family: 'JetBrains Mono', monospace; color: #C9C5FF;">{{bar.value}}</span></div>
+<div style="height: 12px; border-radius: 999px; background: #2A2D35; overflow: hidden;"><div style="{{bar.style}}"></div></div>
+<span style="font-size: 12px; color: #8A8F9C;">{{bar.note}}</span>
+</div>
+</sc-for>
+</div>
+<span style="margin-top: auto; font-size: 12px; line-height: 1.5; color: #8A8F9C;">{{paper.chartNote}}</span>
+</div>
+</div>
+</section>
+
+</div>`;
+window.__mountDC(__TPL, Component);
+</script>
+</body>
+</html>

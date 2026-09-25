@@ -1,0 +1,430 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440">
+<title>Playwright Architecture — Module 03</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap">
+<style>html,body{margin:0;background:#F4F1EA;font-family:'IBM Plex Sans',system-ui,sans-serif} #app > div{margin:0 auto}</style>
+</head>
+<body>
+
+<style>
+.snav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:16px 40px;background:#16181D;color:#F4F1EA;font-family:'IBM Plex Sans',sans-serif;flex-wrap:wrap;gap:12px}
+.snav a{color:#F4F1EA;text-decoration:none}
+.snav .brand{display:flex;align-items:center;gap:10px;font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:18px}
+.snav .brand span.logo{width:34px;height:34px;border-radius:9px;background:#7EE2A8;color:#16181D;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:14px}
+.snav ul{list-style:none;display:flex;gap:6px;margin:0;padding:0;align-items:center;flex-wrap:wrap}
+.snav > ul > li{position:relative}
+.snav > ul > li > a,.snav > ul > li > span{display:block;padding:9px 14px;border-radius:9px;font-size:15px;font-weight:500;cursor:pointer;white-space:nowrap}
+.snav > ul > li:hover > a,.snav > ul > li:hover > span,.snav .cur{background:#2A2D35}
+.snav .caret{font-size:11px;opacity:.7;margin-left:4px}
+.snav .drop{position:absolute;top:100%;left:0;min-width:220px;background:#1E2129;border:1px solid #2E323C;border-radius:12px;padding:8px;display:none;flex-direction:column;gap:2px;box-shadow:0 18px 40px -16px rgba(0,0,0,.6)}
+.snav > ul > li:hover .drop{display:flex}
+.snav .drop a{padding:9px 12px;border-radius:8px;font-size:14px;color:#D8DAE0}
+.snav .drop a:hover{background:#2A2D35;color:#fff}
+.snav .drop .grp{font-family:'JetBrains Mono',monospace;font-size:11px;color:#8A8F9C;text-transform:uppercase;letter-spacing:.06em;padding:8px 12px 2px}
+.snav .cta{padding:9px 18px;border-radius:999px;background:#1F7A52;color:#fff;font-weight:600}
+.snav .menubtn{display:none;background:none;border:1.5px solid #3A3E48;color:#F4F1EA;border-radius:9px;padding:8px 12px;font-size:15px;cursor:pointer}
+@media(max-width:1100px){
+  .snav .menubtn{display:block}
+  .snav > ul{display:none;flex-direction:column;align-items:stretch;width:100%;order:3}
+  .snav.open > ul{display:flex}
+  .snav .drop{position:static;display:flex;border:none;box-shadow:none;background:transparent;padding:0 0 6px 14px}
+  .snav > ul > li:hover .drop{display:flex}
+}
+</style>
+<nav class="snav" id="snav">
+<a class="brand" href="index.html"><span class="logo">S✓</span>Shamima Sultana</a>
+<button class="menubtn" onclick="document.getElementById('snav').classList.toggle('open')">Menu ☰</button>
+<ul>
+<li><a href="index.html" class="">Home</a></li>
+<li><span class="">About <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="about.html">Intro &amp; journey</a>
+    <a href="skills.html">Skills</a>
+    <a href="certifications.html">Certifications</a>
+    <a href="research.html">Research</a>
+    <a href="achievements.html">Achievements</a>
+  </div></li>
+<li><span class="">Work <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="projects.html">Projects</a>
+  </div></li>
+<li><span class="cur">Learn <span class="caret">▾</span></span>
+  <div class="drop">
+    <span class="grp">Automation</span>
+    <a href="PWHub.html">Playwright path</a>
+    <a href="Selenium.html">Selenium with Java</a>
+    <a href="MobileTest.html">Mobile testing</a>
+    <span class="grp">Performance</span>
+    <a href="K6Hub.html">k6</a>
+    <a href="JMeter.html">JMeter</a>
+    <span class="grp">Data &amp; APIs</span>
+    <a href="SQLHub.html">SQL</a>
+    <a href="API.html">API testing</a>
+    <span class="grp">Core &amp; specialised</span>
+    <a href="Manual.html">Manual testing</a>
+    <a href="AITest.html">AI / LLM testing</a>
+    <a href="DevTools.html">DevTools</a>
+    <a href="Git.html">Git &amp; GitHub</a>
+    <a href="A11y.html">Accessibility</a>
+    <a href="Security.html">Security</a>
+  </div></li>
+<li><span class="">Writing <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="K6Hub.html">Tutorials &amp; articles</a>
+  </div></li>
+<li><span class="">More <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="News.html">News</a>
+    <a href="Interview.html">Interview prep</a>
+    <a href="ISTQB.html">ISTQB prep</a>
+  </div></li>
+<li><a class="cta" href="mailto:shamimasultanamiley605@gmail.com">Contact</a></li>
+</ul>
+</nav>
+
+<div id="app"></div>
+<script>/* Minimal renderer: replaces Claude's canvas engine so pages run anywhere. */
+(function(){
+  function resolve(scopes, path){
+    path=path.trim();
+    var parts=path.split('.'), head=parts[0], base, found=false;
+    for(var i=scopes.length-1;i>=0;i--){ if(scopes[i] && Object.prototype.hasOwnProperty.call(scopes[i],head)){ base=scopes[i][head]; found=true; break; } }
+    if(!found) return undefined;
+    for(var j=1;j<parts.length;j++){ if(base==null) return undefined; base=base[parts[j]]; }
+    return base;
+  }
+  function subst(str, scopes){
+    return str.replace(/\{\{([^}]+)\}\}/g, function(_,e){ var v=resolve(scopes,e); return v==null?'':String(v); });
+  }
+  function firstExpr(str){ var m=str.match(/\{\{([^}]+)\}\}/); return m?m[1].trim():null; }
+  function processNode(node, scopes, out){
+    if(node.nodeType===3){ // text
+      var t=node.nodeValue;
+      if(t.indexOf('{{')>=0) out.push(document.createTextNode(subst(t,scopes)));
+      else out.push(document.createTextNode(t));
+      return;
+    }
+    if(node.nodeType!==1){ return; }
+    var tag=node.tagName.toLowerCase();
+    if(tag==='sc-for'){
+      var listExpr=firstExpr(node.getAttribute('list')||'');
+      var as=node.getAttribute('as');
+      var arr=listExpr?resolve(scopes,listExpr):null;
+      if(Array.isArray(arr)){
+        for(var k=0;k<arr.length;k++){
+          var sc=scopes.concat([{__k:as, [as]:arr[k]}]);
+          for(var c=0;c<node.childNodes.length;c++) processNode(node.childNodes[c], sc, out);
+        }
+      }
+      return;
+    }
+    if(tag==='sc-if'){
+      var valExpr=firstExpr(node.getAttribute('value')||'');
+      var cond=valExpr?resolve(scopes,valExpr):false;
+      if(cond){ for(var c2=0;c2<node.childNodes.length;c2++) processNode(node.childNodes[c2], scopes, out); }
+      return;
+    }
+    var el=document.createElement(tag);
+    for(var a=0;a<node.attributes.length;a++){
+      var at=node.attributes[a], name=at.name, val=at.value;
+      if(name.indexOf('hint-')===0) continue;
+      if(name==='onclick'){ var h=firstExpr(val); (function(expr){ el.addEventListener('click', function(ev){ var fn=resolve(scopes,expr); if(typeof fn==='function') fn(ev); }); })(h); continue; }
+      if(name==='onchange'){ var h2=firstExpr(val); (function(expr){ el.addEventListener('input', function(ev){ var fn=resolve(scopes,expr); if(typeof fn==='function') fn(ev); }); })(h2); continue; }
+      var sv=val.indexOf('{{')>=0?subst(val,scopes):val;
+      if(name==='value' && (tag==='input'||tag==='textarea')){ el.value=sv; el.setAttribute('value',sv); }
+      else el.setAttribute(name, sv);
+    }
+    var kids=[];
+    for(var cc=0;cc<node.childNodes.length;cc++) processNode(node.childNodes[cc], scopes, kids);
+    for(var ki=0;ki<kids.length;ki++) el.appendChild(kids[ki]);
+    out.push(el);
+  }
+  window.__mountDC=function(templateHTML, ComponentClass){
+    var tplRoot=document.createElement('div'); tplRoot.innerHTML=templateHTML;
+    var mount=document.getElementById('app');
+    var comp=new ComponentClass({});
+    function doRender(){
+      var vals;
+      try{ vals=comp.renderVals(); }catch(e){ console.error('render error',e); return; }
+      var frag=document.createDocumentFragment();
+      var buf=[];
+      for(var i=0;i<tplRoot.childNodes.length;i++) processNode(tplRoot.childNodes[i], [vals], buf);
+      for(var b=0;b<buf.length;b++) frag.appendChild(buf[b]);
+      // preserve focus in search/textarea across re-render
+      var active=document.activeElement, sel=null, id=null;
+      mount.innerHTML=''; mount.appendChild(frag);
+    }
+    comp.setState=function(s){ Object.assign(comp.state, s); doRender(); };
+    doRender();
+  };
+  window.DCLogic=function(){};
+})();
+</script>
+<script>
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { lesson: 0, c: 0, h: 'ctx' };
+  }
+  renderVals() {
+    const st = this.state;
+    const L = [
+      { title: 'The client-server model', body: 'Your Python code doesn\u2019t control the browser directly. It sends messages to the Playwright driver, a separate Node.js process, which speaks each browser\u2019s own protocol. One long-lived connection keeps it fast, and there is no separate WebDriver to install.',
+        idea: 'Python test\n   │  messages over one open connection\n   ▼\nPlaywright driver (Node.js)\n   │  browser protocols\n   ▼\nChromium · Firefox · WebKit',
+        code: 'from playwright.sync_api import sync_playwright\n\nwith sync_playwright() as p:        # starts the driver\n    browser = p.chromium.launch()    # driver starts a browser\n    page = browser.new_page()\n    page.goto("https://demo.example.com")\n    browser.close()',
+        tip: 'playwright install downloads browser builds that match your Playwright version.', practice: 'Run a script with headless=False and slow_mo=500 to watch each command happen.' },
+      { title: 'The object hierarchy', body: 'Everything in Playwright lives inside something else. Knowing which layer you\u2019re on explains most confusing errors.',
+        idea: 'Playwright        the entry point\n└─ Browser        one launched browser\n   └─ Context     an isolated session\n      └─ Page     one tab\n         └─ Locator  a way to find elements',
+        code: 'with sync_playwright() as p:\n    browser = p.chromium.launch()\n    context = browser.new_context()\n    page = context.new_page()\n    save = page.get_by_role("button", name="Save")\n    save.click()',
+        tip: 'The pytest-playwright page fixture already gives you browser → context → page.', practice: 'Write out the hierarchy from memory, then check it against the diagram below.' },
+      { title: 'BrowserContext isolation', body: 'A context is like a fresh incognito window: its own cookies, storage and login. Contexts are cheap to create, which is why every test can get a clean one, and why two users can be tested at once.',
+        idea: 'Context A (buyer)  │  Context B (vendor)\n  own cookies      │    own cookies\n  own storage      │    own storage\n  own login        │    own login',
+        code: 'buyer_ctx = browser.new_context()\nvendor_ctx = browser.new_context()\n\nbuyer = buyer_ctx.new_page()\nvendor = vendor_ctx.new_page()\n\nLoginPage(buyer).login("buyer1", "p1")\nLoginPage(vendor).login("vendor1", "p2")\n# a buyer publishes, a vendor bids: one test',
+        tip: 'Perfect for procurement flows with two roles, like buyer and vendor.', practice: 'Write a test where one context creates a tender and another sees it.' },
+      { title: 'Browsers and channels', body: 'Playwright ships its own Chromium, Firefox and WebKit (the engine behind Safari). Channels let you use installed branded browsers like Chrome and Edge.',
+        idea: 'chromium   Chrome, Edge engine\nfirefox    Firefox engine\nwebkit     Safari engine\n\nchannel="chrome"   installed Google Chrome\nchannel="msedge"   installed Microsoft Edge',
+        code: 'p.chromium.launch()\np.firefox.launch()\np.webkit.launch()\np.chromium.launch(channel="msedge")\n\n# with pytest-playwright\npytest --browser chromium --browser firefox\npytest --browser-channel chrome',
+        tip: 'WebKit on Windows is the easiest way to catch Safari-only bugs without a Mac.', practice: 'Run one test on all three engines with repeated --browser flags.' },
+      { title: 'Sync vs async API', body: 'The same API exists twice. Sync runs one line after another. Async needs await and is useful when you already run inside asyncio. Tests almost always use sync.',
+        idea: 'sync_api    simple, readable, pytest default\nasync_api   await on every call,\n            for asyncio-based projects',
+        code: '# sync\nfrom playwright.sync_api import sync_playwright\nwith sync_playwright() as p:\n    page = p.chromium.launch().new_page()\n    page.goto("/login")\n\n# async\nfrom playwright.async_api import async_playwright\nasync with async_playwright() as p:\n    browser = await p.chromium.launch()\n    page = await browser.new_page()\n    await page.goto("/login")',
+        tip: 'Pick one API per project and stick with it.', practice: 'Rewrite a 3-line sync script as async, then back.' },
+      { title: 'Playwright vs Selenium', body: 'Both automate browsers. The practical differences show up in waiting, debugging and setup.',
+        idea: 'Waiting    auto-waits vs manual waits\nDebugging  Trace Viewer built in\nNetwork    mock and inspect built in\nSetup      no driver binaries to manage\nIsolation  cheap contexts vs new sessions',
+        code: '# Selenium: you add the wait\nWebDriverWait(driver, 10).until(\n    EC.element_to_be_clickable((By.ID, "save"))).click()\n\n# Playwright: waiting is built into the action\npage.get_by_role("button", name="Save").click()',
+        tip: 'In interviews, give one concrete example instead of a feature list.', practice: 'Take one Selenium test you wrote and rewrite it in Playwright.' }
+    ];
+    const n = L.length;
+    const lessonNav = L.map((l, i) => {
+      const on = i === st.lesson, done = i < st.lesson;
+      return { title: l.title, num: String(i + 1).padStart(2, '0'), pick: () => this.setState({ lesson: i }),
+        style: 'display:flex;align-items:center;gap:12px;min-height:44px;padding:8px 12px;border-radius:10px;border:none;cursor:pointer;text-align:left;font:' + (on ? '600' : '400') + ' 15px IBM Plex Sans,sans-serif;' + (on ? 'background:#16181D;color:#F4F1EA;' : 'background:transparent;color:#16181D;'),
+        numStyle: 'flex-shrink:0;font:600 12px JetBrains Mono,monospace;width:28px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;' + (on ? 'background:#2F5D8A;color:#fff;' : done ? 'background:#D9E8F5;color:#2F5D8A;' : 'background:#EAE5DA;color:#6A6E77;') };
+    });
+    const pct = Math.round(((st.lesson + 1) / n) * 100);
+
+    // follow one command
+    const C = [
+      { at: 'py', where: 'step 1 · your Python process', head: 'You call click()', body: 'Your test calls a method on a locator. Nothing has touched the browser yet.', msg: 'page.get_by_role("button", name="Save").click()' },
+      { at: 'drv', where: 'step 2 · Python → driver', head: 'A message goes to the driver', body: 'The Python library turns the call into a message and sends it over the open connection to the driver.', msg: '{\n  "method": "click",\n  "selector": "internal:role=button[name=\\"Save\\"]",\n  "timeout": 30000\n}' },
+      { at: 'drv', where: 'step 3 · inside the driver', head: 'Actionability checks', body: 'The driver finds the element and waits until it is attached, visible, stable (not animating), enabled and not covered by another element. This is auto-waiting.', msg: 'waiting for get_by_role("button", name="Save")\n  - element is visible\n  - element is stable\n  - element is enabled\n  - element receives events' },
+      { at: 'br', where: 'step 4 · driver → browser', head: 'The browser gets real input', body: 'The driver scrolls the element into view and sends real mouse events through the browser\u2019s own protocol.', msg: 'scroll into view\nmouse move → (412, 238)\nmouse down\nmouse up' },
+      { at: 'br', where: 'step 5 · in the browser', head: 'The page reacts', body: 'The click fires the page\u2019s own JavaScript: the form submits, a request goes out, the DOM updates.', msg: 'click event → form submit\nPOST /api/tenders  201' },
+      { at: 'py', where: 'step 6 · back to Python', head: 'Your next line runs', body: 'The driver reports success and click() returns. If any check never passed, you get a TimeoutError with the log from step 3 instead.', msg: 'click() returned\n\n# or, on failure:\nTimeoutError: locator.click:\n  Timeout 30000ms exceeded' }
+    ];
+    const cs = C[st.c];
+    const colStyle = (k) => 'display:flex;flex-direction:column;gap:12px;padding:26px;min-height:190px;transition:all .2s;' +
+      (cs.at === k ? 'background:#8FB8E0;color:#0E2238;' : 'background:#1E2129;color:#A9AEBA;') +
+      (k === 'py' ? 'border-radius:20px 0 0 20px;' : k === 'br' ? 'border-radius:0 20px 20px 0;' : '') +
+      (k !== 'br' ? 'border-right:2px dashed #3A3E48;' : '');
+
+    // hierarchy
+    const H = {
+      pw: { name: 'Playwright', body: 'The entry point. It starts the driver and gives you the browser types.', analogy: 'Like the computer that can open any browser.', code: 'with sync_playwright() as p:\n    p.chromium / p.firefox / p.webkit' },
+      br: { name: 'Browser', body: 'One launched browser process. Starting one is the slow part, so tests usually share it for the whole run.', analogy: 'Like opening the Chrome application.', code: 'browser = p.chromium.launch(headless=False)\n\n# pytest-playwright: scope="session"' },
+      ctx: { name: 'BrowserContext', body: 'An isolated session with its own cookies, storage and permissions. Cheap to create; each test gets a fresh one.', analogy: 'Like a new incognito window.', code: 'context = browser.new_context(\n    viewport={"width": 1280, "height": 720},\n    locale="en-GB",\n    storage_state="auth/buyer.json")' },
+      pg: { name: 'Page', body: 'One tab inside a context. Navigation, locators and screenshots all start here. Popups open as new pages in the same context.', analogy: 'Like a single browser tab.', code: 'page = context.new_page()\npage.goto("/tenders")\n\nwith page.expect_popup() as info:\n    page.get_by_text("Open report").click()\npopup = info.value' },
+      loc: { name: 'Locator', body: 'A recipe for finding elements, not the element itself. It\u2019s evaluated fresh every time you act, which is why locators don\u2019t go stale.', analogy: 'Like directions to a button, not the button.', code: 'create = page.get_by_role("button", name="Create")\ncreate.click()           # found now\npage.reload()\ncreate.click()           # found again' }
+    };
+    const box = (k, base) => ({ style: base + (st.h === k ? 'background:#2F5D8A;color:#FFFFFF;border:2px solid #2F5D8A;' : 'background:rgba(47,93,138,0.06);color:#173452;border:2px solid #9AB0C6;') });
+    const hTabs = [['pw', 'Playwright'], ['br', 'Browser'], ['ctx', 'Context'], ['pg', 'Page'], ['loc', 'Locator']].map(([k, label]) => ({ label, pick: () => this.setState({ h: k }),
+      style: 'min-height:44px;padding:10px 18px;border-radius:999px;cursor:pointer;font:600 15px IBM Plex Sans,sans-serif;border:1.5px solid #2F5D8A;' + (st.h === k ? 'background:#2F5D8A;color:#fff;' : 'background:transparent;color:#2F5D8A;') }));
+    const h = {
+      pw: box('pw', 'display:flex;flex-direction:column;gap:14px;padding:18px;border-radius:24px;'),
+      br: box('br', 'display:flex;flex-direction:column;gap:14px;padding:16px;border-radius:20px;'),
+      ctx: box('ctx', 'display:flex;flex-direction:column;gap:10px;padding:14px;border-radius:16px;'),
+      pg: box('pg', 'display:flex;flex-direction:column;gap:8px;padding:10px;border-radius:12px;'),
+      loc: box('loc', 'padding:8px 10px;border-radius:8px;font:600 12px JetBrains Mono,monospace;')
+    };
+
+    const vs = [
+      { k: 'Waiting', pw: 'Auto-waits before every action and in expect()', se: 'You add explicit waits yourself' },
+      { k: 'Browser drivers', pw: 'None; browsers installed with one command', se: 'Driver per browser (Selenium Manager helps)' },
+      { k: 'Speed', pw: 'One persistent connection', se: 'HTTP request per command (W3C WebDriver)' },
+      { k: 'Isolation', pw: 'Cheap contexts in one browser', se: 'Usually a new browser session' },
+      { k: 'Debugging', pw: 'Trace Viewer, Inspector, codegen', se: 'Screenshots, logs, third-party tools' },
+      { k: 'Network', pw: 'Mock, block and inspect requests built in', se: 'Limited; often needs a proxy' },
+      { k: 'Multiple tabs / users', pw: 'Pages and contexts', se: 'Window handles' },
+      { k: 'Languages', pw: 'Python, JS/TS, Java, .NET', se: 'Java, Python, C#, JS, Ruby and more' }
+    ];
+
+    return {
+      lessonNav, cur: L[st.lesson], lessonNum: String(st.lesson + 1), lessonTotal: String(n),
+      prev: () => this.setState({ lesson: Math.max(0, st.lesson - 1) }),
+      next: () => this.setState({ lesson: Math.min(n - 1, st.lesson + 1) }),
+      progressStyle: 'height:100%;border-radius:999px;background:#2F5D8A;transition:width .3s;width:' + pct + '%;',
+      progressLabel: pct + '% complete',
+      col: { py: colStyle('py'), drv: colStyle('drv'), br: colStyle('br') },
+      cStep: cs, cLabel: (st.c + 1) + ' / ' + C.length,
+      cPrev: () => this.setState({ c: Math.max(0, st.c - 1) }),
+      cNext: () => this.setState({ c: Math.min(C.length - 1, st.c + 1) }),
+      h, hTabs, hSel: H[st.h], vs
+    };
+  }
+}
+
+var __TPL=`<div style="width: 1440px; height: 4000px; box-sizing: border-box; display: flex; flex-direction: column; background: #F4F1EA; font-family: 'IBM Plex Sans', system-ui, sans-serif; color: #16181D;">
+
+<!-- HERO -->
+<section style="background: #D9E8F5; padding: 64px 80px 56px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 40px; align-items: end;">
+<div style="grid-column: span 7; display: flex; flex-direction: column; gap: 18px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #2F5D8A;"><a href="PWHub.html" style="color: #173452;">playwright</a> / module 03 · Architecture</span>
+<h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 68px; line-height: 0.98; letter-spacing: -0.03em; color: #0E2238;">How Playwright<br>actually works.</h1>
+<p style="margin: 0; font-size: 19px; line-height: 1.6; color: #2A4764; max-width: 620px;">The mental model to have before writing more Playwright code: who talks to whom, and how browsers, contexts and pages fit inside each other.</p>
+</div>
+<div style="grid-column: span 5; display: flex; align-items: center; gap: 10px; font-family: 'JetBrains Mono', monospace; font-size: 13px;">
+<span style="flex: 1; background: #FFFFFF; border-radius: 14px; padding: 16px 12px; text-align: center; border: 1.5px solid #B7CEE5;">Python test</span>
+<span style="color: #2F5D8A; font-size: 18px;">→</span>
+<span style="flex: 1; background: #2F5D8A; color: #FFFFFF; border-radius: 14px; padding: 16px 12px; text-align: center;">driver</span>
+<span style="color: #2F5D8A; font-size: 18px;">→</span>
+<span style="flex: 1; background: #16181D; color: #7EE2A8; border-radius: 14px; padding: 16px 12px; text-align: center;">browser</span>
+</div>
+</section>
+
+<!-- LESSONS -->
+<section style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 40px; padding: 64px 80px;">
+<aside style="grid-column: span 3; display: flex; flex-direction: column; gap: 6px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #6A6E77; text-transform: uppercase; letter-spacing: 0.08em; padding: 0 12px 10px;">Lessons</span>
+<sc-for list="{{lessonNav}}" as="l" hint-placeholder-count="6">
+<button onClick="{{l.pick}}" style="{{l.style}}"><span style="{{l.numStyle}}">{{l.num}}</span><span>{{l.title}}</span></button>
+</sc-for>
+<div style="margin-top: 18px; padding: 0 12px; display: flex; flex-direction: column; gap: 8px;">
+<div style="height: 6px; border-radius: 999px; background: #E3DED3; overflow: hidden;"><div style="{{progressStyle}}"></div></div>
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #2F5D8A;">{{progressLabel}}</span>
+</div>
+</aside>
+<div style="grid-column: span 9; display: flex; flex-direction: column; gap: 24px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 20px;">
+<div style="display: flex; flex-direction: column; gap: 10px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #2F5D8A;">lesson {{lessonNum}} of {{lessonTotal}}</span>
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 46px; letter-spacing: -0.02em; line-height: 1.05;">{{cur.title}}</h2>
+</div>
+</div>
+<p style="margin: 0; font-size: 18px; line-height: 1.7; color: #34373F; max-width: 820px;">{{cur.body}}</p>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px;">
+<div style="background: #FFFFFF; border: 1px solid #DDD7CB; border-radius: 16px; overflow: hidden;">
+<div style="padding: 12px 18px; border-bottom: 1px solid #DDD7CB; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #2F5D8A;">the idea</div>
+<pre style="margin: 0; padding: 20px; font-family: 'JetBrains Mono', monospace; font-size: 14px; line-height: 1.75; color: #16181D; white-space: pre-wrap;">{{cur.idea}}</pre>
+</div>
+<div style="background: #16181D; border-radius: 16px; overflow: hidden;">
+<div style="padding: 12px 18px; border-bottom: 1px solid #2A2D35; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #7EE2A8;">in code</div>
+<pre style="margin: 0; padding: 20px; font-family: 'JetBrains Mono', monospace; font-size: 14px; line-height: 1.75; color: #D8DAE0; white-space: pre; overflow-x: auto;">{{cur.code}}</pre>
+</div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px;">
+<div style="display: flex; gap: 14px; background: #DCEFE3; border-radius: 16px; padding: 20px 22px; align-items: flex-start;">
+<span style="flex-shrink: 0; width: 32px; height: 32px; border-radius: 9px; background: #1F7A52; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 700;">✓</span>
+<div style="display: flex; flex-direction: column; gap: 4px;"><span style="font-weight: 600; color: #174F37;">Remember</span><span style="font-size: 15px; line-height: 1.6; color: #174F37;">{{cur.tip}}</span></div>
+</div>
+<div style="display: flex; gap: 14px; background: #F6E7B8; border-radius: 16px; padding: 20px 22px; align-items: flex-start;">
+<span style="flex-shrink: 0; width: 32px; height: 32px; border-radius: 9px; background: #8A5A00; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 700;">?</span>
+<div style="display: flex; flex-direction: column; gap: 4px;"><span style="font-weight: 600; color: #5E3E00;">Practice</span><span style="font-size: 15px; line-height: 1.6; color: #5E3E00;">{{cur.practice}}</span></div>
+</div>
+</div>
+<div style="display: flex; justify-content: space-between;">
+<button onClick="{{prev}}" style="min-height: 48px; padding: 12px 22px; border-radius: 12px; border: 1.5px solid #16181D; background: transparent; cursor: pointer; font: 600 15px 'IBM Plex Sans', sans-serif; color: #16181D;">← Previous</button>
+<button onClick="{{next}}" style="min-height: 48px; padding: 12px 22px; border-radius: 12px; border: none; background: #2F5D8A; color: #FFFFFF; cursor: pointer; font: 600 15px 'IBM Plex Sans', sans-serif;">Next lesson →</button>
+</div>
+</div>
+</section>
+
+<!-- VISUAL 1: FOLLOW ONE COMMAND -->
+<section style="background: #16181D; color: #F4F1EA; padding: 88px 80px; display: flex; flex-direction: column; gap: 36px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 40px;">
+<div style="display: flex; flex-direction: column; gap: 14px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #8FB8E0;">visualize · client → driver → browser</span>
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 48px; letter-spacing: -0.02em;">Follow one click through the system</h2>
+</div>
+<div style="display: flex; gap: 10px; align-items: center;">
+<button onClick="{{cPrev}}" aria-label="Previous step" style="width: 48px; height: 48px; border-radius: 12px; border: 1.5px solid #3A3E48; background: transparent; color: #F4F1EA; cursor: pointer; font-size: 18px;">←</button>
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; min-width: 60px; text-align: center;">{{cLabel}}</span>
+<button onClick="{{cNext}}" aria-label="Next step" style="width: 48px; height: 48px; border-radius: 12px; border: none; background: #8FB8E0; color: #16181D; cursor: pointer; font-size: 18px;">→</button>
+</div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; align-items: stretch;">
+<div style="{{col.py}}"><span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; opacity: 0.8;">your process</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 26px; font-weight: 700;">Python test</span><span style="font-family: 'JetBrains Mono', monospace; font-size: 13px;">page.get_by_role("button",<br>  name="Save").click()</span></div>
+<div style="{{col.drv}}"><span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; opacity: 0.8;">separate process (Node.js)</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 26px; font-weight: 700;">Playwright driver</span><span style="font-size: 14px;">finds the element, waits until it is visible, stable, enabled and able to receive the click</span></div>
+<div style="{{col.br}}"><span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; opacity: 0.8;">real browser</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 26px; font-weight: 700;">Chromium / Firefox / WebKit</span><span style="font-size: 14px;">performs the click on the page</span></div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 24px;">
+<div style="grid-column: span 7; background: #8FB8E0; color: #0E2238; border-radius: 20px; padding: 26px; display: flex; flex-direction: column; gap: 10px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 13px;">{{cStep.where}}</span>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 28px; font-weight: 700; line-height: 1.15;">{{cStep.head}}</span>
+<span style="font-size: 16px; line-height: 1.6;">{{cStep.body}}</span>
+</div>
+<pre style="grid-column: span 5; margin: 0; background: #1E2129; border: 1px solid #2E323C; border-radius: 20px; padding: 22px; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #D8DAE0; white-space: pre-wrap;">{{cStep.msg}}</pre>
+</div>
+</section>
+
+<!-- VISUAL 2: HIERARCHY -->
+<section style="padding: 88px 80px; display: flex; flex-direction: column; gap: 32px;">
+<div style="display: flex; flex-direction: column; gap: 14px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #2F5D8A;">visualize · the object hierarchy</span>
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 48px; letter-spacing: -0.02em;">Playwright → Browser → Context → Page → Locator</h2>
+<div style="display: flex; gap: 8px;">
+<sc-for list="{{hTabs}}" as="ht" hint-placeholder-count="5"><button onClick="{{ht.pick}}" style="{{ht.style}}">{{ht.label}}</button></sc-for>
+</div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 32px;">
+<div style="grid-column: span 7;">
+<div style="{{h.pw.style}}">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 600;">Playwright</span>
+<div style="{{h.br.style}}">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 600;">Browser · chromium</span>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px;">
+<div style="{{h.ctx.style}}">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 600;">Context A · buyer</span>
+<div style="{{h.pg.style}}"><span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 600;">Page · /tenders</span>
+<div style="{{h.loc.style}}">Locator · "Create" button</div></div>
+<div style="border: 1.5px dashed #9AB0C6; border-radius: 12px; padding: 10px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #4A5E73;">Page · popup</div>
+</div>
+<div style="border: 2px dashed #9AB0C6; border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 10px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 600; color: #4A5E73;">Context B · vendor</span>
+<div style="border: 1.5px dashed #9AB0C6; border-radius: 12px; padding: 10px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #4A5E73;">Page · /bids</div>
+<span style="font-size: 12px; color: #4A5E73;">own cookies, no shared login</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div style="grid-column: span 5; display: flex; flex-direction: column; gap: 16px;">
+<div style="background: #2F5D8A; color: #FFFFFF; border-radius: 20px; padding: 26px; display: flex; flex-direction: column; gap: 10px;">
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 28px; font-weight: 800;">{{hSel.name}}</span>
+<span style="font-size: 16px; line-height: 1.6; color: #E4EEF8;">{{hSel.body}}</span>
+<span style="font-size: 14px; padding: 10px 12px; border-radius: 10px; background: rgba(255,255,255,0.14);">{{hSel.analogy}}</span>
+</div>
+<pre style="margin: 0; background: #16181D; color: #D8DAE0; border-radius: 16px; padding: 20px; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; white-space: pre; overflow-x: auto;">{{hSel.code}}</pre>
+</div>
+</div>
+</section>
+
+<!-- VISUAL 3: COMPARISON -->
+<section style="flex-grow: 1; padding: 20px 80px 100px; display: flex; flex-direction: column; gap: 28px;">
+<div style="display: flex; flex-direction: column; gap: 14px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #2F5D8A;">compare</span>
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 48px; letter-spacing: -0.02em;">Playwright vs Selenium</h2>
+</div>
+<div style="background: #FFFFFF; border: 1px solid #DDD7CB; border-radius: 20px; overflow: hidden;">
+<div style="display: grid; grid-template-columns: 260px repeat(2, minmax(0, 1fr)); background: #16181D; color: #F4F1EA; font-family: 'JetBrains Mono', monospace; font-size: 13px;"><span style="padding: 14px 20px;"></span><span style="padding: 14px 20px; color: #7EE2A8;">Playwright</span><span style="padding: 14px 20px;">Selenium WebDriver</span></div>
+<sc-for list="{{vs}}" as="v" hint-placeholder-count="8">
+<div style="display: grid; grid-template-columns: 260px repeat(2, minmax(0, 1fr)); border-top: 1px solid #EAE5DA; font-size: 15px;">
+<span style="padding: 14px 20px; font-weight: 600;">{{v.k}}</span><span style="padding: 14px 20px; color: #174F37;">{{v.pw}}</span><span style="padding: 14px 20px; color: #4A4E57;">{{v.se}}</span>
+</div>
+</sc-for>
+</div>
+<span style="font-size: 14px; color: #5C606A;">Both are solid tools. Selenium has a bigger ecosystem and more language bindings; Playwright gives you more out of the box.</span>
+</section>
+
+<section style="padding: 0 80px 72px; display: flex; justify-content: space-between; align-items: center; gap: 30px;">
+<div style="display: flex; flex-direction: column; gap: 8px;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #6A6E77;">back to the path</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 30px; font-weight: 800;">Next up: Module 04 · Playwright Core</span></div>
+<a href="PWCore.html" style="text-decoration: none; padding: 16px 26px; border-radius: 12px; background: #16181D; color: #7EE2A8; font-weight: 600;">Continue →</a>
+</section>
+</div>`;
+window.__mountDC(__TPL, Component);
+</script>
+</body>
+</html>

@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440">
+<title>Mobile Testing — Manual & Appium</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap">
+<style>html,body{margin:0;background:#F4F1EA;font-family:'IBM Plex Sans',system-ui,sans-serif} #app > div{margin:0 auto}</style>
+</head>
+<body>
+
+<style>
+.snav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:16px 40px;background:#16181D;color:#F4F1EA;font-family:'IBM Plex Sans',sans-serif;flex-wrap:wrap;gap:12px}
+.snav a{color:#F4F1EA;text-decoration:none}
+.snav .brand{display:flex;align-items:center;gap:10px;font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:18px}
+.snav .brand span.logo{width:34px;height:34px;border-radius:9px;background:#7EE2A8;color:#16181D;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:14px}
+.snav ul{list-style:none;display:flex;gap:6px;margin:0;padding:0;align-items:center;flex-wrap:wrap}
+.snav > ul > li{position:relative}
+.snav > ul > li > a,.snav > ul > li > span{display:block;padding:9px 14px;border-radius:9px;font-size:15px;font-weight:500;cursor:pointer;white-space:nowrap}
+.snav > ul > li:hover > a,.snav > ul > li:hover > span,.snav .cur{background:#2A2D35}
+.snav .caret{font-size:11px;opacity:.7;margin-left:4px}
+.snav .drop{position:absolute;top:100%;left:0;min-width:220px;background:#1E2129;border:1px solid #2E323C;border-radius:12px;padding:8px;display:none;flex-direction:column;gap:2px;box-shadow:0 18px 40px -16px rgba(0,0,0,.6)}
+.snav > ul > li:hover .drop{display:flex}
+.snav .drop a{padding:9px 12px;border-radius:8px;font-size:14px;color:#D8DAE0}
+.snav .drop a:hover{background:#2A2D35;color:#fff}
+.snav .drop .grp{font-family:'JetBrains Mono',monospace;font-size:11px;color:#8A8F9C;text-transform:uppercase;letter-spacing:.06em;padding:8px 12px 2px}
+.snav .cta{padding:9px 18px;border-radius:999px;background:#1F7A52;color:#fff;font-weight:600}
+.snav .menubtn{display:none;background:none;border:1.5px solid #3A3E48;color:#F4F1EA;border-radius:9px;padding:8px 12px;font-size:15px;cursor:pointer}
+@media(max-width:1100px){
+  .snav .menubtn{display:block}
+  .snav > ul{display:none;flex-direction:column;align-items:stretch;width:100%;order:3}
+  .snav.open > ul{display:flex}
+  .snav .drop{position:static;display:flex;border:none;box-shadow:none;background:transparent;padding:0 0 6px 14px}
+  .snav > ul > li:hover .drop{display:flex}
+}
+</style>
+<nav class="snav" id="snav">
+<a class="brand" href="index.html"><span class="logo">S✓</span>Shamima Sultana</a>
+<button class="menubtn" onclick="document.getElementById('snav').classList.toggle('open')">Menu ☰</button>
+<ul>
+<li><a href="index.html" class="">Home</a></li>
+<li><span class="">About <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="about.html">Intro &amp; journey</a>
+    <a href="skills.html">Skills</a>
+    <a href="certifications.html">Certifications</a>
+    <a href="research.html">Research</a>
+    <a href="achievements.html">Achievements</a>
+  </div></li>
+<li><span class="">Work <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="projects.html">Projects</a>
+  </div></li>
+<li><span class="cur">Learn <span class="caret">▾</span></span>
+  <div class="drop">
+    <span class="grp">Automation</span>
+    <a href="PWHub.html">Playwright path</a>
+    <a href="Selenium.html">Selenium with Java</a>
+    <a href="MobileTest.html">Mobile testing</a>
+    <span class="grp">Performance</span>
+    <a href="K6Hub.html">k6</a>
+    <a href="JMeter.html">JMeter</a>
+    <span class="grp">Data &amp; APIs</span>
+    <a href="SQLHub.html">SQL</a>
+    <a href="API.html">API testing</a>
+    <span class="grp">Core &amp; specialised</span>
+    <a href="Manual.html">Manual testing</a>
+    <a href="AITest.html">AI / LLM testing</a>
+    <a href="DevTools.html">DevTools</a>
+    <a href="Git.html">Git &amp; GitHub</a>
+    <a href="A11y.html">Accessibility</a>
+    <a href="Security.html">Security</a>
+  </div></li>
+<li><span class="">Writing <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="K6Hub.html">Tutorials &amp; articles</a>
+  </div></li>
+<li><span class="">More <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="News.html">News</a>
+    <a href="Interview.html">Interview prep</a>
+    <a href="ISTQB.html">ISTQB prep</a>
+  </div></li>
+<li><a class="cta" href="mailto:shamimasultanamiley605@gmail.com">Contact</a></li>
+</ul>
+</nav>
+
+<div id="app"></div>
+<script>/* Minimal renderer: replaces Claude's canvas engine so pages run anywhere. */
+(function(){
+  function resolve(scopes, path){
+    path=path.trim();
+    var parts=path.split('.'), head=parts[0], base, found=false;
+    for(var i=scopes.length-1;i>=0;i--){ if(scopes[i] && Object.prototype.hasOwnProperty.call(scopes[i],head)){ base=scopes[i][head]; found=true; break; } }
+    if(!found) return undefined;
+    for(var j=1;j<parts.length;j++){ if(base==null) return undefined; base=base[parts[j]]; }
+    return base;
+  }
+  function subst(str, scopes){
+    return str.replace(/\{\{([^}]+)\}\}/g, function(_,e){ var v=resolve(scopes,e); return v==null?'':String(v); });
+  }
+  function firstExpr(str){ var m=str.match(/\{\{([^}]+)\}\}/); return m?m[1].trim():null; }
+  function processNode(node, scopes, out){
+    if(node.nodeType===3){ // text
+      var t=node.nodeValue;
+      if(t.indexOf('{{')>=0) out.push(document.createTextNode(subst(t,scopes)));
+      else out.push(document.createTextNode(t));
+      return;
+    }
+    if(node.nodeType!==1){ return; }
+    var tag=node.tagName.toLowerCase();
+    if(tag==='sc-for'){
+      var listExpr=firstExpr(node.getAttribute('list')||'');
+      var as=node.getAttribute('as');
+      var arr=listExpr?resolve(scopes,listExpr):null;
+      if(Array.isArray(arr)){
+        for(var k=0;k<arr.length;k++){
+          var sc=scopes.concat([{__k:as, [as]:arr[k]}]);
+          for(var c=0;c<node.childNodes.length;c++) processNode(node.childNodes[c], sc, out);
+        }
+      }
+      return;
+    }
+    if(tag==='sc-if'){
+      var valExpr=firstExpr(node.getAttribute('value')||'');
+      var cond=valExpr?resolve(scopes,valExpr):false;
+      if(cond){ for(var c2=0;c2<node.childNodes.length;c2++) processNode(node.childNodes[c2], scopes, out); }
+      return;
+    }
+    var el=document.createElement(tag);
+    for(var a=0;a<node.attributes.length;a++){
+      var at=node.attributes[a], name=at.name, val=at.value;
+      if(name.indexOf('hint-')===0) continue;
+      if(name==='onclick'){ var h=firstExpr(val); (function(expr){ el.addEventListener('click', function(ev){ var fn=resolve(scopes,expr); if(typeof fn==='function') fn(ev); }); })(h); continue; }
+      if(name==='onchange'){ var h2=firstExpr(val); (function(expr){ el.addEventListener('input', function(ev){ var fn=resolve(scopes,expr); if(typeof fn==='function') fn(ev); }); })(h2); continue; }
+      var sv=val.indexOf('{{')>=0?subst(val,scopes):val;
+      if(name==='value' && (tag==='input'||tag==='textarea')){ el.value=sv; el.setAttribute('value',sv); }
+      else el.setAttribute(name, sv);
+    }
+    var kids=[];
+    for(var cc=0;cc<node.childNodes.length;cc++) processNode(node.childNodes[cc], scopes, kids);
+    for(var ki=0;ki<kids.length;ki++) el.appendChild(kids[ki]);
+    out.push(el);
+  }
+  window.__mountDC=function(templateHTML, ComponentClass){
+    var tplRoot=document.createElement('div'); tplRoot.innerHTML=templateHTML;
+    var mount=document.getElementById('app');
+    var comp=new ComponentClass({});
+    function doRender(){
+      var vals;
+      try{ vals=comp.renderVals(); }catch(e){ console.error('render error',e); return; }
+      var frag=document.createDocumentFragment();
+      var buf=[];
+      for(var i=0;i<tplRoot.childNodes.length;i++) processNode(tplRoot.childNodes[i], [vals], buf);
+      for(var b=0;b<buf.length;b++) frag.appendChild(buf[b]);
+      // preserve focus in search/textarea across re-render
+      var active=document.activeElement, sel=null, id=null;
+      mount.innerHTML=''; mount.appendChild(frag);
+    }
+    comp.setState=function(s){ Object.assign(comp.state, s); doRender(); };
+    doRender();
+  };
+  window.DCLogic=function(){};
+})();
+</script>
+<script>
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { m: 0, l: 0, mode: 'split', f: 0, done: {} };
+  }
+  renderVals() {
+    const st = this.state;
+    const MODS = [{"num": "01", "title": "Mobile fundamentals", "blurb": "App types, device fragmentation, and where to test: emulators, real devices or the cloud.", "lessons": [{"title": "Types of mobile apps", "body": "How an app is built changes what you test and which tools you use.", "code": "Native      built for one platform (Kotlin/Java for Android,\n            Swift for iOS); full device access\nHybrid      web content inside a native shell (e.g. a WebView);\n            some screens behave like a website\nCross-      one codebase for both (Flutter, React Native)\nplatform\nMobile web  a website in the phone's browser\nPWA         a website that installs like an app", "out": "Ask developers first: which type is it? Hybrid apps need\nboth mobile and web techniques (and WebView debugging).", "tip": "Check the app on both Android and iOS even when it's 'one codebase'; platform bugs still happen.", "mistake": "Testing a mobile website only by resizing a desktop browser.", "viz": ""}, {"title": "Fragmentation and the device matrix", "body": "Thousands of phone models, screen sizes and OS versions exist. You can't test them all, so choose wisely.", "code": "Build a matrix from real usage data (analytics):\n  Android  2–3 OS versions (newest + most used older ones)\n           small, medium, large screens\n           popular brands in your market (e.g. Samsung, Xiaomi)\n  iOS      latest + previous major version\n           one small iPhone, one large\n\nExample matrix\n  Pixel emulator (Android latest)     every build\n  Samsung mid-range, Android N-1      every release\n  Budget phone, small screen, low RAM every release\n  iPhone (latest iOS)                 every release", "out": "Low-end devices find the most performance bugs;\nmany users in Bangladesh use budget phones.", "tip": "Review the matrix every few months as usage changes.", "mistake": "Testing only on the tester's own flagship phone.", "viz": ""}, {"title": "Emulators, real devices and the cloud", "body": "Each option has a place in your strategy.", "code": "Emulator / simulator   free, fast, easy to reset,\n                       good for most functional testing;\n                       not real performance, sensors or camera\nReal device            real touch, performance, battery,\n                       network, camera, notifications\nCloud device farm      hundreds of real devices remotely\n                       (BrowserStack, Sauce Labs, LambdaTest,\n                       Firebase Test Lab, AWS Device Farm)", "out": "Typical mix: emulators for daily work and automation,\na few real devices for release checks, the cloud for the\nwider matrix.", "tip": "iOS Simulator needs a Mac with Xcode; use a cloud farm if you don't have one.", "mistake": "Signing off a release after testing only on emulators.", "viz": ""}, {"title": "How mobile differs from web", "body": "The same feature needs extra checks on a phone.", "code": "Web                          Mobile adds\nmouse, keyboard              touch, gestures, on-screen keyboard\nstable broadband             switching 4G / Wi-Fi / offline\nalways in the foreground     calls, notifications, background, killed\nbrowser permissions          camera, location, contacts, storage\ndeploy = instant             store review, users on old versions\none screen shape             notches, foldables, rotation", "out": "The next module turns each of these into test ideas\nyou can use on any app.", "tip": "Start every mobile test plan with this list.", "mistake": "Copying the web test cases and calling it mobile coverage.", "viz": ""}]}, {"num": "02", "title": "Mobile-specific test areas", "blurb": "The checks that catch the bugs web testing never meets.", "lessons": [{"title": "Interruptions", "body": "Real users get interrupted constantly. The app must survive and resume correctly.", "code": "During checkout / form entry / video upload, try:\n  incoming call (emulator: Extended controls → Phone)\n  SMS or push notification, then tap it\n  alarm, low-battery popup\n  pressing Home, then returning\n  switching to another app for 5 minutes\n  locking and unlocking the screen\n\nExpected: no crash, no data lost, no double payment,\nthe user returns to the same step", "out": "Interruptions during payment are high-risk:\ncheck the order isn't created twice.", "tip": "Combine with SQL/API checks to confirm what was really saved.", "mistake": "Only testing with the app always in the foreground.", "viz": ""}, {"title": "Network conditions", "body": "Phones move between networks and lose signal. Test the in-between states.", "code": "  4G → Wi-Fi switch during a request\n  Airplane mode mid-upload, then back on\n  Slow network (emulator: Extended controls → Cellular → EDGE)\n  No network at app launch\n  Captive portal Wi-Fi (login page, no internet)\n\nadb shell svc wifi disable     # turn Wi-Fi off\nadb shell svc data disable     # turn mobile data off", "out": "Expected: clear offline message, retry options,\nno half-saved records, queued actions sent later if designed.", "tip": "Ask what the app should do offline; it's often not specified.", "mistake": "Testing only on the office Wi-Fi.", "viz": ""}, {"title": "Permissions", "body": "Apps must ask for permissions at the right time and cope when users say no.", "code": "Test each permission (camera, location, photos, notifications):\n  Allow → feature works\n  Deny  → clear explanation, app still usable\n  Deny + \"Don't ask again\" → path to Settings\n  Allow only while using / approximate location\n  Revoke later in Settings → app handles it on return\n\nadb shell pm revoke com.example.app android.permission.CAMERA", "out": "A crash after 'Deny' is a common, serious bug.\nStores also reject apps that ask for permissions they don't need.", "tip": "Reset permissions between runs: adb shell pm reset-permissions (or clear app data).", "mistake": "Always tapping 'Allow' and never testing 'Deny'.", "viz": ""}, {"title": "App lifecycle and orientation", "body": "Apps are paused, resumed, killed by the OS and rotated. State must survive.", "code": "  Rotate on every screen with a form: data kept?\n  Background the app for 30 min, reopen: still logged in?\n  Kill from recent apps mid-flow, reopen\n  Enable Developer options → \"Don't keep activities\"\n    (forces Android to destroy screens: finds state bugs fast)\n  Low-memory: open many heavy apps, then return", "out": "'Don't keep activities' is a tester favourite on Android:\nit exposes lost form data and crashes in minutes.", "tip": "Test rotation even if the app is 'portrait only'; some screens (video, camera) may still rotate.", "mistake": "Never killing the app during testing.", "viz": ""}, {"title": "UI, gestures and display", "body": "Screens vary in size, shape, font size and theme. Touch is not a mouse click.", "code": "  Small (≈5\") and large screens, tablets, foldables\n  Notch / camera cut-out hiding content\n  System font size at largest: text cut off? buttons overlap?\n    adb shell settings put system font_scale 1.3\n  Dark mode\n  On-screen keyboard covers the input or Submit button\n  Gestures: swipe, long-press, pinch, pull-to-refresh, back gesture\n  Touch targets big enough (≈ 48 dp)", "out": "Large font + small screen is where layouts break most.\nIt's also an accessibility requirement.", "tip": "Keep screenshots of each screen at largest font size as evidence.", "mistake": "Testing only at default font size in light mode.", "viz": ""}, {"title": "Install, update and data", "body": "How the app gets onto the phone and survives updates.", "code": "  Fresh install → first-run experience, onboarding\n  Update from the previous store version → data kept,\n    user still logged in, migrations work\n  Downgrade / reinstall behaviour\n  Uninstall → no leftover sensitive files\n  Low storage: install / download / upload with <100 MB free\n  Clear app data: adb shell pm clear com.example.app", "out": "Update testing needs the OLD build installed first.\nMany serious bugs are migration bugs.", "tip": "Keep APKs/IPAs of the last two releases for upgrade testing.", "mistake": "Only ever testing fresh installs.", "viz": ""}]}, {"num": "03", "title": "Tools for mobile testing", "blurb": "Emulators, ADB, logs, iOS basics and debugging mobile web.", "lessons": [{"title": "Android emulator setup", "body": "Android Studio's Device Manager creates virtual phones for any Android version.", "code": "1. Install Android Studio (developer.android.com/studio)\n2. Device Manager → Create device\n   → pick a phone (e.g. Pixel) → pick a system image\n   (Google Play image if you need the Play Store)\n3. Start it; drag an .apk onto it to install\n4. Extended controls (⋯): location, phone calls, SMS,\n   battery, network speed, camera, fingerprint", "out": "Create several: newest Android, one older version,\na small screen and a tablet.", "tip": "Use snapshots to save a clean state and restore it in seconds.", "mistake": "One emulator for everything, full of leftover test data.", "viz": ""}, {"title": "ADB essentials", "body": "ADB (Android Debug Bridge) controls devices and emulators from the terminal. It comes with Android Studio's platform-tools.", "code": "adb devices                              list connected devices\nadb install -r app.apk                   install / reinstall\nadb uninstall com.example.app\nadb shell pm clear com.example.app       reset app data\nadb shell am force-stop com.example.app\nadb shell screencap -p /sdcard/s.png && adb pull /sdcard/s.png\nadb shell screenrecord /sdcard/bug.mp4   (Ctrl + C to stop)\nadb pull /sdcard/bug.mp4", "out": "Real phones: enable Developer options → USB debugging,\nconnect by USB, accept the prompt on the phone.", "tip": "A screen recording plus logcat is the best Android bug evidence.", "mistake": "Leaving USB debugging on for a personal phone you don't test with.", "viz": ""}, {"title": "Reading logs with logcat", "body": "When an app crashes or misbehaves, the device log shows why.", "code": "adb logcat -c                            clear old logs\n# reproduce the bug…\nadb logcat -d -v time > bug-214.log      save the log\nadb logcat *:E                           errors only\nadb logcat --pid=$(adb shell pidof -s com.example.app)\n\nLook for\n  FATAL EXCEPTION     a crash, with the stack trace\n  ANR in com.example  'App Not Responding'", "out": "Attach the lines around FATAL EXCEPTION to the bug report;\ndevelopers can often fix the crash from that alone.", "tip": "Android Studio's Logcat window has filters by app and level.", "mistake": "Reporting 'app crashed' without the log.", "viz": ""}, {"title": "iOS basics without being an iOS developer", "body": "iOS testing needs Apple tools, but the concepts are the same.", "code": "Simulator         Xcode on a Mac → Open Developer Tool → Simulator\n                  xcrun simctl list devices\nReal devices      builds shared through TestFlight\n                  (install the TestFlight app, accept the invite)\nLogs              Mac: Console app → select the device\nScreenshots       Side + Volume up\nScreen recording  Control Centre → Screen Recording\nNo Mac?           cloud device farms for iPhones", "out": "TestFlight builds expire after 90 days; check the build\nnumber in every bug report.", "tip": "Test iOS-specific behaviour: swipe-back gesture, permission wording, Face ID prompts.", "mistake": "Assuming 'works on Android' means 'works on iOS'.", "viz": ""}, {"title": "Debugging mobile web and WebViews", "body": "Websites and hybrid screens on a phone can be inspected with desktop DevTools.", "code": "Android + Chrome\n  Phone: USB debugging on → connect\n  Desktop Chrome: chrome://inspect/#devices → inspect\n  (WebViews appear too, if the app enables debugging)\niOS + Safari\n  iPhone: Settings → Safari → Advanced → Web Inspector on\n  Mac Safari: Develop menu → your iPhone → the page", "out": "Full Console, Network and Elements for the page on the\nreal phone: the DevTools course applies directly.", "tip": "Ask developers to enable WebView debugging in test builds.", "mistake": "Debugging a mobile-only bug with desktop device emulation only.", "viz": ""}]}, {"num": "04", "title": "Bugs & non-functional", "blurb": "Mobile bug reports, performance, accessibility and security basics.", "lessons": [{"title": "Writing mobile bug reports", "body": "Mobile bugs depend heavily on the device and state. Capture all of it.", "code": "Title    App crashes when rotating on the payment screen\nDevice   Samsung Galaxy A15 · Android 14 · 4 GB RAM\nBuild    2.4.1 (build 311) · Play Store internal track\nNetwork  4G, then Wi-Fi\nState    logged in, 2 items in cart, font size largest\nSteps    1. Open cart 2. Tap Pay 3. Rotate to landscape\nActual   App closes\nEvidence screen recording, logcat (FATAL EXCEPTION lines)\nRepro    5/5 on this device; 0/5 on Pixel emulator", "out": "The 'Repro' line saves hours: it tells developers\nthe bug is device-specific.", "tip": "Always include build number and device model; 'latest version' isn't enough.", "mistake": "'Crashes on my phone' with no model, OS or build.", "viz": ""}, {"title": "Performance", "body": "Users notice slow launches, lag and battery drain more on phones than on desktops.", "code": "Check\n  Cold start time (app not in memory) vs warm start\n  Scrolling long lists: smooth or janky?\n  Memory over a long session (Android Studio Profiler)\n  Battery: 30 min of normal use on a real device\n  App size and data usage\n  ANRs (App Not Responding) under slow network\n\nadb shell am start -W -n com.example.app/.MainActivity\n  → TotalTime: 1450 (ms)", "out": "Test performance on a budget device; flagship phones\nhide most problems.", "tip": "Measure the same flow on each release and compare.", "mistake": "Judging performance on an emulator running on a fast laptop.", "viz": ""}, {"title": "Mobile accessibility", "body": "Phones have their own assistive technology. Test with it.", "code": "  Android TalkBack / iOS VoiceOver: complete a key flow\n    Every button announced with a meaningful name?\n    Logical reading order?\n  Largest font size and display size: nothing cut off\n  Touch targets ≥ 48 dp (Android) / 44 pt (iOS)\n  Colour contrast; no meaning by colour alone\n  Works in both orientations\n\nAndroid: Accessibility Scanner app (Google) flags issues", "out": "Icon-only buttons with no label are the most common\nmobile accessibility bug. TalkBack says just 'button'.", "tip": "The Accessibility course goes deeper on principles and WCAG.", "mistake": "Never turning on TalkBack or VoiceOver.", "viz": ""}, {"title": "Security and privacy basics", "body": "Quick checks any mobile tester can do on apps they're authorised to test.", "code": "  Sensitive screens hidden in the recent-apps preview?\n  Screenshots allowed on screens showing card or ID data?\n  Logs (logcat) contain passwords, tokens or personal data?\n  Logged out after long inactivity? Token expiry handled?\n  Data left on the device after logout / uninstall?\n  Deep links opening screens that need login, without login?", "out": "Tokens in logcat are a common, serious finding:\nany app with log access could read them.", "tip": "Report security findings privately to the team.", "mistake": "Assuming mobile apps are safe because 'users can't see the code'.", "viz": ""}]}, {"num": "05", "title": "Appium automation", "blurb": "Automate Android (and iOS) apps with Appium and Python.", "lessons": [{"title": "How Appium works", "body": "Appium lets you drive mobile apps with a WebDriver-style API. Step through the architecture below.", "code": "Test (Python / Java / JS)\n   │  WebDriver commands over HTTP\n   ▼\nAppium server (Node.js)\n   │  picks a driver for the platform\n   ▼\nDriver: UiAutomator2 (Android) / XCUITest (iOS)\n   │\n   ▼\nDevice or emulator → your app", "out": "The same ideas as Selenium: sessions, locators, waits,\npage objects, CI. Your Selenium and Playwright skills carry over.", "tip": "Check appium.io for the current major version and supported drivers.", "mistake": "Expecting Appium to work without the platform driver installed.", "viz": "flow"}, {"title": "Install Appium and a driver", "body": "Appium is installed with npm; drivers are installed separately.", "code": "# Node.js LTS required\nnpm install -g appium\nappium driver install uiautomator2      # Android\nappium driver install xcuitest          # iOS (on a Mac)\nappium driver list --installed\n\n# check your Android setup\nappium driver doctor uiautomator2\n\nappium                                   # start the server\n# listening on http://127.0.0.1:4723", "out": "Android also needs: Android Studio SDK, platform-tools,\nANDROID_HOME set, and Java.", "tip": "Run the doctor check first; it lists exactly what's missing.", "mistake": "Mixing old Appium 1.x tutorials (/wd/hub URLs) with current versions.", "viz": ""}, {"title": "Appium Inspector and locators", "body": "Appium Inspector shows the app's element tree and suggests locators, like DevTools for apps.", "code": "Download Appium Inspector (github.com/appium/appium-inspector)\nCapabilities:\n  { \"platformName\": \"Android\",\n    \"appium:automationName\": \"UiAutomator2\",\n    \"appium:deviceName\": \"emulator-5554\",\n    \"appium:app\": \"C:/apps/demo-app.apk\" }\n→ Start Session → click elements on the screenshot\n\nLocator priority\n  1. accessibility id  (content-desc / accessibilityIdentifier)\n  2. id                (Android resource-id)\n  3. UiAutomator / iOS predicate / class chain\n  4. XPath             (slow, fragile: last resort)", "out": "Accessibility ids work on both platforms and help\nscreen-reader users: ask developers to add them.", "tip": "Practise with an open-source demo app, e.g. Sauce Labs' My Demo App.", "mistake": "Long XPath locators copied from the Inspector.", "viz": ""}, {"title": "Your first Appium test in Python", "body": "Start a session, find elements, act and assert.", "code": "# pip install Appium-Python-Client pytest\nfrom pathlib import Path\nfrom appium import webdriver\nfrom appium.options.android import UiAutomator2Options\nfrom appium.webdriver.common.appiumby import AppiumBy\n\ndef test_login():\n    options = UiAutomator2Options()\n    options.platform_name = \"Android\"\n    options.device_name = \"emulator-5554\"\n    options.app = str(Path(\"apps/demo-app.apk\").resolve())\n    driver = webdriver.Remote(\"http://127.0.0.1:4723\", options=options)\n    try:\n        driver.find_element(AppiumBy.ACCESSIBILITY_ID, \"Username input\").send_keys(\"bob\")\n        driver.find_element(AppiumBy.ACCESSIBILITY_ID, \"Password input\").send_keys(\"secret\")\n        driver.find_element(AppiumBy.ACCESSIBILITY_ID, \"Login button\").click()\n    finally:\n        driver.quit()", "out": "Locator names here are examples: take the real ones\nfrom Appium Inspector for your app.", "tip": "Move driver creation into a pytest fixture, exactly like Playwright's page fixture.", "mistake": "Hardcoding absolute APK paths that only exist on your laptop.", "viz": ""}, {"title": "Waits and gestures", "body": "Mobile UIs animate and load slowly on cheap devices. Wait for conditions and use gesture commands.", "code": "from selenium.webdriver.support.ui import WebDriverWait\nfrom selenium.webdriver.support import expected_conditions as EC\n\nwait = WebDriverWait(driver, 15)\nwait.until(EC.visibility_of_element_located(\n    (AppiumBy.ACCESSIBILITY_ID, \"Products screen\")))\n\n# UiAutomator2 gesture commands\ndriver.execute_script(\"mobile: swipeGesture\", {\n    \"left\": 100, \"top\": 500, \"width\": 600, \"height\": 800,\n    \"direction\": \"up\", \"percent\": 0.75})\ndriver.execute_script(\"mobile: longClickGesture\",\n    {\"elementId\": item.id, \"duration\": 1000})", "out": "Same explicit-wait rules as Selenium: no sleeps,\nwait for the specific thing you need.", "tip": "Wrap gestures in page-object methods: products.scroll_to_end().", "mistake": "time.sleep(5) after every tap.", "viz": ""}, {"title": "Framework, CI and device farms", "body": "Structure Appium tests like your web framework, then run them at scale.", "code": "mobile-tests/\n├── apps/                 (git-ignored, downloaded in CI)\n├── pages/                screens as page objects\n├── conftest.py           driver fixture, capabilities per platform\n├── tests/\n└── pytest.ini\n\nDevice farm: upload the app, point the driver at their URL\n  driver = webdriver.Remote(FARM_URL, options=options)\n  (credentials from environment variables)", "out": "CI options: an Android emulator in GitHub Actions\n(community emulator actions), or a cloud device farm for\nreal devices and iOS.", "tip": "Run a small smoke set on every build and the device matrix nightly.", "mistake": "Trying to run the full device matrix on every commit.", "viz": ""}]}, {"num": "06", "title": "Other tools & interview", "blurb": "Native frameworks, newer tools, and mobile interview questions.", "lessons": [{"title": "Espresso, XCUITest and Maestro", "body": "Appium isn't the only option. Know what else teams use.", "code": "Espresso    Android, written by devs in Kotlin/Java,\n            very fast, runs inside the app project\nXCUITest    iOS, Swift, Apple's own framework\nMaestro     simple YAML flows, quick to learn:\n              - launchApp\n              - tapOn: \"Login\"\n              - inputText: \"bob\"\n              - assertVisible: \"Products\"\nDetox       React Native apps", "out": "Appium: one tool, both platforms, any language.\nNative frameworks: faster and more stable, but per platform\nand closer to the developers' code.", "tip": "Ask what the developers already use; joining their framework can be the best choice.", "mistake": "Insisting on Appium when the team already has a solid Espresso suite.", "viz": ""}, {"title": "Mobile testing interview questions", "body": "Short answers you can build on.", "code": "Q Emulator vs real device?\nA Emulators are fast and free for functional tests; real devices\n  are needed for performance, sensors, network and release sign-off.\nQ What mobile-specific tests do you do?\nA Interruptions, network changes, permissions, lifecycle and\n  rotation, gestures, font size, install/update, battery.\nQ How do you choose devices?\nA From usage analytics: top OS versions, screen sizes and brands,\n  including a low-end device.\nQ How does Appium work?\nA Client → Appium server → platform driver (UiAutomator2/XCUITest)\n  → device.\nQ How do you report a mobile bug?\nA Device, OS, build, network, state, steps, recording and logs,\n  plus which devices it does NOT happen on.", "out": "Mention 'Don't keep activities' and logcat; they show\nhands-on Android experience.", "tip": "Add a small Appium project with a demo app to your GitHub.", "mistake": "Only talking about web testing in a mobile interview.", "viz": ""}]}];
+    const FLOW = [{"name": "Test code", "desc": "Your pytest (or Java/JS) test creates a session with capabilities: platform, device, app.", "next": "Commands go to the Appium server.", "code": "webdriver.Remote(\"http://127.0.0.1:4723\", options=options)"}, {"name": "Appium server", "desc": "A Node.js server that receives WebDriver commands over HTTP and routes them to the right driver.", "next": "It picks the platform driver.", "code": "$ appium\n[Appium] listening on http://127.0.0.1:4723"}, {"name": "Driver", "desc": "UiAutomator2 for Android, XCUITest for iOS. Installed separately with 'appium driver install'.", "next": "The driver talks to the device's automation framework.", "code": "appium:automationName = UiAutomator2"}, {"name": "Device", "desc": "An emulator, simulator, real phone, or a phone in a cloud device farm.", "next": "The driver installs and launches the app.", "code": "emulator-5554 · Android 15"}, {"name": "App", "desc": "Your app receives real taps, typing and gestures. Results travel back the same way to your test.", "next": "Your test asserts on what the screen shows.", "code": "find_element(ACCESSIBILITY_ID, \"Login button\").click()"}];
+    const A = '#00796B', AD = '#80CBC4';
+    const mod = MODS[st.m];
+    const cur = mod.lessons[st.l] || mod.lessons[0];
+    const key = (m, l) => m + '-' + l;
+    let total = 0, doneN = 0;
+    MODS.forEach((mm, i) => mm.lessons.forEach((_, j) => { total++; if (st.done[key(i, j)]) doneN++; }));
+    const modTabs = MODS.map((mm, i) => {
+      const on = i === st.m;
+      const d = mm.lessons.filter((_, j) => st.done[key(i, j)]).length;
+      return { num: mm.num + (d === mm.lessons.length ? ' ✓' : ''), title: mm.title, pick: () => this.setState({ m: i, l: 0 }),
+        style: 'display:flex;flex-direction:column;align-items:flex-start;gap:4px;min-height:64px;padding:10px 12px;border:none;border-radius:14px 14px 0 0;cursor:pointer;text-align:left;font:600 13px IBM Plex Sans,sans-serif;flex:1;' + (on ? 'background:#F4F1EA;color:#16181D;' : 'background:rgba(0,0,0,0.06);color:#06302B;') };
+    });
+    const lessonNav = mod.lessons.map((ls, j) => {
+      const on = j === st.l, dn = !!st.done[key(st.m, j)];
+      return { title: ls.title, num: dn ? '✓' : String(j + 1).padStart(2, '0'), pick: () => this.setState({ l: j }),
+        style: 'display:flex;align-items:center;gap:12px;min-height:44px;padding:8px 12px;border-radius:10px;border:none;cursor:pointer;text-align:left;font:' + (on ? '600' : '400') + ' 15px IBM Plex Sans,sans-serif;' + (on ? 'background:#16181D;color:#F4F1EA;' : 'background:transparent;color:#16181D;'),
+        numStyle: 'flex-shrink:0;font:600 12px JetBrains Mono,monospace;width:28px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;' + (on ? 'background:' + A + ';color:#fff;' : dn ? 'background:#DCEFE3;color:#1F7A52;' : 'background:#EAE5DA;color:#6A6E77;') };
+    });
+    const modeDefs = [['split', 'Side by side'], ['code', 'Do this'], ['out', 'Explained']];
+    const modes = modeDefs.map(([id, label]) => ({ label, pick: () => this.setState({ mode: id }),
+      style: 'min-height:40px;padding:8px 14px;border-radius:8px;border:none;cursor:pointer;font:600 14px IBM Plex Sans,sans-serif;' + (st.mode === id ? 'background:#FFFFFF;color:#16181D;box-shadow:0 1px 3px rgba(0,0,0,.12);' : 'background:transparent;color:#5C606A;') }));
+    const isFirst = st.m === 0 && st.l === 0;
+    const isLast = st.m === MODS.length - 1 && st.l === mod.lessons.length - 1;
+    const go = (dir) => {
+      let m = st.m, l = st.l + dir;
+      if (l < 0) { if (m === 0) return; m -= 1; l = MODS[m].lessons.length - 1; }
+      if (l >= MODS[m].lessons.length) { if (m === MODS.length - 1) return; m += 1; l = 0; }
+      this.setState({ m, l });
+    };
+    const k = key(st.m, st.l); const isDone = !!st.done[k];
+    const pct = Math.round((doneN / total) * 100);
+    const fi = Math.min(st.f, FLOW.length - 1);
+    const fSteps = FLOW.map((s, i) => ({ num: String(i + 1), name: s.name, pick: () => this.setState({ f: i }),
+      style: 'display:flex;flex-direction:column;align-items:flex-start;gap:2px;min-height:52px;padding:8px 14px;border-radius:12px;cursor:pointer;font:600 14px IBM Plex Sans,sans-serif;text-align:left;' + (i === fi ? 'background:' + AD + ';color:#16181D;border:1.5px solid ' + AD + ';' : i < fi ? 'background:#2A2D35;color:#F4F1EA;border:1.5px solid #3A3E48;' : 'background:transparent;color:#A9AEBA;border:1.5px solid #3A3E48;') }));
+    return {
+      mod, cur, modTabs, lessonNav, modes,
+      lessonNum: String(st.l + 1), lessonTotal: String(mod.lessons.length),
+      showA: st.mode !== 'out', showB: st.mode !== 'code',
+      gridStyle: st.mode === 'split' ? 'display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;' : 'display:grid;grid-template-columns:repeat(1,minmax(0,1fr));gap:16px;',
+      prev: () => go(-1), next: () => go(1),
+      prevLabel: isFirst ? 'Start' : 'Previous', nextLabel: isLast ? 'Finished' : 'Next lesson',
+      markDone: () => this.setState({ done: { ...st.done, [k]: !isDone } }),
+      doneLabel: isDone ? '✓ Done' : 'Mark as done',
+      doneBtnStyle: 'min-height:48px;padding:12px 22px;border-radius:12px;cursor:pointer;font:600 15px IBM Plex Sans,sans-serif;' + (isDone ? 'background:#DCEFE3;color:#1F7A52;border:1.5px solid #7FC8A0;' : 'background:#FFFFFF;color:#16181D;border:1.5px solid #DDD7CB;'),
+      overallLabel: doneN + ' / ' + total + ' lessons',
+      overallStyle: 'height:100%;border-radius:999px;background:' + A + ';transition:width .3s;width:' + pct + '%;',
+      vizFlow: cur.viz === 'flow', fSteps, fCur: FLOW[fi], fLabel: (fi + 1) + ' / ' + FLOW.length,
+      fPrev: () => this.setState({ f: Math.max(0, fi - 1) }), fNext: () => this.setState({ f: Math.min(FLOW.length - 1, fi + 1) })
+    };
+  }
+}
+
+var __TPL=`<div style="width: 1440px; height: 2900px; box-sizing: border-box; display: flex; flex-direction: column; background: #F4F1EA; font-family: 'IBM Plex Sans', system-ui, sans-serif; color: #16181D;">
+
+<section style="background: #DDF0EE; padding: 48px 80px 0; display: flex; flex-direction: column; gap: 26px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 40px;">
+<div style="display: flex; flex-direction: column; gap: 14px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #1F5A53;">mobile testing · module {{mod.num}}</span>
+<h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 56px; line-height: 1; letter-spacing: -0.03em; color: #06302B;">{{mod.title}}</h1>
+<p style="margin: 0; font-size: 18px; line-height: 1.6; color: #1F5A53; max-width: 760px;">{{mod.blurb}}</p>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px; min-width: 300px;">
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 22px; font-weight: 800; color: #06302B;">Mobile testing: manual + Appium</span>
+<div style="display: flex; justify-content: space-between; font-size: 14px; color: #06302B;"><span>Course progress</span><span style="font-family: 'JetBrains Mono', monospace;">{{overallLabel}}</span></div>
+<div style="height: 8px; border-radius: 999px; background: rgba(0,0,0,0.1); overflow: hidden;"><div style="{{overallStyle}}"></div></div>
+<span style="font-size: 13px; color: #1F5A53;">Android examples use Android Studio and ADB.</span>
+</div>
+</div>
+<div style="display: flex; gap: 6px;">
+<sc-for list="{{modTabs}}" as="t" hint-placeholder-count="9">
+<button onClick="{{t.pick}}" style="{{t.style}}"><span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; opacity: 0.8;">{{t.num}}</span><span>{{t.title}}</span></button>
+</sc-for>
+</div>
+</section>
+
+<section style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 40px; padding: 56px 80px 48px;">
+<aside style="grid-column: span 3; display: flex; flex-direction: column; gap: 6px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #6A6E77; text-transform: uppercase; letter-spacing: 0.08em; padding: 0 12px 10px;">module {{mod.num}} · lessons</span>
+<sc-for list="{{lessonNav}}" as="l" hint-placeholder-count="7">
+<button onClick="{{l.pick}}" style="{{l.style}}"><span style="{{l.numStyle}}">{{l.num}}</span><span>{{l.title}}</span></button>
+</sc-for>
+</aside>
+<div style="grid-column: span 9; display: flex; flex-direction: column; gap: 22px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 20px;">
+<div style="display: flex; flex-direction: column; gap: 10px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #00796B;">module {{mod.num}} · lesson {{lessonNum}} of {{lessonTotal}}</span>
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 44px; letter-spacing: -0.02em; line-height: 1.05;">{{cur.title}}</h2>
+</div>
+<div style="display: flex; gap: 6px; background: #EAE5DA; padding: 5px; border-radius: 12px;">
+<sc-for list="{{modes}}" as="m" hint-placeholder-count="3"><button onClick="{{m.pick}}" style="{{m.style}}">{{m.label}}</button></sc-for>
+</div>
+</div>
+<p style="margin: 0; font-size: 18px; line-height: 1.7; color: #34373F; max-width: 840px;">{{cur.body}}</p>
+<div style="{{gridStyle}}">
+<sc-if value="{{showA}}" hint-placeholder-val="{{ true }}">
+<div style="background: #16181D; border-radius: 16px; overflow: hidden;">
+<div style="padding: 12px 18px; border-bottom: 1px solid #2A2D35; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #80CBC4;">what to do / code</div>
+<pre style="margin: 0; padding: 20px; font-family: 'JetBrains Mono', monospace; font-size: 13.5px; line-height: 1.7; color: #D8DAE0; white-space: pre-wrap;">{{cur.code}}</pre>
+</div>
+</sc-if>
+<sc-if value="{{showB}}" hint-placeholder-val="{{ true }}">
+<div style="background: #FFFFFF; border: 1px solid #DDD7CB; border-radius: 16px; overflow: hidden;">
+<div style="padding: 12px 18px; border-bottom: 1px solid #DDD7CB; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #00796B;">what to check / why</div>
+<pre style="margin: 0; padding: 20px; font-family: 'JetBrains Mono', monospace; font-size: 13.5px; line-height: 1.7; color: #16181D; white-space: pre-wrap;">{{cur.out}}</pre>
+</div>
+</sc-if>
+</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px;">
+<div style="display: flex; gap: 14px; background: #DCEFE3; border-radius: 16px; padding: 20px 22px; align-items: flex-start;">
+<span style="flex-shrink: 0; width: 32px; height: 32px; border-radius: 9px; background: #1F7A52; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 700;">✓</span>
+<div style="display: flex; flex-direction: column; gap: 4px;"><span style="font-weight: 600; color: #174F37;">Remember</span><span style="font-size: 15px; line-height: 1.6; color: #174F37;">{{cur.tip}}</span></div>
+</div>
+<div style="display: flex; gap: 14px; background: #FCE7DD; border-radius: 16px; padding: 20px 22px; align-items: flex-start;">
+<span style="flex-shrink: 0; width: 32px; height: 32px; border-radius: 9px; background: #C4502A; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 700;">!</span>
+<div style="display: flex; flex-direction: column; gap: 4px;"><span style="font-weight: 600; color: #7A2E14;">Common mistake</span><span style="font-size: 15px; line-height: 1.6; color: #7A2E14;">{{cur.mistake}}</span></div>
+</div>
+</div>
+<div style="display: flex; justify-content: space-between; align-items: center;">
+<button onClick="{{prev}}" style="min-height: 48px; padding: 12px 22px; border-radius: 12px; border: 1.5px solid #16181D; background: transparent; cursor: pointer; font: 600 15px 'IBM Plex Sans', sans-serif; color: #16181D;">← {{prevLabel}}</button>
+<button onClick="{{markDone}}" style="{{doneBtnStyle}}">{{doneLabel}}</button>
+<button onClick="{{next}}" style="min-height: 48px; padding: 12px 22px; border-radius: 12px; border: none; background: #00796B; color: #FFFFFF; cursor: pointer; font: 600 15px 'IBM Plex Sans', sans-serif;">{{nextLabel}} →</button>
+</div>
+</div>
+</section>
+
+<sc-if value="{{vizFlow}}" hint-placeholder-val="{{ false }}">
+<section style="margin: 0 80px 64px; background: #16181D; color: #F4F1EA; border-radius: 28px; padding: 44px; display: flex; flex-direction: column; gap: 26px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 30px;">
+<div style="display: flex; flex-direction: column; gap: 10px;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #80CBC4;">visualize · Appium architecture</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 36px; font-weight: 800;">How one tap travels from your test to the app</span></div>
+<div style="display: flex; gap: 10px; align-items: center;">
+<button onClick="{{fPrev}}" aria-label="Previous step" style="width: 48px; height: 48px; border-radius: 12px; border: 1.5px solid #3A3E48; background: transparent; color: #F4F1EA; cursor: pointer; font-size: 18px;">←</button>
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; min-width: 60px; text-align: center;">{{fLabel}}</span>
+<button onClick="{{fNext}}" aria-label="Next step" style="width: 48px; height: 48px; border-radius: 12px; border: none; background: #80CBC4; color: #16181D; cursor: pointer; font-size: 18px;">→</button>
+</div>
+</div>
+<div style="display: flex; gap: 8px; flex-wrap: wrap;">
+<sc-for list="{{fSteps}}" as="fs" hint-placeholder-count="7"><button onClick="{{fs.pick}}" style="{{fs.style}}"><span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; opacity: 0.75;">{{fs.num}}</span><span>{{fs.name}}</span></button></sc-for>
+</div>
+<div style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 24px;">
+<div style="grid-column: span 6; background: #80CBC4; color: #16181D; border-radius: 20px; padding: 26px; display: flex; flex-direction: column; gap: 10px;">
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 28px; font-weight: 800;">{{fCur.name}}</span>
+<span style="font-size: 16px; line-height: 1.6;">{{fCur.desc}}</span>
+<span style="font-size: 14px; font-weight: 600;">{{fCur.next}}</span>
+</div>
+<pre style="grid-column: span 6; margin: 0; background: #1E2129; border: 1px solid #2E323C; border-radius: 20px; padding: 22px; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #D8DAE0; white-space: pre-wrap;">{{fCur.code}}</pre>
+</div>
+</section>
+</sc-if>
+
+<div style="flex-grow: 1;"></div>
+<section style="padding: 0 80px 64px; display: flex; justify-content: space-between; align-items: center; gap: 30px;">
+<div style="display: flex; flex-direction: column; gap: 8px;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #6A6E77;">next course</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 30px; font-weight: 800;">Accessibility testing</span></div>
+<a href="A11y.html" style="text-decoration: none; padding: 16px 26px; border-radius: 12px; background: #16181D; color: #80CBC4; font-weight: 600;">Start accessibility →</a>
+</section>
+</div>`;
+window.__mountDC(__TPL, Component);
+</script>
+</body>
+</html>

@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440">
+<title>Achievements — Shamima Sultana</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap">
+<style>html,body{margin:0;background:#F4F1EA;font-family:'IBM Plex Sans',system-ui,sans-serif}</style>
+</head>
+<body>
+
+<style>
+.snav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:16px 40px;background:#16181D;color:#F4F1EA;font-family:'IBM Plex Sans',sans-serif;flex-wrap:wrap;gap:12px}
+.snav a{color:#F4F1EA;text-decoration:none}
+.snav .brand{display:flex;align-items:center;gap:10px;font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:18px}
+.snav .brand span.logo{width:34px;height:34px;border-radius:9px;background:#7EE2A8;color:#16181D;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:14px}
+.snav ul{list-style:none;display:flex;gap:6px;margin:0;padding:0;align-items:center;flex-wrap:wrap}
+.snav > ul > li{position:relative}
+.snav > ul > li > a,.snav > ul > li > span{display:block;padding:9px 14px;border-radius:9px;font-size:15px;font-weight:500;cursor:pointer;white-space:nowrap}
+.snav > ul > li:hover > a,.snav > ul > li:hover > span,.snav .cur{background:#2A2D35}
+.snav .caret{font-size:11px;opacity:.7;margin-left:4px}
+.snav .drop{position:absolute;top:100%;left:0;min-width:220px;background:#1E2129;border:1px solid #2E323C;border-radius:12px;padding:8px;display:none;flex-direction:column;gap:2px;box-shadow:0 18px 40px -16px rgba(0,0,0,.6)}
+.snav > ul > li:hover .drop{display:flex}
+.snav .drop a{padding:9px 12px;border-radius:8px;font-size:14px;color:#D8DAE0}
+.snav .drop a:hover{background:#2A2D35;color:#fff}
+.snav .drop .grp{font-family:'JetBrains Mono',monospace;font-size:11px;color:#8A8F9C;text-transform:uppercase;letter-spacing:.06em;padding:8px 12px 2px}
+.snav .cta{padding:9px 18px;border-radius:999px;background:#1F7A52;color:#fff;font-weight:600}
+.snav .menubtn{display:none;background:none;border:1.5px solid #3A3E48;color:#F4F1EA;border-radius:9px;padding:8px 12px;font-size:15px;cursor:pointer}
+@media(max-width:1100px){
+  .snav .menubtn{display:block}
+  .snav > ul{display:none;flex-direction:column;align-items:stretch;width:100%;order:3}
+  .snav.open > ul{display:flex}
+  .snav .drop{position:static;display:flex;border:none;box-shadow:none;background:transparent;padding:0 0 6px 14px}
+  .snav > ul > li:hover .drop{display:flex}
+}
+</style>
+<nav class="snav" id="snav">
+<a class="brand" href="index.html"><span class="logo">S✓</span>Shamima Sultana</a>
+<button class="menubtn" onclick="document.getElementById('snav').classList.toggle('open')">Menu ☰</button>
+<ul>
+<li><a href="index.html" class="">Home</a></li>
+<li><span class="cur">About <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="about.html">Intro &amp; journey</a>
+    <a href="skills.html">Skills</a>
+    <a href="certifications.html">Certifications</a>
+    <a href="research.html">Research</a>
+    <a href="achievements.html">Achievements</a>
+  </div></li>
+<li><span class="">Work <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="projects.html">Projects</a>
+  </div></li>
+<li><span class="">Learn <span class="caret">▾</span></span>
+  <div class="drop">
+    <span class="grp">Automation</span>
+    <a href="PWHub.html">Playwright path</a>
+    <a href="Selenium.html">Selenium with Java</a>
+    <a href="MobileTest.html">Mobile testing</a>
+    <span class="grp">Performance</span>
+    <a href="K6Hub.html">k6</a>
+    <a href="JMeter.html">JMeter</a>
+    <span class="grp">Data &amp; APIs</span>
+    <a href="SQLHub.html">SQL</a>
+    <a href="API.html">API testing</a>
+    <span class="grp">Core &amp; specialised</span>
+    <a href="Manual.html">Manual testing</a>
+    <a href="AITest.html">AI / LLM testing</a>
+    <a href="DevTools.html">DevTools</a>
+    <a href="Git.html">Git &amp; GitHub</a>
+    <a href="A11y.html">Accessibility</a>
+    <a href="Security.html">Security</a>
+  </div></li>
+<li><span class="">Writing <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="K6Hub.html">Tutorials &amp; articles</a>
+  </div></li>
+<li><span class="">More <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="News.html">News</a>
+    <a href="Interview.html">Interview prep</a>
+    <a href="ISTQB.html">ISTQB prep</a>
+  </div></li>
+<li><a class="cta" href="mailto:shamimasultanamiley605@gmail.com">Contact</a></li>
+</ul>
+</nav>
+
+<div style="width:1440px;margin:0 auto;box-sizing:border-box;display:flex;flex-direction:column;background:#F4F1EA;color:#16181D;font-family:'IBM Plex Sans',system-ui,sans-serif;"><!-- ACHIEVEMENTS -->
+<section style="margin: 0 80px; background: #F6E7B8; border-radius: 28px; padding: 56px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 40px;">
+<div style="grid-column: span 4; display: flex; flex-direction: column; gap: 16px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #8A5A00;">04 / achievements</span>
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 44px; letter-spacing: -0.02em; line-height: 1.05; color: #3E2A00;">Competing, learning, showing up</h2>
+<p style="margin: 0; font-size: 16px; line-height: 1.6; color: #5E4513;">Programming contests taught me to read problems carefully, think about edge cases and debug under pressure. That's most of testing.</p>
+<div style="margin-top: 8px; background: #FFFDF6; border-radius: 18px; padding: 24px; display: flex; flex-direction: column; gap: 14px;">
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 40px; line-height: 0.6; color: #C99A2E;">“</span>
+<span style="font-size: 16px; line-height: 1.6; color: #3E2A00;">She was sincere and regular in class, did very well in lab classes, and is very hardworking. I strongly recommend her.</span>
+<span style="font-size: 13px; color: #6B5320;">Linta Islam · former CSE instructor, East West University</span>
+</div>
+</div>
+<div style="grid-column: span 8; display: flex; flex-direction: column; gap: 22px;">
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px;">
+<div style="background: #16181D; color: #F4F1EA; border-radius: 20px; padding: 26px; display: flex; flex-direction: column; gap: 10px;">
+<span style="align-self: flex-start; font-family: 'JetBrains Mono', monospace; font-size: 12px; padding: 5px 10px; border-radius: 999px; background: #E8B64C; color: #16181D; font-weight: 600;">WINNER</span>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 24px; font-weight: 700; line-height: 1.2;">Road to 2030 Daily Pillar Challenge</span>
+<span style="font-size: 14px; color: #A9AEBA;">One of the winners · BRAC IT</span>
+</div>
+<div style="background: #FFFDF6; border-radius: 20px; padding: 26px; display: flex; flex-direction: column; gap: 10px;">
+<span style="align-self: flex-start; font-family: 'JetBrains Mono', monospace; font-size: 12px; padding: 5px 10px; border-radius: 999px; background: #C99A2E; color: #FFFFFF; font-weight: 600;">RANKED 36TH</span>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 24px; font-weight: 700; line-height: 1.2; color: #2A1D00;">NSU Inter-University Girls' Programming Contest</span>
+<span style="font-size: 14px; color: #6B5320;">2019 · team EWU_Girls</span>
+</div>
+</div>
+
+<div style="background: #FFFDF6; border-radius: 20px; padding: 26px; display: flex; flex-direction: column; gap: 18px;">
+<div style="display: flex; justify-content: space-between; align-items: baseline;">
+<span style="font-weight: 600; font-size: 16px; color: #2A1D00;">Contests I competed in</span>
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #8A5A00;">2019 → 2022</span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; border-top: 2px solid #E7D49A;">
+<div style="display: flex; flex-direction: column; gap: 10px; padding: 16px 16px 0 0;">
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 28px; font-weight: 800; color: #C99A2E;">2019</span>
+<span style="font-size: 14px; line-height: 1.4; color: #3E2A00;">National Girls' Programming Contest</span>
+<span style="font-size: 14px; line-height: 1.4; color: #3E2A00;">UITS Inter Private University Programming Contest</span>
+<span style="font-size: 14px; line-height: 1.4; color: #3E2A00;">IUB Inwed Tech Fest</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 10px; padding: 16px 16px 0; border-left: 1px dashed #E7D49A;">
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 28px; font-weight: 800; color: #C99A2E;">2021</span>
+<span style="font-size: 14px; line-height: 1.4; color: #3E2A00;">Ada Lovelace National Girls' Programming Contest</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 10px; padding: 16px 0 0 16px; border-left: 1px dashed #E7D49A;">
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 28px; font-weight: 800; color: #C99A2E;">2022</span>
+<span style="font-size: 14px; line-height: 1.4; color: #3E2A00;">National Girls' Programming Contest</span>
+<span style="font-size: 14px; line-height: 1.4; color: #3E2A00;">Ada Lovelace National Girls' Programming Contest · team EWU_Rookies</span>
+</div>
+</div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px;">
+<div style="background: #FFFDF6; border-radius: 16px; padding: 18px 20px; display: flex; gap: 14px; align-items: center;">
+<span style="flex-shrink: 0; width: 44px; height: 44px; border-radius: 12px; background: #FCE7DD; color: #C4502A; display: flex; align-items: center; justify-content: center; font: 700 20px 'JetBrains Mono', monospace;">+</span>
+<div style="display: flex; flex-direction: column; gap: 3px;"><span style="font-weight: 600; font-size: 15px; color: #2A1D00;">Volunteer</span><span style="font-size: 13px; color: #6B5320;">Bangladesh Red Crescent Society</span></div>
+</div>
+<div style="background: #FFFDF6; border-radius: 16px; padding: 18px 20px; display: flex; gap: 14px; align-items: center;">
+<span style="flex-shrink: 0; width: 44px; height: 44px; border-radius: 12px; background: #E3E1F5; color: #4B45A1; display: flex; align-items: center; justify-content: center; font: 700 18px 'JetBrains Mono', monospace;">“”</span>
+<div style="display: flex; flex-direction: column; gap: 3px;"><span style="font-weight: 600; font-size: 15px; color: #2A1D00;">Member</span><span style="font-size: 13px; color: #6B5320;">National Debate Federation Bangladesh</span></div>
+</div>
+</div>
+</div>
+</section>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440">
+<title>Selenium with Java</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap">
+<style>html,body{margin:0;background:#F4F1EA;font-family:'IBM Plex Sans',system-ui,sans-serif} #app > div{margin:0 auto}</style>
+</head>
+<body>
+
+<style>
+.snav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:16px 40px;background:#16181D;color:#F4F1EA;font-family:'IBM Plex Sans',sans-serif;flex-wrap:wrap;gap:12px}
+.snav a{color:#F4F1EA;text-decoration:none}
+.snav .brand{display:flex;align-items:center;gap:10px;font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:18px}
+.snav .brand span.logo{width:34px;height:34px;border-radius:9px;background:#7EE2A8;color:#16181D;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:14px}
+.snav ul{list-style:none;display:flex;gap:6px;margin:0;padding:0;align-items:center;flex-wrap:wrap}
+.snav > ul > li{position:relative}
+.snav > ul > li > a,.snav > ul > li > span{display:block;padding:9px 14px;border-radius:9px;font-size:15px;font-weight:500;cursor:pointer;white-space:nowrap}
+.snav > ul > li:hover > a,.snav > ul > li:hover > span,.snav .cur{background:#2A2D35}
+.snav .caret{font-size:11px;opacity:.7;margin-left:4px}
+.snav .drop{position:absolute;top:100%;left:0;min-width:220px;background:#1E2129;border:1px solid #2E323C;border-radius:12px;padding:8px;display:none;flex-direction:column;gap:2px;box-shadow:0 18px 40px -16px rgba(0,0,0,.6)}
+.snav > ul > li:hover .drop{display:flex}
+.snav .drop a{padding:9px 12px;border-radius:8px;font-size:14px;color:#D8DAE0}
+.snav .drop a:hover{background:#2A2D35;color:#fff}
+.snav .drop .grp{font-family:'JetBrains Mono',monospace;font-size:11px;color:#8A8F9C;text-transform:uppercase;letter-spacing:.06em;padding:8px 12px 2px}
+.snav .cta{padding:9px 18px;border-radius:999px;background:#1F7A52;color:#fff;font-weight:600}
+.snav .menubtn{display:none;background:none;border:1.5px solid #3A3E48;color:#F4F1EA;border-radius:9px;padding:8px 12px;font-size:15px;cursor:pointer}
+@media(max-width:1100px){
+  .snav .menubtn{display:block}
+  .snav > ul{display:none;flex-direction:column;align-items:stretch;width:100%;order:3}
+  .snav.open > ul{display:flex}
+  .snav .drop{position:static;display:flex;border:none;box-shadow:none;background:transparent;padding:0 0 6px 14px}
+  .snav > ul > li:hover .drop{display:flex}
+}
+</style>
+<nav class="snav" id="snav">
+<a class="brand" href="index.html"><span class="logo">S✓</span>Shamima Sultana</a>
+<button class="menubtn" onclick="document.getElementById('snav').classList.toggle('open')">Menu ☰</button>
+<ul>
+<li><a href="index.html" class="">Home</a></li>
+<li><span class="">About <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="about.html">Intro &amp; journey</a>
+    <a href="skills.html">Skills</a>
+    <a href="certifications.html">Certifications</a>
+    <a href="research.html">Research</a>
+    <a href="achievements.html">Achievements</a>
+  </div></li>
+<li><span class="">Work <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="projects.html">Projects</a>
+  </div></li>
+<li><span class="cur">Learn <span class="caret">▾</span></span>
+  <div class="drop">
+    <span class="grp">Automation</span>
+    <a href="PWHub.html">Playwright path</a>
+    <a href="Selenium.html">Selenium with Java</a>
+    <a href="MobileTest.html">Mobile testing</a>
+    <span class="grp">Performance</span>
+    <a href="K6Hub.html">k6</a>
+    <a href="JMeter.html">JMeter</a>
+    <span class="grp">Data &amp; APIs</span>
+    <a href="SQLHub.html">SQL</a>
+    <a href="API.html">API testing</a>
+    <span class="grp">Core &amp; specialised</span>
+    <a href="Manual.html">Manual testing</a>
+    <a href="AITest.html">AI / LLM testing</a>
+    <a href="DevTools.html">DevTools</a>
+    <a href="Git.html">Git &amp; GitHub</a>
+    <a href="A11y.html">Accessibility</a>
+    <a href="Security.html">Security</a>
+  </div></li>
+<li><span class="">Writing <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="K6Hub.html">Tutorials &amp; articles</a>
+  </div></li>
+<li><span class="">More <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="News.html">News</a>
+    <a href="Interview.html">Interview prep</a>
+    <a href="ISTQB.html">ISTQB prep</a>
+  </div></li>
+<li><a class="cta" href="mailto:shamimasultanamiley605@gmail.com">Contact</a></li>
+</ul>
+</nav>
+
+<div id="app"></div>
+<script>/* Minimal renderer: replaces Claude's canvas engine so pages run anywhere. */
+(function(){
+  function resolve(scopes, path){
+    path=path.trim();
+    var parts=path.split('.'), head=parts[0], base, found=false;
+    for(var i=scopes.length-1;i>=0;i--){ if(scopes[i] && Object.prototype.hasOwnProperty.call(scopes[i],head)){ base=scopes[i][head]; found=true; break; } }
+    if(!found) return undefined;
+    for(var j=1;j<parts.length;j++){ if(base==null) return undefined; base=base[parts[j]]; }
+    return base;
+  }
+  function subst(str, scopes){
+    return str.replace(/\{\{([^}]+)\}\}/g, function(_,e){ var v=resolve(scopes,e); return v==null?'':String(v); });
+  }
+  function firstExpr(str){ var m=str.match(/\{\{([^}]+)\}\}/); return m?m[1].trim():null; }
+  function processNode(node, scopes, out){
+    if(node.nodeType===3){ // text
+      var t=node.nodeValue;
+      if(t.indexOf('{{')>=0) out.push(document.createTextNode(subst(t,scopes)));
+      else out.push(document.createTextNode(t));
+      return;
+    }
+    if(node.nodeType!==1){ return; }
+    var tag=node.tagName.toLowerCase();
+    if(tag==='sc-for'){
+      var listExpr=firstExpr(node.getAttribute('list')||'');
+      var as=node.getAttribute('as');
+      var arr=listExpr?resolve(scopes,listExpr):null;
+      if(Array.isArray(arr)){
+        for(var k=0;k<arr.length;k++){
+          var sc=scopes.concat([{__k:as, [as]:arr[k]}]);
+          for(var c=0;c<node.childNodes.length;c++) processNode(node.childNodes[c], sc, out);
+        }
+      }
+      return;
+    }
+    if(tag==='sc-if'){
+      var valExpr=firstExpr(node.getAttribute('value')||'');
+      var cond=valExpr?resolve(scopes,valExpr):false;
+      if(cond){ for(var c2=0;c2<node.childNodes.length;c2++) processNode(node.childNodes[c2], scopes, out); }
+      return;
+    }
+    var el=document.createElement(tag);
+    for(var a=0;a<node.attributes.length;a++){
+      var at=node.attributes[a], name=at.name, val=at.value;
+      if(name.indexOf('hint-')===0) continue;
+      if(name==='onclick'){ var h=firstExpr(val); (function(expr){ el.addEventListener('click', function(ev){ var fn=resolve(scopes,expr); if(typeof fn==='function') fn(ev); }); })(h); continue; }
+      if(name==='onchange'){ var h2=firstExpr(val); (function(expr){ el.addEventListener('input', function(ev){ var fn=resolve(scopes,expr); if(typeof fn==='function') fn(ev); }); })(h2); continue; }
+      var sv=val.indexOf('{{')>=0?subst(val,scopes):val;
+      if(name==='value' && (tag==='input'||tag==='textarea')){ el.value=sv; el.setAttribute('value',sv); }
+      else el.setAttribute(name, sv);
+    }
+    var kids=[];
+    for(var cc=0;cc<node.childNodes.length;cc++) processNode(node.childNodes[cc], scopes, kids);
+    for(var ki=0;ki<kids.length;ki++) el.appendChild(kids[ki]);
+    out.push(el);
+  }
+  window.__mountDC=function(templateHTML, ComponentClass){
+    var tplRoot=document.createElement('div'); tplRoot.innerHTML=templateHTML;
+    var mount=document.getElementById('app');
+    var comp=new ComponentClass({});
+    function doRender(){
+      var vals;
+      try{ vals=comp.renderVals(); }catch(e){ console.error('render error',e); return; }
+      var frag=document.createDocumentFragment();
+      var buf=[];
+      for(var i=0;i<tplRoot.childNodes.length;i++) processNode(tplRoot.childNodes[i], [vals], buf);
+      for(var b=0;b<buf.length;b++) frag.appendChild(buf[b]);
+      // preserve focus in search/textarea across re-render
+      var active=document.activeElement, sel=null, id=null;
+      mount.innerHTML=''; mount.appendChild(frag);
+    }
+    comp.setState=function(s){ Object.assign(comp.state, s); doRender(); };
+    doRender();
+  };
+  window.DCLogic=function(){};
+})();
+</script>
+<script>
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { m: 0, l: 0, mode: 'split', f: 0, done: {} };
+  }
+  renderVals() {
+    const st = this.state;
+    const MODS = [{"num": "01", "title": "Setup & first test", "blurb": "Install the tools, create a Maven project, and run your first Selenium test.", "lessons": [{"title": "Why Selenium with Java", "body": "Selenium WebDriver is the most widely used browser automation library, and Java is its most common language in job posts.", "code": "Selenium   W3C WebDriver standard, all major browsers,\n           huge community, Grid for scaling\nJava       strong typing, Maven/Gradle, TestNG/JUnit,\n           common in enterprise QA teams\n\nYou already know the concepts from the Playwright path:\nlocators, waits, page objects, fixtures (→ TestNG),\nreports, CI. This course maps them to Selenium + Java.", "out": "Current line: Selenium 4.x. Since 4.6, Selenium Manager\ndownloads the right browser driver automatically.", "tip": "Knowing both Playwright and Selenium makes you useful in almost any QA team.", "mistake": "Following old tutorials that tell you to download chromedriver.exe by hand.", "viz": ""}, {"title": "Install JDK, IDE and Maven", "body": "Three tools: a Java Development Kit, an IDE, and Maven for dependencies and running tests.", "code": "winget install EclipseAdoptium.Temurin.21.JDK\njava -version          # 21.x\n\nIntelliJ IDEA Community (free): jetbrains.com/idea\n  (bundles Maven; or: winget install Apache.Maven)\n\nNew Project → Maven → GroupId: com.shamima.qa\n                      ArtifactId: selenium-java-demo", "out": "Project structure\n  pom.xml\n  src/main/java      framework code (pages, utils)\n  src/test/java      tests\n  src/test/resources config, testng.xml", "tip": "Use a Long-Term Support JDK (17 or 21).", "mistake": "Mixing several JDK versions and getting 'unsupported class file version' errors.", "viz": ""}, {"title": "pom.xml dependencies", "body": "Maven downloads Selenium and TestNG from the dependencies you list.", "code": "<dependencies>\n  <dependency>\n    <groupId>org.seleniumhq.selenium<\/groupId>\n    <artifactId>selenium-java<\/artifactId>\n    <version>4.x.x<\/version>   <!-- latest 4.x from selenium.dev -->\n  <\/dependency>\n  <dependency>\n    <groupId>org.testng<\/groupId>\n    <artifactId>testng<\/artifactId>\n    <version>7.x.x<\/version>\n    <scope>test<\/scope>\n  <\/dependency>\n<\/dependencies>", "out": "IntelliJ: click 'Load Maven Changes'.\nTerminal: mvn -q dependency:resolve", "tip": "Check selenium.dev and Maven Central for the current versions and pin them.", "mistake": "Adding WebDriverManager out of habit; Selenium Manager already handles drivers.", "viz": ""}, {"title": "Your first test", "body": "Open a browser, check the title, close it.", "code": "import org.openqa.selenium.WebDriver;\nimport org.openqa.selenium.chrome.ChromeDriver;\nimport org.testng.Assert;\nimport org.testng.annotations.Test;\n\npublic class FirstTest {\n    @Test\n    public void homePageHasTitle() {\n        WebDriver driver = new ChromeDriver();\n        try {\n            driver.get(\"https://www.saucedemo.com\");\n            Assert.assertEquals(driver.getTitle(), \"Swag Labs\");\n        } finally {\n            driver.quit();\n        }\n    }\n}", "out": "mvn test\n  Tests run: 1, Failures: 0, Errors: 0, Skipped: 0\nChrome opens, loads the page, closes.", "tip": "Always quit() in finally (or @AfterMethod); leftover browsers eat memory.", "mistake": "driver.close() instead of quit(): it closes one window but leaves the driver running.", "viz": ""}]}, {"num": "02", "title": "Locators & interactions", "blurb": "Find elements reliably and interact with them.", "lessons": [{"title": "Locator strategies", "body": "Selenium finds elements with By. Prefer stable, meaningful attributes.", "code": "driver.findElement(By.id(\"user-name\"))\ndriver.findElement(By.name(\"password\"))\ndriver.findElement(By.cssSelector(\"[data-test='login-button']\"))\ndriver.findElement(By.xpath(\"//button[text()='Add to cart']\"))\ndriver.findElement(By.linkText(\"Forgot password?\"))\ndriver.findElements(By.className(\"inventory_item\"))   // list\n\nPriority: id / data-test → name → CSS → XPath", "out": "findElement throws NoSuchElementException if nothing matches;\nfindElements returns an empty list instead.", "tip": "Ask developers for data-test attributes; they make locators stable.", "mistake": "Absolute XPath like /html/body/div[2]/div/div[3]/button.", "viz": ""}, {"title": "CSS and XPath patterns", "body": "The handful of patterns that cover most real locators.", "code": "CSS\n  #cart                    id\n  .inventory_item          class\n  [data-test='checkout']   attribute\n  div.card > button        direct child\n  input[name^='user']      starts with\n\nXPath (when you need text or going up the tree)\n  //button[normalize-space()='Checkout']\n  //div[contains(@class,'item')][.//div[text()='Backpack']]//button\n  //label[text()='Email']/following-sibling::input", "out": "Rule of thumb: CSS for attributes and structure,\nXPath when you must match visible text or parent/sibling.", "tip": "Test locators in DevTools with Ctrl + F in the Elements panel (DevTools course).", "mistake": "Locators that depend on position like (//button)[7].", "viz": ""}, {"title": "Everyday interactions", "body": "Click, type, read and check element state.", "code": "WebElement user = driver.findElement(By.id(\"user-name\"));\nuser.clear();\nuser.sendKeys(\"standard_user\");\ndriver.findElement(By.id(\"password\")).sendKeys(\"secret_sauce\", Keys.ENTER);\n\nString text  = driver.findElement(By.className(\"title\")).getText();\nString value = user.getAttribute(\"value\");   // or getDomProperty\nboolean ok   = button.isDisplayed() && button.isEnabled();", "out": "SauceDemo's users and password are published on its\nlogin page, so they're safe to use in practice code.", "tip": "Read values with getText() for visible text, getAttribute/getDomProperty for input values.", "mistake": "Typing without clear() and ending up with doubled text.", "viz": ""}, {"title": "Dropdowns, mouse and keyboard", "body": "Select for <select> elements; the Actions class for hover, drag and key combinations.", "code": "// https://the-internet.herokuapp.com/dropdown\nSelect select = new Select(driver.findElement(By.id(\"dropdown\")));\nselect.selectByVisibleText(\"Option 2\");\nString chosen = select.getFirstSelectedOption().getText();\n\nActions actions = new Actions(driver);\nactions.moveToElement(menu).perform();                 // hover\nactions.dragAndDrop(source, target).perform();\nactions.keyDown(Keys.CONTROL).sendKeys(\"a\").keyUp(Keys.CONTROL).perform();", "out": "Select only works on real <select> tags. Custom dropdowns\n(div-based) are clicked like normal elements.", "tip": "Always end an Actions chain with perform().", "mistake": "Using Select on a styled div dropdown and getting UnexpectedTagNameException.", "viz": ""}, {"title": "JavaScriptExecutor", "body": "Run JavaScript in the page when WebDriver can't do something directly. Use it sparingly.", "code": "JavascriptExecutor js = (JavascriptExecutor) driver;\njs.executeScript(\"arguments[0].scrollIntoView(true);\", footer);\njs.executeScript(\"window.scrollBy(0, 800);\");\nString state = (String) js.executeScript(\"return document.readyState;\");\n\n// last resort only:\njs.executeScript(\"arguments[0].click();\", button);", "out": "A JS click skips the real user checks (visible, not covered).\nIf a normal click fails, the page may really be broken.", "tip": "Use JS for reading page state and scrolling, not to force clicks past real problems.", "mistake": "Replacing every click with a JS click to 'fix' flakiness, hiding real bugs.", "viz": ""}]}, {"num": "03", "title": "Waits & tricky UI", "blurb": "Waits done right, stale elements, alerts, frames, windows, uploads and screenshots.", "lessons": [{"title": "Implicit vs explicit waits", "body": "Selenium does not auto-wait like Playwright. You must wait for the right condition.", "code": "// Implicit: a global wait for findElement (avoid mixing with explicit)\ndriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(0));\n\n// Explicit: wait for a specific condition (recommended)\nWebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));\nWebElement badge = wait.until(\n    ExpectedConditions.visibilityOfElementLocated(By.className(\"shopping_cart_badge\")));\nwait.until(ExpectedConditions.elementToBeClickable(By.id(\"checkout\"))).click();\nwait.until(ExpectedConditions.urlContains(\"checkout-step-one\"));", "out": "Mixing implicit and explicit waits can cause unpredictable\nwait times. Pick explicit waits and keep implicit at 0.", "tip": "Wrap common waits in BasePage helpers: waitVisible(by), clickWhenReady(by).", "mistake": "Thread.sleep(3000) everywhere.", "viz": ""}, {"title": "FluentWait and stale elements", "body": "FluentWait adds polling and ignored exceptions. Stale elements happen when the page re-renders.", "code": "Wait<WebDriver> fluent = new FluentWait<>(driver)\n    .withTimeout(Duration.ofSeconds(15))\n    .pollingEvery(Duration.ofMillis(500))\n    .ignoring(NoSuchElementException.class)\n    .ignoring(StaleElementReferenceException.class);\n\nWebElement total = fluent.until(d -> d.findElement(By.className(\"summary_total_label\")));\n\n// StaleElementReferenceException fix: find the element again\n// after the page/table refreshes, instead of reusing an old reference", "out": "Playwright's locators are re-evaluated every time, so this\nerror doesn't exist there. In Selenium, store By locators,\nnot WebElements, in page objects.", "tip": "Keep By objects as fields and call findElement when you need the element.", "mistake": "Caching WebElements in fields and getting stale errors after every refresh.", "viz": ""}, {"title": "Alerts, frames and windows", "body": "Switch WebDriver's focus to the right place before interacting.", "code": "// alerts (https://the-internet.herokuapp.com/javascript_alerts)\nAlert alert = wait.until(ExpectedConditions.alertIsPresent());\nString msg = alert.getText();\nalert.accept();          // or dismiss(), sendKeys(\"text\")\n\n// frames (https://the-internet.herokuapp.com/iframe)\ndriver.switchTo().frame(\"mce_0_ifr\");\n// … work inside …\ndriver.switchTo().defaultContent();\n\n// windows / tabs (https://the-internet.herokuapp.com/windows)\nString main = driver.getWindowHandle();\ndriver.findElement(By.linkText(\"Click Here\")).click();\nfor (String h : driver.getWindowHandles())\n    if (!h.equals(main)) driver.switchTo().window(h);\ndriver.switchTo().newWindow(WindowType.TAB);   // Selenium 4", "out": "Forgetting to switch back (defaultContent / main window)\nis the most common cause of 'element not found' after these.", "tip": "Wrap switches in helper methods that always switch back.", "mistake": "Looking for elements inside an iframe without switching into it.", "viz": ""}, {"title": "File uploads and screenshots", "body": "Upload by sending a file path; capture screenshots of the page or one element.", "code": "// upload (https://the-internet.herokuapp.com/upload)\ndriver.findElement(By.id(\"file-upload\"))\n      .sendKeys(Paths.get(\"src/test/resources/quote.pdf\").toAbsolutePath().toString());\ndriver.findElement(By.id(\"file-submit\")).click();\n\n// screenshots\nFile page = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);\nFiles.copy(page.toPath(), Paths.get(\"target/screenshots/checkout.png\"));\nFile el = element.getScreenshotAs(OutputType.FILE);   // one element", "out": "sendKeys on the <input type='file'> skips the OS dialog,\nwhich WebDriver can't control.", "tip": "Take a screenshot automatically on failure with a TestNG listener (module 04).", "mistake": "Trying to click the OS file dialog.", "viz": ""}]}, {"num": "04", "title": "TestNG", "blurb": "Structure tests with annotations, assertions, groups, data providers and parallel runs.", "lessons": [{"title": "The annotation lifecycle", "body": "TestNG runs setup and teardown methods around your tests in a fixed order. Step through it below.", "code": "@BeforeSuite   once before everything\n@BeforeTest    before each <test> in testng.xml\n@BeforeClass   before the first test in a class\n@BeforeMethod  before EACH @Test  (start browser here)\n@Test          the test\n@AfterMethod   after EACH @Test   (screenshot + quit here)\n@AfterClass / @AfterTest / @AfterSuite", "out": "Same idea as pytest fixture scopes:\nsuite ≈ session, class ≈ class, method ≈ function.", "tip": "Start a fresh browser in @BeforeMethod so tests stay independent.", "mistake": "One browser in @BeforeSuite shared by every test.", "viz": "flow"}, {"title": "Assertions and soft assertions", "body": "Hard assertions stop the test at the first failure; SoftAssert collects failures and reports them together.", "code": "Assert.assertEquals(actualTitle, \"Swag Labs\");\nAssert.assertTrue(badge.isDisplayed(), \"Cart badge should show\");\n\nSoftAssert soft = new SoftAssert();\nsoft.assertEquals(name, \"Sauce Labs Backpack\");\nsoft.assertEquals(price, \"$29.99\");\nsoft.assertEquals(qty, \"1\");\nsoft.assertAll();          // REQUIRED: reports all failures", "out": "Note TestNG's order: assertEquals(actual, expected).\nJUnit uses (expected, actual).", "tip": "Soft asserts for checking many fields on one page; hard asserts for steps later steps depend on.", "mistake": "Forgetting soft.assertAll(), so failures are silently ignored.", "viz": ""}, {"title": "Groups, priority and dependencies", "body": "Tag tests to run subsets; control order only when you really must.", "code": "@Test(groups = {\"smoke\"})\npublic void validUserCanLogin() { ... }\n\n@Test(groups = {\"regression\"}, priority = 2)\npublic void cartShowsTwoItems() { ... }\n\n@Test(dependsOnMethods = \"validUserCanLogin\")\npublic void userCanLogout() { ... }\n\nmvn test -Dgroups=smoke", "out": "dependsOnMethods skips the dependent test if the first fails,\nbut it creates order dependency; prefer independent tests.", "tip": "Use groups the same way you used pytest markers.", "mistake": "Chains of dependsOnMethods that make parallel runs impossible.", "viz": ""}, {"title": "DataProvider", "body": "Run one test with many data rows, like pytest's parametrize.", "code": "@DataProvider(name = \"invalidLogins\")\npublic Object[][] invalidLogins() {\n    return new Object[][] {\n        {\"locked_out_user\", \"secret_sauce\", \"Sorry, this user has been locked out.\"},\n        {\"standard_user\",   \"wrong\",        \"Username and password do not match\"},\n        {\"\",                \"secret_sauce\", \"Username is required\"},\n    };\n}\n\n@Test(dataProvider = \"invalidLogins\")\npublic void loginShowsError(String user, String pwd, String message) {\n    loginPage.login(user, pwd);\n    Assert.assertTrue(loginPage.errorText().contains(message));\n}", "out": "Each row appears as its own test result.\nData can also come from Excel, CSV or JSON files.", "tip": "Keep negative test data in a DataProvider; it documents your test design.", "mistake": "A for-loop inside one test instead of a DataProvider.", "viz": ""}, {"title": "testng.xml, parallel runs and listeners", "body": "Suites choose what runs and how. Listeners react to results, e.g. screenshots on failure.", "code": "<!-- src/test/resources/testng.xml -->\n<suite name=\"Regression\" parallel=\"methods\" thread-count=\"4\">\n  <listeners>\n    <listener class-name=\"com.shamima.qa.listeners.FailureListener\"/>\n  <\/listeners>\n  <test name=\"Chrome\">\n    <parameter name=\"browser\" value=\"chrome\"/>\n    <packages><package name=\"com.shamima.qa.tests\"/><\/packages>\n  <\/test>\n<\/suite>\n\npublic class FailureListener implements ITestListener {\n  public void onTestFailure(ITestResult r) { /* take screenshot, attach */ }\n}", "out": "Parallel runs need one driver per thread:\na ThreadLocal<WebDriver> (module 05).", "tip": "A RetryAnalyzer can retry flaky tests; track retries like you did with pytest-rerunfailures.", "mistake": "Turning on parallel='methods' with a static shared WebDriver.", "viz": ""}]}, {"num": "05", "title": "Framework", "blurb": "Page objects, a driver factory, config, logging and reports in Java.", "lessons": [{"title": "Page Object Model in Java", "body": "Same pattern as the Playwright path: one class per page, locators private, actions public.", "code": "public class LoginPage extends BasePage {\n    private final By username = By.id(\"user-name\");\n    private final By password = By.id(\"password\");\n    private final By loginBtn = By.id(\"login-button\");\n    private final By error    = By.cssSelector(\"[data-test='error']\");\n\n    public LoginPage(WebDriver driver) { super(driver); }\n\n    public InventoryPage loginAs(String user, String pwd) {\n        type(username, user);\n        type(password, pwd);\n        click(loginBtn);\n        return new InventoryPage(driver);\n    }\n    public String errorText() { return waitVisible(error).getText(); }\n}", "out": "Returning the next page object makes tests read like journeys:\nnew LoginPage(driver).loginAs(...).addToCart(\"Backpack\")", "tip": "Store By locators, not WebElements, to avoid stale element errors.", "mistake": "Assertions inside page objects.", "viz": ""}, {"title": "BasePage helpers", "body": "Put waiting and common actions in one place.", "code": "public abstract class BasePage {\n    protected final WebDriver driver;\n    protected final WebDriverWait wait;\n\n    protected BasePage(WebDriver driver) {\n        this.driver = driver;\n        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));\n    }\n    protected WebElement waitVisible(By by) {\n        return wait.until(ExpectedConditions.visibilityOfElementLocated(by));\n    }\n    protected void click(By by) {\n        wait.until(ExpectedConditions.elementToBeClickable(by)).click();\n    }\n    protected void type(By by, String text) {\n        WebElement el = waitVisible(by); el.clear(); el.sendKeys(text);\n    }\n}", "out": "Every page gets safe waits for free, the Selenium version\nof Playwright's auto-waiting.", "tip": "PageFactory (@FindBy) also exists; many teams now prefer plain By fields for clarity.", "mistake": "Copy-pasting WebDriverWait code into every page.", "viz": ""}, {"title": "DriverFactory with ThreadLocal", "body": "Create the right browser from config, one per thread, so parallel tests don't share a driver.", "code": "public final class DriverFactory {\n    private static final ThreadLocal<WebDriver> DRIVER = new ThreadLocal<>();\n\n    public static WebDriver start(String browser, boolean headless) {\n        WebDriver d;\n        if (browser.equals(\"firefox\")) {\n            FirefoxOptions o = new FirefoxOptions();\n            if (headless) o.addArguments(\"-headless\");\n            d = new FirefoxDriver(o);\n        } else {\n            ChromeOptions o = new ChromeOptions();\n            if (headless) o.addArguments(\"--headless=new\");\n            d = new ChromeDriver(o);\n        }\n        DRIVER.set(d);\n        return d;\n    }\n    public static WebDriver get() { return DRIVER.get(); }\n    public static void quit() { DRIVER.get().quit(); DRIVER.remove(); }\n}", "out": "BaseTest: @BeforeMethod start(...), @AfterMethod quit().\nEach parallel thread has its own browser.", "tip": "Read browser and headless flags from config or -D system properties.", "mistake": "A static WebDriver field shared across threads.", "viz": ""}, {"title": "Config, logging and reports", "body": "Environment settings in a properties file, logging with Log4j2/SLF4J, and a rich report.", "code": "# src/test/resources/config.properties\nbaseUrl=https://www.saucedemo.com\nbrowser=chrome\nheadless=false\n\nmvn test -Dbrowser=firefox -Dheadless=true    # override from CLI\n\nLogging: SLF4J + Log4j2 → log.info(\"Logging in as {}\", user)\nReports: Allure (allure-testng) or ExtentReports\n  mvn test && allure serve target/allure-results", "out": "Same structure as the Python framework:\nconfig per env, secrets from env vars, steps in reports.", "tip": "Let -D system properties override the file, so CI can switch browsers without edits.", "mistake": "Hardcoded URLs and browser names in test classes.", "viz": ""}]}, {"num": "06", "title": "Scale & CI", "blurb": "Selenium Grid, headless runs, cross-browser and GitHub Actions.", "lessons": [{"title": "Selenium Grid 4 with Docker", "body": "Grid runs browsers on other machines or containers. Docker makes it a one-liner.", "code": "# single standalone container\ndocker run -d -p 4444:4444 --shm-size=2g selenium/standalone-chrome\n\n// in the DriverFactory\nWebDriver d = new RemoteWebDriver(\n    new URL(\"http://localhost:4444\"), new ChromeOptions());\n\nGrid UI: http://localhost:4444 → sessions, queue, live view", "out": "For several browsers, docker compose with a hub + chrome,\nfirefox and edge nodes (see the docker-selenium README).", "tip": "Use the same image version as your Selenium dependency.", "mistake": "Forgetting --shm-size and getting Chrome crashes in containers.", "viz": ""}, {"title": "GitHub Actions for Maven + Selenium", "body": "Run the suite headless on every push and keep the reports.", "code": "# .github/workflows/selenium.yml\njobs:\n  test:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - uses: actions/setup-java@v4\n        with: { distribution: temurin, java-version: \"21\", cache: maven }\n      - run: mvn -B test -Dheadless=true -Dgroups=smoke\n      - uses: actions/upload-artifact@v4\n        if: always()\n        with:\n          name: reports\n          path: |\n            target/surefire-reports\n            target/allure-results", "out": "Ubuntu runners include Chrome; Selenium Manager fetches\nthe matching driver automatically.", "tip": "Run smoke on push, full regression on a nightly schedule.", "mistake": "Running tests with a visible browser in CI.", "viz": ""}]}, {"num": "07", "title": "Selenium vs Playwright & interview", "blurb": "Compare the tools and answer the questions interviewers ask.", "lessons": [{"title": "Selenium vs Playwright", "body": "You know both now. Here's how to explain the differences.", "code": "                 Selenium                  Playwright\nWaiting          explicit waits you add    auto-waiting built in\nDrivers          Selenium Manager          bundled browsers\nProtocol         W3C WebDriver (+ BiDi)    own protocol, one connection\nIsolation        new session per test      cheap browser contexts\nDebugging        screenshots, logs, Grid   Trace Viewer, Inspector\nLanguages        Java, Python, C#, JS, Ruby JS/TS, Python, Java, .NET\nEcosystem        very large, mature        newer, growing fast", "out": "Good answer: \"Both are solid. Selenium fits existing Java\nteams and Grid setups; Playwright gives more out of the box.\nI've built frameworks in both.\"", "tip": "Mention WebDriver BiDi: Selenium is adding Playwright-like features (network, console).", "mistake": "Saying one tool is simply 'better'.", "viz": ""}, {"title": "Selenium interview questions", "body": "The questions you'll hear most, with short answers.", "code": "Q findElement vs findElements?\nA findElement throws if none match; findElements returns an empty list.\nQ Implicit vs explicit wait?\nA Implicit: global for element lookup. Explicit: wait for a specific\n  condition. Prefer explicit; don't mix them.\nQ What is StaleElementReferenceException?\nA The element was re-rendered; find it again (store By, not WebElement).\nQ close() vs quit()?\nA close() closes the current window; quit() ends the whole session.\nQ How do you run tests in parallel safely?\nA TestNG parallel + ThreadLocal<WebDriver>, independent test data.\nQ How do you handle a new tab?\nA getWindowHandles(), switch to the new handle, switch back after.", "out": "Show your Java framework repo: DriverFactory, BasePage,\nDataProviders, testng.xml, CI badge.", "tip": "Build the capstone scenarios in Java too; the same app in two tools is a strong story.", "mistake": "Answering only from memory with no code to show.", "viz": ""}]}];
+    const FLOW = [{"name": "@BeforeSuite", "desc": "Runs once before the whole suite. Good for global setup like reading config or starting reports.", "next": "Next: @BeforeTest.", "code": "@BeforeSuite\npublic void loadConfig() { ... }"}, {"name": "@BeforeTest", "desc": "Runs before each <test> block in testng.xml (for example, per browser).", "next": "Next: @BeforeClass.", "code": "<test name=\"Chrome\"> … <\/test>"}, {"name": "@BeforeClass", "desc": "Once before the first test method of a class.", "next": "Next: @BeforeMethod.", "code": "@BeforeClass\npublic void prepareData() { ... }"}, {"name": "@BeforeMethod", "desc": "Before EVERY test. Start a fresh browser here so tests stay independent.", "next": "Next: the test.", "code": "@BeforeMethod\npublic void start() { DriverFactory.start(browser, headless); }"}, {"name": "@Test", "desc": "The test itself: page objects, actions and assertions.", "next": "Next: @AfterMethod.", "code": "@Test(groups = \"smoke\")\npublic void validUserCanLogin() { ... }"}, {"name": "@AfterMethod", "desc": "After EVERY test, even failed ones: screenshot on failure, then quit the browser.", "next": "Then @AfterClass, @AfterTest, @AfterSuite in reverse order.", "code": "@AfterMethod(alwaysRun = true)\npublic void stop(ITestResult r) { DriverFactory.quit(); }"}, {"name": "@AfterSuite", "desc": "Once at the very end: close reports, clean shared resources.", "next": "Same idea as pytest's session teardown.", "code": "@AfterSuite\npublic void finish() { ... }"}];
+    const A = '#2E7D32', AD = '#A5D6A7';
+    const mod = MODS[st.m];
+    const cur = mod.lessons[st.l] || mod.lessons[0];
+    const key = (m, l) => m + '-' + l;
+    let total = 0, doneN = 0;
+    MODS.forEach((mm, i) => mm.lessons.forEach((_, j) => { total++; if (st.done[key(i, j)]) doneN++; }));
+    const modTabs = MODS.map((mm, i) => {
+      const on = i === st.m;
+      const d = mm.lessons.filter((_, j) => st.done[key(i, j)]).length;
+      return { num: mm.num + (d === mm.lessons.length ? ' ✓' : ''), title: mm.title, pick: () => this.setState({ m: i, l: 0 }),
+        style: 'display:flex;flex-direction:column;align-items:flex-start;gap:4px;min-height:64px;padding:10px 12px;border:none;border-radius:14px 14px 0 0;cursor:pointer;text-align:left;font:600 13px IBM Plex Sans,sans-serif;flex:1;' + (on ? 'background:#F4F1EA;color:#16181D;' : 'background:rgba(0,0,0,0.06);color:#10331A;') };
+    });
+    const lessonNav = mod.lessons.map((ls, j) => {
+      const on = j === st.l, dn = !!st.done[key(st.m, j)];
+      return { title: ls.title, num: dn ? '✓' : String(j + 1).padStart(2, '0'), pick: () => this.setState({ l: j }),
+        style: 'display:flex;align-items:center;gap:12px;min-height:44px;padding:8px 12px;border-radius:10px;border:none;cursor:pointer;text-align:left;font:' + (on ? '600' : '400') + ' 15px IBM Plex Sans,sans-serif;' + (on ? 'background:#16181D;color:#F4F1EA;' : 'background:transparent;color:#16181D;'),
+        numStyle: 'flex-shrink:0;font:600 12px JetBrains Mono,monospace;width:28px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;' + (on ? 'background:' + A + ';color:#fff;' : dn ? 'background:#DCEFE3;color:#1F7A52;' : 'background:#EAE5DA;color:#6A6E77;') };
+    });
+    const modeDefs = [['split', 'Side by side'], ['code', 'Code'], ['out', 'Explained']];
+    const modes = modeDefs.map(([id, label]) => ({ label, pick: () => this.setState({ mode: id }),
+      style: 'min-height:40px;padding:8px 14px;border-radius:8px;border:none;cursor:pointer;font:600 14px IBM Plex Sans,sans-serif;' + (st.mode === id ? 'background:#FFFFFF;color:#16181D;box-shadow:0 1px 3px rgba(0,0,0,.12);' : 'background:transparent;color:#5C606A;') }));
+    const isFirst = st.m === 0 && st.l === 0;
+    const isLast = st.m === MODS.length - 1 && st.l === mod.lessons.length - 1;
+    const go = (dir) => {
+      let m = st.m, l = st.l + dir;
+      if (l < 0) { if (m === 0) return; m -= 1; l = MODS[m].lessons.length - 1; }
+      if (l >= MODS[m].lessons.length) { if (m === MODS.length - 1) return; m += 1; l = 0; }
+      this.setState({ m, l });
+    };
+    const k = key(st.m, st.l); const isDone = !!st.done[k];
+    const pct = Math.round((doneN / total) * 100);
+    const fi = Math.min(st.f, FLOW.length - 1);
+    const fSteps = FLOW.map((s, i) => ({ num: String(i + 1), name: s.name, pick: () => this.setState({ f: i }),
+      style: 'display:flex;flex-direction:column;align-items:flex-start;gap:2px;min-height:52px;padding:8px 14px;border-radius:12px;cursor:pointer;font:600 14px IBM Plex Sans,sans-serif;text-align:left;' + (i === fi ? 'background:' + AD + ';color:#16181D;border:1.5px solid ' + AD + ';' : i < fi ? 'background:#2A2D35;color:#F4F1EA;border:1.5px solid #3A3E48;' : 'background:transparent;color:#A9AEBA;border:1.5px solid #3A3E48;') }));
+    return {
+      mod, cur, modTabs, lessonNav, modes,
+      lessonNum: String(st.l + 1), lessonTotal: String(mod.lessons.length),
+      showA: st.mode !== 'out', showB: st.mode !== 'code',
+      gridStyle: st.mode === 'split' ? 'display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;' : 'display:grid;grid-template-columns:repeat(1,minmax(0,1fr));gap:16px;',
+      prev: () => go(-1), next: () => go(1),
+      prevLabel: isFirst ? 'Start' : 'Previous', nextLabel: isLast ? 'Finished' : 'Next lesson',
+      markDone: () => this.setState({ done: { ...st.done, [k]: !isDone } }),
+      doneLabel: isDone ? '✓ Done' : 'Mark as done',
+      doneBtnStyle: 'min-height:48px;padding:12px 22px;border-radius:12px;cursor:pointer;font:600 15px IBM Plex Sans,sans-serif;' + (isDone ? 'background:#DCEFE3;color:#1F7A52;border:1.5px solid #7FC8A0;' : 'background:#FFFFFF;color:#16181D;border:1.5px solid #DDD7CB;'),
+      overallLabel: doneN + ' / ' + total + ' lessons',
+      overallStyle: 'height:100%;border-radius:999px;background:' + A + ';transition:width .3s;width:' + pct + '%;',
+      vizFlow: cur.viz === 'flow', fSteps, fCur: FLOW[fi], fLabel: (fi + 1) + ' / ' + FLOW.length,
+      fPrev: () => this.setState({ f: Math.max(0, fi - 1) }), fNext: () => this.setState({ f: Math.min(FLOW.length - 1, fi + 1) })
+    };
+  }
+}
+
+var __TPL=`<div style="width: 1440px; height: 2900px; box-sizing: border-box; display: flex; flex-direction: column; background: #F4F1EA; font-family: 'IBM Plex Sans', system-ui, sans-serif; color: #16181D;">
+
+<section style="background: #E3F1E4; padding: 48px 80px 0; display: flex; flex-direction: column; gap: 26px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 40px;">
+<div style="display: flex; flex-direction: column; gap: 14px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #2E5A36;">selenium with java · module {{mod.num}}</span>
+<h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 56px; line-height: 1; letter-spacing: -0.03em; color: #10331A;">{{mod.title}}</h1>
+<p style="margin: 0; font-size: 18px; line-height: 1.6; color: #2E5A36; max-width: 760px;">{{mod.blurb}}</p>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px; min-width: 300px;">
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 22px; font-weight: 800; color: #10331A;">Selenium WebDriver with Java + TestNG</span>
+<div style="display: flex; justify-content: space-between; font-size: 14px; color: #10331A;"><span>Course progress</span><span style="font-family: 'JetBrains Mono', monospace;">{{overallLabel}}</span></div>
+<div style="height: 8px; border-radius: 999px; background: rgba(0,0,0,0.1); overflow: hidden;"><div style="{{overallStyle}}"></div></div>
+<span style="font-size: 13px; color: #2E5A36;">Practice sites: saucedemo.com and the-internet.herokuapp.com.</span>
+</div>
+</div>
+<div style="display: flex; gap: 6px;">
+<sc-for list="{{modTabs}}" as="t" hint-placeholder-count="9">
+<button onClick="{{t.pick}}" style="{{t.style}}"><span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; opacity: 0.8;">{{t.num}}</span><span>{{t.title}}</span></button>
+</sc-for>
+</div>
+</section>
+
+<section style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 40px; padding: 56px 80px 48px;">
+<aside style="grid-column: span 3; display: flex; flex-direction: column; gap: 6px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #6A6E77; text-transform: uppercase; letter-spacing: 0.08em; padding: 0 12px 10px;">module {{mod.num}} · lessons</span>
+<sc-for list="{{lessonNav}}" as="l" hint-placeholder-count="7">
+<button onClick="{{l.pick}}" style="{{l.style}}"><span style="{{l.numStyle}}">{{l.num}}</span><span>{{l.title}}</span></button>
+</sc-for>
+</aside>
+<div style="grid-column: span 9; display: flex; flex-direction: column; gap: 22px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 20px;">
+<div style="display: flex; flex-direction: column; gap: 10px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #2E7D32;">module {{mod.num}} · lesson {{lessonNum}} of {{lessonTotal}}</span>
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 44px; letter-spacing: -0.02em; line-height: 1.05;">{{cur.title}}</h2>
+</div>
+<div style="display: flex; gap: 6px; background: #EAE5DA; padding: 5px; border-radius: 12px;">
+<sc-for list="{{modes}}" as="m" hint-placeholder-count="3"><button onClick="{{m.pick}}" style="{{m.style}}">{{m.label}}</button></sc-for>
+</div>
+</div>
+<p style="margin: 0; font-size: 18px; line-height: 1.7; color: #34373F; max-width: 840px;">{{cur.body}}</p>
+<div style="{{gridStyle}}">
+<sc-if value="{{showA}}" hint-placeholder-val="{{ true }}">
+<div style="background: #16181D; border-radius: 16px; overflow: hidden;">
+<div style="padding: 12px 18px; border-bottom: 1px solid #2A2D35; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #A5D6A7;">java / config</div>
+<pre style="margin: 0; padding: 20px; font-family: 'JetBrains Mono', monospace; font-size: 13.5px; line-height: 1.7; color: #D8DAE0; white-space: pre-wrap;">{{cur.code}}</pre>
+</div>
+</sc-if>
+<sc-if value="{{showB}}" hint-placeholder-val="{{ true }}">
+<div style="background: #FFFFFF; border: 1px solid #DDD7CB; border-radius: 16px; overflow: hidden;">
+<div style="padding: 12px 18px; border-bottom: 1px solid #DDD7CB; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #2E7D32;">what happens / why</div>
+<pre style="margin: 0; padding: 20px; font-family: 'JetBrains Mono', monospace; font-size: 13.5px; line-height: 1.7; color: #16181D; white-space: pre-wrap;">{{cur.out}}</pre>
+</div>
+</sc-if>
+</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px;">
+<div style="display: flex; gap: 14px; background: #DCEFE3; border-radius: 16px; padding: 20px 22px; align-items: flex-start;">
+<span style="flex-shrink: 0; width: 32px; height: 32px; border-radius: 9px; background: #1F7A52; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 700;">✓</span>
+<div style="display: flex; flex-direction: column; gap: 4px;"><span style="font-weight: 600; color: #174F37;">Remember</span><span style="font-size: 15px; line-height: 1.6; color: #174F37;">{{cur.tip}}</span></div>
+</div>
+<div style="display: flex; gap: 14px; background: #FCE7DD; border-radius: 16px; padding: 20px 22px; align-items: flex-start;">
+<span style="flex-shrink: 0; width: 32px; height: 32px; border-radius: 9px; background: #C4502A; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 700;">!</span>
+<div style="display: flex; flex-direction: column; gap: 4px;"><span style="font-weight: 600; color: #7A2E14;">Common mistake</span><span style="font-size: 15px; line-height: 1.6; color: #7A2E14;">{{cur.mistake}}</span></div>
+</div>
+</div>
+<div style="display: flex; justify-content: space-between; align-items: center;">
+<button onClick="{{prev}}" style="min-height: 48px; padding: 12px 22px; border-radius: 12px; border: 1.5px solid #16181D; background: transparent; cursor: pointer; font: 600 15px 'IBM Plex Sans', sans-serif; color: #16181D;">← {{prevLabel}}</button>
+<button onClick="{{markDone}}" style="{{doneBtnStyle}}">{{doneLabel}}</button>
+<button onClick="{{next}}" style="min-height: 48px; padding: 12px 22px; border-radius: 12px; border: none; background: #2E7D32; color: #FFFFFF; cursor: pointer; font: 600 15px 'IBM Plex Sans', sans-serif;">{{nextLabel}} →</button>
+</div>
+</div>
+</section>
+
+<sc-if value="{{vizFlow}}" hint-placeholder-val="{{ false }}">
+<section style="margin: 0 80px 64px; background: #16181D; color: #F4F1EA; border-radius: 28px; padding: 44px; display: flex; flex-direction: column; gap: 26px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 30px;">
+<div style="display: flex; flex-direction: column; gap: 10px;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #A5D6A7;">visualize · TestNG lifecycle</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 36px; font-weight: 800;">What runs before and after each test</span></div>
+<div style="display: flex; gap: 10px; align-items: center;">
+<button onClick="{{fPrev}}" aria-label="Previous step" style="width: 48px; height: 48px; border-radius: 12px; border: 1.5px solid #3A3E48; background: transparent; color: #F4F1EA; cursor: pointer; font-size: 18px;">←</button>
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; min-width: 60px; text-align: center;">{{fLabel}}</span>
+<button onClick="{{fNext}}" aria-label="Next step" style="width: 48px; height: 48px; border-radius: 12px; border: none; background: #A5D6A7; color: #16181D; cursor: pointer; font-size: 18px;">→</button>
+</div>
+</div>
+<div style="display: flex; gap: 8px; flex-wrap: wrap;">
+<sc-for list="{{fSteps}}" as="fs" hint-placeholder-count="7"><button onClick="{{fs.pick}}" style="{{fs.style}}"><span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; opacity: 0.75;">{{fs.num}}</span><span>{{fs.name}}</span></button></sc-for>
+</div>
+<div style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 24px;">
+<div style="grid-column: span 6; background: #A5D6A7; color: #16181D; border-radius: 20px; padding: 26px; display: flex; flex-direction: column; gap: 10px;">
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 28px; font-weight: 800;">{{fCur.name}}</span>
+<span style="font-size: 16px; line-height: 1.6;">{{fCur.desc}}</span>
+<span style="font-size: 14px; font-weight: 600;">{{fCur.next}}</span>
+</div>
+<pre style="grid-column: span 6; margin: 0; background: #1E2129; border: 1px solid #2E323C; border-radius: 20px; padding: 22px; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #D8DAE0; white-space: pre-wrap;">{{fCur.code}}</pre>
+</div>
+</section>
+</sc-if>
+
+<div style="flex-grow: 1;"></div>
+<section style="padding: 0 80px 64px; display: flex; justify-content: space-between; align-items: center; gap: 30px;">
+<div style="display: flex; flex-direction: column; gap: 8px;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #6A6E77;">next course</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 30px; font-weight: 800;">Mobile testing</span></div>
+<a href="MobileTest.html" style="text-decoration: none; padding: 16px 26px; border-radius: 12px; background: #16181D; color: #A5D6A7; font-weight: 600;">Start mobile testing →</a>
+</section>
+</div>`;
+window.__mountDC(__TPL, Component);
+</script>
+</body>
+</html>

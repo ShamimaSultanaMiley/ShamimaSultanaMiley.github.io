@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440">
+<title>Security Testing Tools</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap">
+<style>html,body{margin:0;background:#F4F1EA;font-family:'IBM Plex Sans',system-ui,sans-serif} #app > div{margin:0 auto}</style>
+</head>
+<body>
+
+<style>
+.snav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:16px 40px;background:#16181D;color:#F4F1EA;font-family:'IBM Plex Sans',sans-serif;flex-wrap:wrap;gap:12px}
+.snav a{color:#F4F1EA;text-decoration:none}
+.snav .brand{display:flex;align-items:center;gap:10px;font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:18px}
+.snav .brand span.logo{width:34px;height:34px;border-radius:9px;background:#7EE2A8;color:#16181D;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:14px}
+.snav ul{list-style:none;display:flex;gap:6px;margin:0;padding:0;align-items:center;flex-wrap:wrap}
+.snav > ul > li{position:relative}
+.snav > ul > li > a,.snav > ul > li > span{display:block;padding:9px 14px;border-radius:9px;font-size:15px;font-weight:500;cursor:pointer;white-space:nowrap}
+.snav > ul > li:hover > a,.snav > ul > li:hover > span,.snav .cur{background:#2A2D35}
+.snav .caret{font-size:11px;opacity:.7;margin-left:4px}
+.snav .drop{position:absolute;top:100%;left:0;min-width:220px;background:#1E2129;border:1px solid #2E323C;border-radius:12px;padding:8px;display:none;flex-direction:column;gap:2px;box-shadow:0 18px 40px -16px rgba(0,0,0,.6)}
+.snav > ul > li:hover .drop{display:flex}
+.snav .drop a{padding:9px 12px;border-radius:8px;font-size:14px;color:#D8DAE0}
+.snav .drop a:hover{background:#2A2D35;color:#fff}
+.snav .drop .grp{font-family:'JetBrains Mono',monospace;font-size:11px;color:#8A8F9C;text-transform:uppercase;letter-spacing:.06em;padding:8px 12px 2px}
+.snav .cta{padding:9px 18px;border-radius:999px;background:#1F7A52;color:#fff;font-weight:600}
+.snav .menubtn{display:none;background:none;border:1.5px solid #3A3E48;color:#F4F1EA;border-radius:9px;padding:8px 12px;font-size:15px;cursor:pointer}
+@media(max-width:1100px){
+  .snav .menubtn{display:block}
+  .snav > ul{display:none;flex-direction:column;align-items:stretch;width:100%;order:3}
+  .snav.open > ul{display:flex}
+  .snav .drop{position:static;display:flex;border:none;box-shadow:none;background:transparent;padding:0 0 6px 14px}
+  .snav > ul > li:hover .drop{display:flex}
+}
+</style>
+<nav class="snav" id="snav">
+<a class="brand" href="index.html"><span class="logo">S✓</span>Shamima Sultana</a>
+<button class="menubtn" onclick="document.getElementById('snav').classList.toggle('open')">Menu ☰</button>
+<ul>
+<li><a href="index.html" class="">Home</a></li>
+<li><span class="">About <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="about.html">Intro &amp; journey</a>
+    <a href="skills.html">Skills</a>
+    <a href="certifications.html">Certifications</a>
+    <a href="research.html">Research</a>
+    <a href="achievements.html">Achievements</a>
+  </div></li>
+<li><span class="">Work <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="projects.html">Projects</a>
+  </div></li>
+<li><span class="cur">Learn <span class="caret">▾</span></span>
+  <div class="drop">
+    <span class="grp">Automation</span>
+    <a href="PWHub.html">Playwright path</a>
+    <a href="Selenium.html">Selenium with Java</a>
+    <a href="MobileTest.html">Mobile testing</a>
+    <span class="grp">Performance</span>
+    <a href="K6Hub.html">k6</a>
+    <a href="JMeter.html">JMeter</a>
+    <span class="grp">Data &amp; APIs</span>
+    <a href="SQLHub.html">SQL</a>
+    <a href="API.html">API testing</a>
+    <span class="grp">Core &amp; specialised</span>
+    <a href="Manual.html">Manual testing</a>
+    <a href="AITest.html">AI / LLM testing</a>
+    <a href="DevTools.html">DevTools</a>
+    <a href="Git.html">Git &amp; GitHub</a>
+    <a href="A11y.html">Accessibility</a>
+    <a href="Security.html">Security</a>
+  </div></li>
+<li><span class="">Writing <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="K6Hub.html">Tutorials &amp; articles</a>
+  </div></li>
+<li><span class="">More <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="News.html">News</a>
+    <a href="Interview.html">Interview prep</a>
+    <a href="ISTQB.html">ISTQB prep</a>
+  </div></li>
+<li><a class="cta" href="mailto:shamimasultanamiley605@gmail.com">Contact</a></li>
+</ul>
+</nav>
+
+<div id="app"></div>
+<script>/* Minimal renderer: replaces Claude's canvas engine so pages run anywhere. */
+(function(){
+  function resolve(scopes, path){
+    path=path.trim();
+    var parts=path.split('.'), head=parts[0], base, found=false;
+    for(var i=scopes.length-1;i>=0;i--){ if(scopes[i] && Object.prototype.hasOwnProperty.call(scopes[i],head)){ base=scopes[i][head]; found=true; break; } }
+    if(!found) return undefined;
+    for(var j=1;j<parts.length;j++){ if(base==null) return undefined; base=base[parts[j]]; }
+    return base;
+  }
+  function subst(str, scopes){
+    return str.replace(/\{\{([^}]+)\}\}/g, function(_,e){ var v=resolve(scopes,e); return v==null?'':String(v); });
+  }
+  function firstExpr(str){ var m=str.match(/\{\{([^}]+)\}\}/); return m?m[1].trim():null; }
+  function processNode(node, scopes, out){
+    if(node.nodeType===3){ // text
+      var t=node.nodeValue;
+      if(t.indexOf('{{')>=0) out.push(document.createTextNode(subst(t,scopes)));
+      else out.push(document.createTextNode(t));
+      return;
+    }
+    if(node.nodeType!==1){ return; }
+    var tag=node.tagName.toLowerCase();
+    if(tag==='sc-for'){
+      var listExpr=firstExpr(node.getAttribute('list')||'');
+      var as=node.getAttribute('as');
+      var arr=listExpr?resolve(scopes,listExpr):null;
+      if(Array.isArray(arr)){
+        for(var k=0;k<arr.length;k++){
+          var sc=scopes.concat([{__k:as, [as]:arr[k]}]);
+          for(var c=0;c<node.childNodes.length;c++) processNode(node.childNodes[c], sc, out);
+        }
+      }
+      return;
+    }
+    if(tag==='sc-if'){
+      var valExpr=firstExpr(node.getAttribute('value')||'');
+      var cond=valExpr?resolve(scopes,valExpr):false;
+      if(cond){ for(var c2=0;c2<node.childNodes.length;c2++) processNode(node.childNodes[c2], scopes, out); }
+      return;
+    }
+    var el=document.createElement(tag);
+    for(var a=0;a<node.attributes.length;a++){
+      var at=node.attributes[a], name=at.name, val=at.value;
+      if(name.indexOf('hint-')===0) continue;
+      if(name==='onclick'){ var h=firstExpr(val); (function(expr){ el.addEventListener('click', function(ev){ var fn=resolve(scopes,expr); if(typeof fn==='function') fn(ev); }); })(h); continue; }
+      if(name==='onchange'){ var h2=firstExpr(val); (function(expr){ el.addEventListener('input', function(ev){ var fn=resolve(scopes,expr); if(typeof fn==='function') fn(ev); }); })(h2); continue; }
+      var sv=val.indexOf('{{')>=0?subst(val,scopes):val;
+      if(name==='value' && (tag==='input'||tag==='textarea')){ el.value=sv; el.setAttribute('value',sv); }
+      else el.setAttribute(name, sv);
+    }
+    var kids=[];
+    for(var cc=0;cc<node.childNodes.length;cc++) processNode(node.childNodes[cc], scopes, kids);
+    for(var ki=0;ki<kids.length;ki++) el.appendChild(kids[ki]);
+    out.push(el);
+  }
+  window.__mountDC=function(templateHTML, ComponentClass){
+    var tplRoot=document.createElement('div'); tplRoot.innerHTML=templateHTML;
+    var mount=document.getElementById('app');
+    var comp=new ComponentClass({});
+    function doRender(){
+      var vals;
+      try{ vals=comp.renderVals(); }catch(e){ console.error('render error',e); return; }
+      var frag=document.createDocumentFragment();
+      var buf=[];
+      for(var i=0;i<tplRoot.childNodes.length;i++) processNode(tplRoot.childNodes[i], [vals], buf);
+      for(var b=0;b<buf.length;b++) frag.appendChild(buf[b]);
+      // preserve focus in search/textarea across re-render
+      var active=document.activeElement, sel=null, id=null;
+      mount.innerHTML=''; mount.appendChild(frag);
+    }
+    comp.setState=function(s){ Object.assign(comp.state, s); doRender(); };
+    doRender();
+  };
+  window.DCLogic=function(){};
+})();
+</script>
+<script>
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { m: 0, l: 0, mode: 'split', f: 0, done: {} };
+  }
+  renderVals() {
+    const st = this.state;
+    const MODS = [{"num": "01", "title": "Foundations & ethics", "blurb": "What security testing is, the rules you must follow, and where to practise legally.", "lessons": [{"title": "What a QA does in security testing", "body": "You don't need to be a penetration tester. QA catches common, high-impact security bugs during normal testing.", "code": "QA security testing (what this course teaches)\n  functional-style checks for common weaknesses:\n  access control, injection, auth, error handling, headers\nPenetration testing (specialists)\n  deep, authorised attacks, exploit chains, reporting\nBug bounty\n  finding and reporting bugs on programs that invite it\n\nYou mostly do the first, and know when to escalate to the\nsecurity team.", "out": "Security is a quality attribute, like performance and\naccessibility: part of your job, not a separate world.", "tip": "Add a short security pass to your test plans for sensitive features.", "mistake": "Assuming security is entirely someone else's responsibility.", "viz": ""}, {"title": "Rules of engagement: stay legal", "body": "Testing a system without permission is illegal in most countries. This is the most important lesson in the course.", "code": "Before any security testing, confirm\n  ✓ written authorisation (scope, targets, time window)\n  ✓ which environment (test/staging, never production\n    unless explicitly approved)\n  ✓ which tests are allowed (no denial-of-service, no real\n    data exfiltration)\n  ✓ who to notify, and how to report findings privately\n\nNever test\n  ✗ a third-party site or app you don't own\n  ✗ production customer data\n  ✗ anything outside the agreed scope", "out": "'I was just testing' is not a legal defence.\nWhen unsure, ask your security lead first.", "tip": "Get authorisation in writing and keep it; verbal 'go ahead' isn't enough.", "mistake": "Running a scanner against a live site to 'see what happens'.", "viz": ""}, {"title": "Confidentiality and responsible disclosure", "body": "Findings are sensitive. How you handle them matters as much as finding them.", "code": "  Report vulnerabilities privately: ticket + security team,\n  never public channels, chat or screenshots in group threads\n  Don't share exploit details widely\n  Redact secrets and personal data from evidence\n  Under a client agreement, never disclose the client's\n  systems, data or the vulnerability to outsiders\n  Follow a responsible-disclosure timeline if one exists", "out": "A leaked vulnerability report can cause more damage than\nthe bug itself.", "tip": "Treat every security finding as confidential by default.", "mistake": "Posting a screenshot of an admin bypass in a team-wide channel.", "viz": ""}, {"title": "Safe practice targets", "body": "Learn the tools on apps built to be attacked. These are legal to test.", "code": "OWASP Juice Shop     modern vulnerable web app (Node), many\n                     challenges, runs in Docker in one command\nDVWA                 Damn Vulnerable Web Application (PHP)\nOWASP WebGoat        guided lessons with exploits\nbWAPP, Mutillidae    more vulnerable apps\nbadssl.com, HTTPBin  safe endpoints for TLS/headers\nVendor labs          PortSwigger Web Security Academy (free)\n\ndocker run --rm -p 3000:3000 bkimminich/juice-shop", "out": "PortSwigger's Web Security Academy is free, high quality,\nand legal to practise on.", "tip": "Do every exercise in this course against Juice Shop or the Academy, never a real site.", "mistake": "Practising on a real company's website 'because it's just for learning'.", "viz": ""}]}, {"num": "02", "title": "The OWASP Top 10", "blurb": "The standard list of the most critical web risks, in the 2025 edition.", "lessons": [{"title": "The OWASP Top 10:2025", "body": "The industry-standard awareness list of the most critical web application security risks.", "code": "A01  Broken Access Control          (now includes SSRF)\nA02  Security Misconfiguration\nA03  Software Supply Chain Failures\nA04  Cryptographic Failures\nA05  Injection                       (SQLi, XSS, command…)\nA06  Insecure Design\nA07  Authentication Failures\nA08  Software or Data Integrity Failures\nA09  Security Logging & Alerting Failures\nA10  Mishandling of Exceptional Conditions   (new)", "out": "It's a shared vocabulary, not a checklist you fully\nautomate. Use it to plan which risks a feature could have.", "tip": "Map each finding to a Top 10 category in your bug reports.", "mistake": "Treating the Top 10 as an exhaustive list; it's the most common risks, not all of them.", "viz": ""}, {"title": "Access control (A01) is the big one", "body": "Broken access control is the most common serious web risk, and the easiest for QA to test.", "code": "IDOR / BOLA   change an ID in the URL or API:\n              /orders/1043 → /orders/1044  → someone else's order?\nPrivilege     a normal user reaching an admin page or API\nMissing check UI hides a button, but the API still allows it\nForced browse guessing URLs like /admin, /export\nSSRF          making the server fetch an internal/attacker URL", "out": "The IDOR check needs only two accounts and a changed ID.\nIt finds serious bugs in a huge number of real apps.", "tip": "Test every 'view/edit/delete X' as a different user who shouldn't have access.", "mistake": "Testing access control only as an admin, where every check passes.", "viz": ""}, {"title": "Injection (A05)", "body": "Injection happens when user input is treated as code or commands.", "code": "SQL injection    ' OR '1'='1   in a login or search field\n                 (SQL course covers the safe-coding side)\nCross-site       <script>alert(1)<\/script> stored and later\nscripting (XSS)  shown to other users, running in their browser\nCommand inj.     input reaching an OS command\nOthers           NoSQL, LDAP, template injection\n\nFix is always: parameterise / escape / validate on the server.", "out": "Signs of a problem: a database error on screen, unexpected\nextra results, or your script actually running.", "tip": "The API and SQL courses show the safe patterns; this course shows how to test for the flaw.", "mistake": "Assuming the UI's input validation protects the server; test the API directly.", "viz": ""}, {"title": "Auth, config, crypto and the rest", "body": "A tour of the remaining categories a tester can probe.", "code": "A02 Misconfig    default passwords, directory listing, debug\n                 pages, verbose errors, missing headers\nA04 Crypto       HTTP instead of HTTPS, weak TLS, secrets in\n                 URLs, passwords stored in plain text\nA07 Auth         weak passwords allowed, no lockout, tokens\n                 valid after logout, guessable reset links\nA09 Logging      security events not logged or alerted\nA10 Exceptions   errors that 'fail open' (allow instead of deny)\n                 or leak stack traces", "out": "Many of these are visible without any tool:\nerror pages, the address bar (http vs https), login behaviour.", "tip": "Keep a per-feature checklist drawn from the Top 10.", "mistake": "Only looking for injection and forgetting configuration and auth issues.", "viz": ""}]}, {"num": "03", "title": "Manual techniques", "blurb": "Security tests you can do with a browser and DevTools, no special tools.", "lessons": [{"title": "Testing access control", "body": "The highest-value manual security testing, using two accounts.", "code": "Setup: user A and user B, plus an admin, each with own data.\n\n  A logs in, notes an object id (order 1043)\n  B tries GET /orders/1043 in the browser / with the API\n    → must be denied (403/404), not shown\n  B replays A's request in DevTools with B's session\n  A normal user opens /admin, /reports, /users\n    → must be denied, not just hidden in the menu\n  Change role/price/total in a request body\n    (mass assignment): is it accepted?", "out": "Do this at the API level too (API course): the UI often\nhides what the server still allows.", "tip": "Make an access-control matrix: rows = actions, columns = roles; test every cell.", "mistake": "Only checking that the menu hides admin links.", "viz": ""}, {"title": "Testing input handling", "body": "Probe how the app treats special input, safely, on practice targets.", "code": "Reflected XSS   type <script>alert(1)<\/script> or\n                \"><img src=x onerror=alert(1)> into fields,\n                search, URL parameters → does it execute?\nStored XSS      save it in a profile/comment → does it run\n                when another page shows it?\nSQLi probes     ' , '' , ' OR '1'='1 , ')-- in inputs\n                → database error? changed results?\nLong / weird    very long strings, unicode, null bytes", "out": "Modern frameworks escape output by default, so many probes\njust show as text: that's a pass. Execution is the bug.", "tip": "Check where input is displayed later; stored XSS shows up on a different page.", "mistake": "Running injection probes against systems you're not authorised to test.", "viz": ""}, {"title": "Testing authentication and sessions", "body": "Login, logout and session handling hide many bugs, all testable by hand.", "code": "  Weak passwords accepted? (password, 123456)\n  Account lockout after N failed attempts?\n  Username enumeration: does \"wrong password\" vs \"no such\n    user\" reveal which accounts exist?\n  After logout, press Back / reuse the old token → still in?\n  Session cookie flags: HttpOnly, Secure, SameSite (DevTools)\n  Password reset link: reusable? long-lived? guessable?\n  Does 2FA actually block access without the code?", "out": "The 'reuse token after logout' check is quick and finds\nreal session-management bugs.", "tip": "Inspect cookies in DevTools → Application → Cookies for the security flags.", "mistake": "Assuming logout invalidates the session; verify the old token is dead.", "viz": ""}, {"title": "Reading requests and responses", "body": "DevTools and the browser tell you a lot without any security tool.", "code": "  http vs https in the address bar (A04)\n  Response headers (Network tab): is there\n    Strict-Transport-Security, Content-Security-Policy,\n    X-Content-Type-Options, X-Frame-Options?\n  Error pages: stack traces, framework versions, SQL text?\n  Hidden fields and JS: prices, roles, feature flags the\n    client trusts but the server should re-check\n  Secrets in URLs, localStorage or JS source", "out": "A price or role in a hidden form field that the server\ntrusts is a classic tampering bug.", "tip": "The DevTools course covers reading these; this is the security lens on the same skills.", "mistake": "Trusting client-side validation; always re-test on the server.", "viz": ""}]}, {"num": "04", "title": "OWASP ZAP", "blurb": "The free, open-source security scanner, from proxy to automated scans.", "lessons": [{"title": "What ZAP is and setup", "body": "OWASP ZAP (Zed Attack Proxy) is a free tool that sits between your browser and the app, so it can see and test every request.", "code": "1. Install ZAP (zaproxy.org) — Java-based, free\n2. Automated Scan (quick start): enter the target URL\n   of your PRACTICE app → Attack\n3. Or Manual Explore: launch a browser that proxies\n   through ZAP, and browse the app normally\n4. ZAP records the site tree and every request", "out": "Point ZAP only at apps you own or are authorised to test,\nlike a local Juice Shop.", "tip": "Start with 'Manual Explore' so ZAP learns the app the way a user does.", "mistake": "Running ZAP's active scan against a production or third-party site.", "viz": ""}, {"title": "Passive vs active scanning", "body": "ZAP has two modes with very different risk levels.", "code": "Passive scan   watches traffic as you browse; never sends\n               attacks. Safe. Flags missing headers, cookies\n               without flags, information leaks.\nActive scan    actively sends attack payloads (injection,\n               XSS…). Can change data or cause errors.\n               Only on authorised test environments.\n\nSpider / AJAX Spider: crawl the app to discover pages first,\nthen scan what was found.", "out": "Passive scanning is safe to leave on while you do normal\nfunctional testing; it's free security coverage.", "tip": "Run passive scanning during your everyday testing on the QA environment.", "mistake": "Active-scanning a shared environment without telling the team; it can corrupt data.", "viz": ""}, {"title": "The proxy and Manual Request Editor", "body": "Because ZAP is a proxy, you can inspect, resend and tamper with requests, like a security-focused DevTools.", "code": "  Browse the app through ZAP → requests appear in the History\n  Right-click a request → Open/Resend with Request Editor\n  Change a parameter (an id, a price, a role) and resend\n  Compare responses: did the change get through?\n  Use it for the access-control tests from module 3, but\n  faster and repeatable", "out": "ZAP's Request Editor is ideal for IDOR testing: resend the\nsame request with a different account's session.", "tip": "Save interesting requests to a ZAP session file so you can revisit them.", "mistake": "Tampering with requests on a live system.", "viz": ""}, {"title": "Reading ZAP alerts", "body": "ZAP reports findings as alerts with risk levels. Testers triage them.", "code": "Risk levels: High · Medium · Low · Informational\nEach alert: description, the request/response, a solution,\nand CWE/OWASP references.\n\nTriage\n  confirm it's real (some are false positives)\n  reproduce it manually\n  rate impact for your app\n  report with the Top 10 mapping and a fix hint", "out": "Automated alerts are a starting point, not final findings.\nAlways confirm before reporting.", "tip": "Export a ZAP report (HTML) as evidence, then verify the important alerts by hand.", "mistake": "Filing every ZAP alert as a bug without confirming it.", "viz": ""}, {"title": "ZAP automation in CI", "body": "ZAP can run headless in a pipeline for a baseline security check on every build.", "code": "# GitHub Actions (against your deployed test app)\n- uses: zaproxy/action-baseline@v0.x\n  with:\n    target: 'https://qa.example.com'\n    # baseline = passive scan; fails on new alerts\n\n# or the ZAP Docker image\ndocker run -t ghcr.io/zaproxy/zaproxy zap-baseline.py \\\n  -t https://qa.example.com -r report.html", "out": "The baseline scan is passive and safe: good for catching\nmissing headers and regressions automatically.", "tip": "Save the HTML report as a CI artifact, like your other test reports.", "mistake": "Running the full active scan in CI against a shared environment.", "viz": ""}]}, {"num": "05", "title": "Burp Suite", "blurb": "The industry-standard web security tool, Community Edition.", "lessons": [{"title": "Burp Suite and setup", "body": "Burp Suite is the most widely used web security tool. The free Community Edition covers what a tester needs.", "code": "Community (free)   Proxy, Repeater, Decoder, Comparer,\n                  a limited Intruder (rate-limited)\nProfessional      full Intruder, active Scanner, more\n\nSetup\n  1. Start Burp → use the built-in browser (easiest), or\n     configure your browser + install Burp's CA certificate\n  2. Proxy → Intercept: see requests as they pass through\n  3. Browse your practice app; traffic fills the HTTP history", "out": "ZAP and Burp overlap a lot. Many teams use Burp; knowing\nboth makes you flexible.", "tip": "Use Burp's built-in browser; it's pre-configured to proxy through Burp.", "mistake": "Community Edition has no active scanner; don't expect automated vuln scanning.", "viz": ""}, {"title": "Proxy and Repeater", "body": "Intercept a request, then replay and modify it as many times as you like.", "code": "Proxy → Intercept on: pause a request, edit it, forward it\nHTTP history: every request, searchable\n\nSend a request to Repeater (Ctrl + R):\n  change one parameter, click Send, read the response\n  perfect for: IDOR (swap the id), auth (drop the token),\n  tampering (change price/role), injection probes\n  repeatable and side-by-side", "out": "Repeater is the tool you'll use most: it turns 'what if I\nchange this?' into a two-second experiment.", "tip": "Annotate requests in the history with colours and notes as you test.", "mistake": "Editing live production requests.", "viz": ""}, {"title": "Decoder, Comparer and Intruder", "body": "Three more tools for everyday testing.", "code": "Decoder    encode/decode Base64, URL, HTML; decode a token\n           to read its contents (e.g. a JWT payload)\nComparer   diff two responses (e.g. valid vs invalid login)\n           to spot username enumeration\nIntruder   automate sending many payloads to one spot\n           (Community is rate-limited but usable for small lists)\n           e.g. try a list of ids, or common passwords", "out": "Decoding a JWT in Decoder shows its user, role and expiry:\nuseful for spotting weak or long-lived tokens.", "tip": "Use Comparer to find subtle differences that reveal enumeration or logic bugs.", "mistake": "Relying on Intruder for large attacks in Community; it's throttled by design.", "viz": ""}, {"title": "A tester's Burp workflow", "body": "How the pieces fit into a security pass on a feature.", "code": "1. Browse the feature through Burp (history fills)\n2. Passive: scan the history for http, missing headers,\n   secrets, interesting parameters\n3. Access control: send key requests to Repeater, resend\n   with another user's session and with no session\n4. Input: send payloads to fields via Repeater\n5. Auth/session: inspect cookies and tokens (Decoder)\n6. Report findings, mapped to the OWASP Top 10", "out": "Same targets as ZAP; pick the tool your team uses.\nThe thinking is identical.", "tip": "Keep a saved Burp project per feature so you can re-test after fixes.", "mistake": "Treating the tool as the tester; the tool shows requests, you find the bugs.", "viz": ""}]}, {"num": "06", "title": "API, dependencies & reporting", "blurb": "Testing API security, checking dependencies, and writing security bug reports.", "lessons": [{"title": "API security testing", "body": "APIs have their own risks (the OWASP API Security Top 10). Much of it is testable with the API course tools.", "code": "BOLA (API IDOR)   most common API risk: user A's token on\n                  user B's object → must be denied\nBroken auth       weak/al long-lived tokens, no expiry,\n                  tokens valid after logout\nExcessive data    response includes fields the UI never shows\n                  (password hashes, internal flags)\nMass assignment   PATCH /users/me { \"role\": \"admin\" } accepted?\nRate limiting      no 429 under rapid requests (abuse, brute force)", "out": "Use Postman, Playwright's API client or Python requests\n(API course) to run these as automated tests.", "tip": "Automate the two-user BOLA check for every sensitive endpoint.", "mistake": "Assuming an undocumented endpoint or field is safe because the UI doesn't use it.", "viz": ""}, {"title": "Dependencies and secrets (A03)", "body": "Most code is third-party. Known-vulnerable dependencies and leaked secrets are common, checkable risks.", "code": "Vulnerable dependencies\n  pip-audit                     Python\n  npm audit                     Node\n  OWASP Dependency-Check        Java and more\n  GitHub Dependabot alerts      automatic on GitHub repos\n\nLeaked secrets\n  gitleaks / trufflehog         scan a repo's history\n  GitHub secret scanning        automatic\n\npip-audit        # in a Python project\nnpm audit fix    # in a Node project", "out": "Supply chain (A03) rose in the 2025 list: outdated\ncomponents have the highest exploit impact.", "tip": "Add a dependency scan to CI; it's cheap and catches real CVEs.", "mistake": "Ignoring 'npm audit' warnings because the app 'still works'.", "viz": ""}, {"title": "Writing security bug reports", "body": "Security bugs need extra care: clear impact, safe evidence, private channels.", "code": "Title    Any logged-in user can view other customers' orders\n         (IDOR on GET /api/orders/{id}) — OWASP A01\nSeverity Critical (confidential data of all customers exposed)\nSteps    1. Log in as user B\n         2. GET /api/orders/1043 (an order belonging to user A)\nExpected 403 Forbidden\nActual   200 OK with A's name, address and items\nEvidence request + redacted response (personal data removed)\nFix hint enforce ownership check on the server for every order\nReport to: security team / private ticket only", "out": "Rate severity by real impact: exposed customer data or an\nauth bypass is critical, even if the fix is one line.", "tip": "Redact personal data and secrets from evidence before attaching it.", "mistake": "Filing a security bug in a public tracker with full exploit details and real data.", "viz": ""}, {"title": "Building security into testing", "body": "Security is strongest when it's part of normal QA, not a one-off audit.", "code": "Design      threat-model sensitive features (what could go wrong?)\nStories     add abuse cases: \"a user must NOT see others' data\"\nEvery test  the DevTools security lens (headers, http, errors)\nAutomated   passive ZAP baseline + dependency scan in CI\n            two-user access-control tests in the API suite\nRelease     a short manual security pass on changed features\nEscalate    deep testing to the security team", "out": "Abuse cases (\"must not…\") sit next to your normal\nacceptance criteria and catch access-control bugs early.", "tip": "Add one abuse case to sensitive stories in refinement.", "mistake": "Leaving all security testing to a single audit before launch.", "viz": ""}]}, {"num": "07", "title": "Interview & career", "blurb": "Security testing questions for QA roles.", "lessons": [{"title": "Security interview questions", "body": "Short answers you can build on.", "code": "Q What is the OWASP Top 10?\nA The standard awareness list of the most critical web risks;\n  the 2025 edition is led by Broken Access Control.\nQ What is IDOR / BOLA?\nA Accessing another user's object by changing an id, when the\n  server doesn't check ownership. Test with two accounts.\nQ Reflected vs stored XSS?\nA Reflected bounces input straight back; stored is saved and\n  runs later for other users. Fix: escape output, CSP.\nQ ZAP vs Burp?\nA Both are proxy-based web security tools. ZAP is fully free\n  and CI-friendly; Burp is the industry standard, Community\n  is free with Repeater/Proxy. I've used both.\nQ How do you test authentication?\nA Weak passwords, lockout, enumeration, token reuse after\n  logout, cookie flags, reset-link strength, 2FA.", "out": "Always add the ethics line: only test with authorisation,\nreport findings privately.", "tip": "A write-up of Juice Shop challenges (mapped to the Top 10) is a strong portfolio piece.", "mistake": "Describing attacks on real sites you had no permission to test.", "viz": ""}, {"title": "A safe practice project", "body": "Show security testing skill legally.", "code": "1. Run OWASP Juice Shop locally (Docker)\n2. Solve a set of challenges across the Top 10:\n   access control, injection, XSS, auth, misconfig\n3. Proxy through ZAP or Burp; use Repeater for access control\n4. Write each finding as a proper security bug report\n   (impact, steps, redacted evidence, Top 10 mapping, fix)\n5. Add a CI dependency scan and a ZAP baseline to a repo\n6. README: what you found and how, tools used, what you learned", "out": "Juice Shop is designed to be attacked and is legal to test:\nthe ideal portfolio target.", "tip": "Also try PortSwigger's Web Security Academy labs; they're free and respected.", "mistake": "Publishing exploit details for a real company's site.", "viz": ""}]}];
+    const FLOW = [];
+    const A = '#C2410C', AD = '#FFB27A';
+    const mod = MODS[st.m];
+    const cur = mod.lessons[st.l] || mod.lessons[0];
+    const key = (m, l) => m + '-' + l;
+    let total = 0, doneN = 0;
+    MODS.forEach((mm, i) => mm.lessons.forEach((_, j) => { total++; if (st.done[key(i, j)]) doneN++; }));
+    const modTabs = MODS.map((mm, i) => {
+      const on = i === st.m;
+      const d = mm.lessons.filter((_, j) => st.done[key(i, j)]).length;
+      return { num: mm.num + (d === mm.lessons.length ? ' ✓' : ''), title: mm.title, pick: () => this.setState({ m: i, l: 0 }),
+        style: 'display:flex;flex-direction:column;align-items:flex-start;gap:4px;min-height:64px;padding:10px 12px;border:none;border-radius:14px 14px 0 0;cursor:pointer;text-align:left;font:600 13px IBM Plex Sans,sans-serif;flex:1;' + (on ? 'background:#F4F1EA;color:#16181D;' : 'background:rgba(0,0,0,0.06);color:#3A1607;') };
+    });
+    const lessonNav = mod.lessons.map((ls, j) => {
+      const on = j === st.l, dn = !!st.done[key(st.m, j)];
+      return { title: ls.title, num: dn ? '✓' : String(j + 1).padStart(2, '0'), pick: () => this.setState({ l: j }),
+        style: 'display:flex;align-items:center;gap:12px;min-height:44px;padding:8px 12px;border-radius:10px;border:none;cursor:pointer;text-align:left;font:' + (on ? '600' : '400') + ' 15px IBM Plex Sans,sans-serif;' + (on ? 'background:#16181D;color:#F4F1EA;' : 'background:transparent;color:#16181D;'),
+        numStyle: 'flex-shrink:0;font:600 12px JetBrains Mono,monospace;width:28px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;' + (on ? 'background:' + A + ';color:#fff;' : dn ? 'background:#DCEFE3;color:#1F7A52;' : 'background:#EAE5DA;color:#6A6E77;') };
+    });
+    const modeDefs = [['split', 'Side by side'], ['code', 'Do this'], ['out', 'Explained']];
+    const modes = modeDefs.map(([id, label]) => ({ label, pick: () => this.setState({ mode: id }),
+      style: 'min-height:40px;padding:8px 14px;border-radius:8px;border:none;cursor:pointer;font:600 14px IBM Plex Sans,sans-serif;' + (st.mode === id ? 'background:#FFFFFF;color:#16181D;box-shadow:0 1px 3px rgba(0,0,0,.12);' : 'background:transparent;color:#5C606A;') }));
+    const isFirst = st.m === 0 && st.l === 0;
+    const isLast = st.m === MODS.length - 1 && st.l === mod.lessons.length - 1;
+    const go = (dir) => {
+      let m = st.m, l = st.l + dir;
+      if (l < 0) { if (m === 0) return; m -= 1; l = MODS[m].lessons.length - 1; }
+      if (l >= MODS[m].lessons.length) { if (m === MODS.length - 1) return; m += 1; l = 0; }
+      this.setState({ m, l });
+    };
+    const k = key(st.m, st.l); const isDone = !!st.done[k];
+    const pct = Math.round((doneN / total) * 100);
+    const fi = Math.min(st.f, FLOW.length - 1);
+    const fSteps = FLOW.map((s, i) => ({ num: String(i + 1), name: s.name, pick: () => this.setState({ f: i }),
+      style: 'display:flex;flex-direction:column;align-items:flex-start;gap:2px;min-height:52px;padding:8px 14px;border-radius:12px;cursor:pointer;font:600 14px IBM Plex Sans,sans-serif;text-align:left;' + (i === fi ? 'background:' + AD + ';color:#16181D;border:1.5px solid ' + AD + ';' : i < fi ? 'background:#2A2D35;color:#F4F1EA;border:1.5px solid #3A3E48;' : 'background:transparent;color:#A9AEBA;border:1.5px solid #3A3E48;') }));
+    return {
+      mod, cur, modTabs, lessonNav, modes,
+      lessonNum: String(st.l + 1), lessonTotal: String(mod.lessons.length),
+      showA: st.mode !== 'out', showB: st.mode !== 'code',
+      gridStyle: st.mode === 'split' ? 'display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;' : 'display:grid;grid-template-columns:repeat(1,minmax(0,1fr));gap:16px;',
+      prev: () => go(-1), next: () => go(1),
+      prevLabel: isFirst ? 'Start' : 'Previous', nextLabel: isLast ? 'Finished' : 'Next lesson',
+      markDone: () => this.setState({ done: { ...st.done, [k]: !isDone } }),
+      doneLabel: isDone ? '✓ Done' : 'Mark as done',
+      doneBtnStyle: 'min-height:48px;padding:12px 22px;border-radius:12px;cursor:pointer;font:600 15px IBM Plex Sans,sans-serif;' + (isDone ? 'background:#DCEFE3;color:#1F7A52;border:1.5px solid #7FC8A0;' : 'background:#FFFFFF;color:#16181D;border:1.5px solid #DDD7CB;'),
+      overallLabel: doneN + ' / ' + total + ' lessons',
+      overallStyle: 'height:100%;border-radius:999px;background:' + A + ';transition:width .3s;width:' + pct + '%;',
+      vizFlow: cur.viz === 'flow', fSteps, fCur: FLOW[fi], fLabel: (fi + 1) + ' / ' + FLOW.length,
+      fPrev: () => this.setState({ f: Math.max(0, fi - 1) }), fNext: () => this.setState({ f: Math.min(FLOW.length - 1, fi + 1) })
+    };
+  }
+}
+
+var __TPL=`<div style="width: 1440px; height: 2900px; box-sizing: border-box; display: flex; flex-direction: column; background: #F4F1EA; font-family: 'IBM Plex Sans', system-ui, sans-serif; color: #16181D;">
+
+<section style="background: #FBE7D8; padding: 48px 80px 0; display: flex; flex-direction: column; gap: 26px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 40px;">
+<div style="display: flex; flex-direction: column; gap: 14px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #6E351A;">security testing tools · module {{mod.num}}</span>
+<h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 56px; line-height: 1; letter-spacing: -0.03em; color: #3A1607;">{{mod.title}}</h1>
+<p style="margin: 0; font-size: 18px; line-height: 1.6; color: #6E351A; max-width: 760px;">{{mod.blurb}}</p>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px; min-width: 300px;">
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 22px; font-weight: 800; color: #3A1607;">Security testing for QA</span>
+<div style="display: flex; justify-content: space-between; font-size: 14px; color: #3A1607;"><span>Course progress</span><span style="font-family: 'JetBrains Mono', monospace;">{{overallLabel}}</span></div>
+<div style="height: 8px; border-radius: 999px; background: rgba(0,0,0,0.1); overflow: hidden;"><div style="{{overallStyle}}"></div></div>
+<span style="font-size: 13px; color: #6E351A;">Practise only on OWASP Juice Shop or authorised targets.</span>
+</div>
+</div>
+<div style="display: flex; gap: 6px;">
+<sc-for list="{{modTabs}}" as="t" hint-placeholder-count="9">
+<button onClick="{{t.pick}}" style="{{t.style}}"><span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; opacity: 0.8;">{{t.num}}</span><span>{{t.title}}</span></button>
+</sc-for>
+</div>
+</section>
+
+<section style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 40px; padding: 56px 80px 48px;">
+<aside style="grid-column: span 3; display: flex; flex-direction: column; gap: 6px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #6A6E77; text-transform: uppercase; letter-spacing: 0.08em; padding: 0 12px 10px;">module {{mod.num}} · lessons</span>
+<sc-for list="{{lessonNav}}" as="l" hint-placeholder-count="7">
+<button onClick="{{l.pick}}" style="{{l.style}}"><span style="{{l.numStyle}}">{{l.num}}</span><span>{{l.title}}</span></button>
+</sc-for>
+</aside>
+<div style="grid-column: span 9; display: flex; flex-direction: column; gap: 22px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 20px;">
+<div style="display: flex; flex-direction: column; gap: 10px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #C2410C;">module {{mod.num}} · lesson {{lessonNum}} of {{lessonTotal}}</span>
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 44px; letter-spacing: -0.02em; line-height: 1.05;">{{cur.title}}</h2>
+</div>
+<div style="display: flex; gap: 6px; background: #EAE5DA; padding: 5px; border-radius: 12px;">
+<sc-for list="{{modes}}" as="m" hint-placeholder-count="3"><button onClick="{{m.pick}}" style="{{m.style}}">{{m.label}}</button></sc-for>
+</div>
+</div>
+<p style="margin: 0; font-size: 18px; line-height: 1.7; color: #34373F; max-width: 840px;">{{cur.body}}</p>
+<div style="{{gridStyle}}">
+<sc-if value="{{showA}}" hint-placeholder-val="{{ true }}">
+<div style="background: #16181D; border-radius: 16px; overflow: hidden;">
+<div style="padding: 12px 18px; border-bottom: 1px solid #2A2D35; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #FFB27A;">what to do / probe</div>
+<pre style="margin: 0; padding: 20px; font-family: 'JetBrains Mono', monospace; font-size: 13.5px; line-height: 1.7; color: #D8DAE0; white-space: pre-wrap;">{{cur.code}}</pre>
+</div>
+</sc-if>
+<sc-if value="{{showB}}" hint-placeholder-val="{{ true }}">
+<div style="background: #FFFFFF; border: 1px solid #DDD7CB; border-radius: 16px; overflow: hidden;">
+<div style="padding: 12px 18px; border-bottom: 1px solid #DDD7CB; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #C2410C;">what to check / why</div>
+<pre style="margin: 0; padding: 20px; font-family: 'JetBrains Mono', monospace; font-size: 13.5px; line-height: 1.7; color: #16181D; white-space: pre-wrap;">{{cur.out}}</pre>
+</div>
+</sc-if>
+</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px;">
+<div style="display: flex; gap: 14px; background: #DCEFE3; border-radius: 16px; padding: 20px 22px; align-items: flex-start;">
+<span style="flex-shrink: 0; width: 32px; height: 32px; border-radius: 9px; background: #1F7A52; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 700;">✓</span>
+<div style="display: flex; flex-direction: column; gap: 4px;"><span style="font-weight: 600; color: #174F37;">Remember</span><span style="font-size: 15px; line-height: 1.6; color: #174F37;">{{cur.tip}}</span></div>
+</div>
+<div style="display: flex; gap: 14px; background: #FCE7DD; border-radius: 16px; padding: 20px 22px; align-items: flex-start;">
+<span style="flex-shrink: 0; width: 32px; height: 32px; border-radius: 9px; background: #C4502A; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 700;">!</span>
+<div style="display: flex; flex-direction: column; gap: 4px;"><span style="font-weight: 600; color: #7A2E14;">Common mistake</span><span style="font-size: 15px; line-height: 1.6; color: #7A2E14;">{{cur.mistake}}</span></div>
+</div>
+</div>
+<div style="display: flex; justify-content: space-between; align-items: center;">
+<button onClick="{{prev}}" style="min-height: 48px; padding: 12px 22px; border-radius: 12px; border: 1.5px solid #16181D; background: transparent; cursor: pointer; font: 600 15px 'IBM Plex Sans', sans-serif; color: #16181D;">← {{prevLabel}}</button>
+<button onClick="{{markDone}}" style="{{doneBtnStyle}}">{{doneLabel}}</button>
+<button onClick="{{next}}" style="min-height: 48px; padding: 12px 22px; border-radius: 12px; border: none; background: #C2410C; color: #FFFFFF; cursor: pointer; font: 600 15px 'IBM Plex Sans', sans-serif;">{{nextLabel}} →</button>
+</div>
+</div>
+</section>
+
+<sc-if value="{{vizFlow}}" hint-placeholder-val="{{ false }}">
+<section style="margin: 0 80px 64px; background: #16181D; color: #F4F1EA; border-radius: 28px; padding: 44px; display: flex; flex-direction: column; gap: 26px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 30px;">
+<div style="display: flex; flex-direction: column; gap: 10px;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #FFB27A;">visualize · </span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 36px; font-weight: 800;"></span></div>
+<div style="display: flex; gap: 10px; align-items: center;">
+<button onClick="{{fPrev}}" aria-label="Previous step" style="width: 48px; height: 48px; border-radius: 12px; border: 1.5px solid #3A3E48; background: transparent; color: #F4F1EA; cursor: pointer; font-size: 18px;">←</button>
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; min-width: 60px; text-align: center;">{{fLabel}}</span>
+<button onClick="{{fNext}}" aria-label="Next step" style="width: 48px; height: 48px; border-radius: 12px; border: none; background: #FFB27A; color: #16181D; cursor: pointer; font-size: 18px;">→</button>
+</div>
+</div>
+<div style="display: flex; gap: 8px; flex-wrap: wrap;">
+<sc-for list="{{fSteps}}" as="fs" hint-placeholder-count="7"><button onClick="{{fs.pick}}" style="{{fs.style}}"><span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; opacity: 0.75;">{{fs.num}}</span><span>{{fs.name}}</span></button></sc-for>
+</div>
+<div style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 24px;">
+<div style="grid-column: span 6; background: #FFB27A; color: #16181D; border-radius: 20px; padding: 26px; display: flex; flex-direction: column; gap: 10px;">
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 28px; font-weight: 800;">{{fCur.name}}</span>
+<span style="font-size: 16px; line-height: 1.6;">{{fCur.desc}}</span>
+<span style="font-size: 14px; font-weight: 600;">{{fCur.next}}</span>
+</div>
+<pre style="grid-column: span 6; margin: 0; background: #1E2129; border: 1px solid #2E323C; border-radius: 20px; padding: 22px; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #D8DAE0; white-space: pre-wrap;">{{fCur.code}}</pre>
+</div>
+</section>
+</sc-if>
+
+<div style="flex-grow: 1;"></div>
+<section style="padding: 0 80px 64px; display: flex; justify-content: space-between; align-items: center; gap: 30px;">
+<div style="display: flex; flex-direction: column; gap: 8px;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #6A6E77;">next</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 30px; font-weight: 800;">ISTQB Foundation prep</span></div>
+<a href="ISTQB.html" style="text-decoration: none; padding: 16px 26px; border-radius: 12px; background: #16181D; color: #FFB27A; font-weight: 600;">ISTQB prep →</a>
+</section>
+</div>`;
+window.__mountDC(__TPL, Component);
+</script>
+</body>
+</html>

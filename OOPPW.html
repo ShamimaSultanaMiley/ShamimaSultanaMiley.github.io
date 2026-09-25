@@ -1,0 +1,436 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440">
+<title>OOP for Playwright — Module 02</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap">
+<style>html,body{margin:0;background:#F4F1EA;font-family:'IBM Plex Sans',system-ui,sans-serif} #app > div{margin:0 auto}</style>
+</head>
+<body>
+
+<style>
+.snav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:16px 40px;background:#16181D;color:#F4F1EA;font-family:'IBM Plex Sans',sans-serif;flex-wrap:wrap;gap:12px}
+.snav a{color:#F4F1EA;text-decoration:none}
+.snav .brand{display:flex;align-items:center;gap:10px;font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:18px}
+.snav .brand span.logo{width:34px;height:34px;border-radius:9px;background:#7EE2A8;color:#16181D;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:14px}
+.snav ul{list-style:none;display:flex;gap:6px;margin:0;padding:0;align-items:center;flex-wrap:wrap}
+.snav > ul > li{position:relative}
+.snav > ul > li > a,.snav > ul > li > span{display:block;padding:9px 14px;border-radius:9px;font-size:15px;font-weight:500;cursor:pointer;white-space:nowrap}
+.snav > ul > li:hover > a,.snav > ul > li:hover > span,.snav .cur{background:#2A2D35}
+.snav .caret{font-size:11px;opacity:.7;margin-left:4px}
+.snav .drop{position:absolute;top:100%;left:0;min-width:220px;background:#1E2129;border:1px solid #2E323C;border-radius:12px;padding:8px;display:none;flex-direction:column;gap:2px;box-shadow:0 18px 40px -16px rgba(0,0,0,.6)}
+.snav > ul > li:hover .drop{display:flex}
+.snav .drop a{padding:9px 12px;border-radius:8px;font-size:14px;color:#D8DAE0}
+.snav .drop a:hover{background:#2A2D35;color:#fff}
+.snav .drop .grp{font-family:'JetBrains Mono',monospace;font-size:11px;color:#8A8F9C;text-transform:uppercase;letter-spacing:.06em;padding:8px 12px 2px}
+.snav .cta{padding:9px 18px;border-radius:999px;background:#1F7A52;color:#fff;font-weight:600}
+.snav .menubtn{display:none;background:none;border:1.5px solid #3A3E48;color:#F4F1EA;border-radius:9px;padding:8px 12px;font-size:15px;cursor:pointer}
+@media(max-width:1100px){
+  .snav .menubtn{display:block}
+  .snav > ul{display:none;flex-direction:column;align-items:stretch;width:100%;order:3}
+  .snav.open > ul{display:flex}
+  .snav .drop{position:static;display:flex;border:none;box-shadow:none;background:transparent;padding:0 0 6px 14px}
+  .snav > ul > li:hover .drop{display:flex}
+}
+</style>
+<nav class="snav" id="snav">
+<a class="brand" href="index.html"><span class="logo">S✓</span>Shamima Sultana</a>
+<button class="menubtn" onclick="document.getElementById('snav').classList.toggle('open')">Menu ☰</button>
+<ul>
+<li><a href="index.html" class="">Home</a></li>
+<li><span class="">About <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="about.html">Intro &amp; journey</a>
+    <a href="skills.html">Skills</a>
+    <a href="certifications.html">Certifications</a>
+    <a href="research.html">Research</a>
+    <a href="achievements.html">Achievements</a>
+  </div></li>
+<li><span class="">Work <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="projects.html">Projects</a>
+  </div></li>
+<li><span class="cur">Learn <span class="caret">▾</span></span>
+  <div class="drop">
+    <span class="grp">Automation</span>
+    <a href="PWHub.html">Playwright path</a>
+    <a href="Selenium.html">Selenium with Java</a>
+    <a href="MobileTest.html">Mobile testing</a>
+    <span class="grp">Performance</span>
+    <a href="K6Hub.html">k6</a>
+    <a href="JMeter.html">JMeter</a>
+    <span class="grp">Data &amp; APIs</span>
+    <a href="SQLHub.html">SQL</a>
+    <a href="API.html">API testing</a>
+    <span class="grp">Core &amp; specialised</span>
+    <a href="Manual.html">Manual testing</a>
+    <a href="AITest.html">AI / LLM testing</a>
+    <a href="DevTools.html">DevTools</a>
+    <a href="Git.html">Git &amp; GitHub</a>
+    <a href="A11y.html">Accessibility</a>
+    <a href="Security.html">Security</a>
+  </div></li>
+<li><span class="">Writing <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="K6Hub.html">Tutorials &amp; articles</a>
+  </div></li>
+<li><span class="">More <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="News.html">News</a>
+    <a href="Interview.html">Interview prep</a>
+    <a href="ISTQB.html">ISTQB prep</a>
+  </div></li>
+<li><a class="cta" href="mailto:shamimasultanamiley605@gmail.com">Contact</a></li>
+</ul>
+</nav>
+
+<div id="app"></div>
+<script>/* Minimal renderer: replaces Claude's canvas engine so pages run anywhere. */
+(function(){
+  function resolve(scopes, path){
+    path=path.trim();
+    var parts=path.split('.'), head=parts[0], base, found=false;
+    for(var i=scopes.length-1;i>=0;i--){ if(scopes[i] && Object.prototype.hasOwnProperty.call(scopes[i],head)){ base=scopes[i][head]; found=true; break; } }
+    if(!found) return undefined;
+    for(var j=1;j<parts.length;j++){ if(base==null) return undefined; base=base[parts[j]]; }
+    return base;
+  }
+  function subst(str, scopes){
+    return str.replace(/\{\{([^}]+)\}\}/g, function(_,e){ var v=resolve(scopes,e); return v==null?'':String(v); });
+  }
+  function firstExpr(str){ var m=str.match(/\{\{([^}]+)\}\}/); return m?m[1].trim():null; }
+  function processNode(node, scopes, out){
+    if(node.nodeType===3){ // text
+      var t=node.nodeValue;
+      if(t.indexOf('{{')>=0) out.push(document.createTextNode(subst(t,scopes)));
+      else out.push(document.createTextNode(t));
+      return;
+    }
+    if(node.nodeType!==1){ return; }
+    var tag=node.tagName.toLowerCase();
+    if(tag==='sc-for'){
+      var listExpr=firstExpr(node.getAttribute('list')||'');
+      var as=node.getAttribute('as');
+      var arr=listExpr?resolve(scopes,listExpr):null;
+      if(Array.isArray(arr)){
+        for(var k=0;k<arr.length;k++){
+          var sc=scopes.concat([{__k:as, [as]:arr[k]}]);
+          for(var c=0;c<node.childNodes.length;c++) processNode(node.childNodes[c], sc, out);
+        }
+      }
+      return;
+    }
+    if(tag==='sc-if'){
+      var valExpr=firstExpr(node.getAttribute('value')||'');
+      var cond=valExpr?resolve(scopes,valExpr):false;
+      if(cond){ for(var c2=0;c2<node.childNodes.length;c2++) processNode(node.childNodes[c2], scopes, out); }
+      return;
+    }
+    var el=document.createElement(tag);
+    for(var a=0;a<node.attributes.length;a++){
+      var at=node.attributes[a], name=at.name, val=at.value;
+      if(name.indexOf('hint-')===0) continue;
+      if(name==='onclick'){ var h=firstExpr(val); (function(expr){ el.addEventListener('click', function(ev){ var fn=resolve(scopes,expr); if(typeof fn==='function') fn(ev); }); })(h); continue; }
+      if(name==='onchange'){ var h2=firstExpr(val); (function(expr){ el.addEventListener('input', function(ev){ var fn=resolve(scopes,expr); if(typeof fn==='function') fn(ev); }); })(h2); continue; }
+      var sv=val.indexOf('{{')>=0?subst(val,scopes):val;
+      if(name==='value' && (tag==='input'||tag==='textarea')){ el.value=sv; el.setAttribute('value',sv); }
+      else el.setAttribute(name, sv);
+    }
+    var kids=[];
+    for(var cc=0;cc<node.childNodes.length;cc++) processNode(node.childNodes[cc], scopes, kids);
+    for(var ki=0;ki<kids.length;ki++) el.appendChild(kids[ki]);
+    out.push(el);
+  }
+  window.__mountDC=function(templateHTML, ComponentClass){
+    var tplRoot=document.createElement('div'); tplRoot.innerHTML=templateHTML;
+    var mount=document.getElementById('app');
+    var comp=new ComponentClass({});
+    function doRender(){
+      var vals;
+      try{ vals=comp.renderVals(); }catch(e){ console.error('render error',e); return; }
+      var frag=document.createDocumentFragment();
+      var buf=[];
+      for(var i=0;i<tplRoot.childNodes.length;i++) processNode(tplRoot.childNodes[i], [vals], buf);
+      for(var b=0;b<buf.length;b++) frag.appendChild(buf[b]);
+      // preserve focus in search/textarea across re-render
+      var active=document.activeElement, sel=null, id=null;
+      mount.innerHTML=''; mount.appendChild(frag);
+    }
+    comp.setState=function(s){ Object.assign(comp.state, s); doRender(); };
+    doRender();
+  };
+  window.DCLogic=function(){};
+})();
+</script>
+<script>
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { lesson: 0, mode: 'split', cls: 1 };
+  }
+  renderVals() {
+    const st = this.state;
+    const L = [
+      { title: 'Why OOP for tests?', body: 'Without structure, the same selectors and steps get copied into every test. OOP groups the data and actions that belong to one page in one place.',
+        plain: '# without OOP: copied into every test\npage.get_by_label("Username").fill("qa1")\npage.get_by_label("Password").fill("p1")\npage.get_by_role("button", name="Sign in").click()',
+        pw: '# with OOP: written once, reused everywhere\nlogin_page = LoginPage(page)\nlogin_page.login("qa1", "p1")',
+        tip: 'When the UI changes, you fix one class instead of fifty tests.', mistake: 'Copy-pasting selectors into many tests. One UI change breaks all of them.' },
+      { title: 'Class and object', body: 'A class is a blueprint. An object is one real thing built from it. You can build many objects from one class.',
+        plain: 'class Tender:\n    pass\n\nt1 = Tender()   # one object\nt2 = Tender()   # another one',
+        pw: 'class LoginPage:\n    pass\n\nlogin_page = LoginPage()',
+        tip: 'Class names use CapitalWords; objects use lower_case.', mistake: 'Calling methods on the class instead of on an object made from it.' },
+      { title: '__init__ and self', body: '__init__ runs automatically when an object is created. self means "this particular object".',
+        plain: 'class Tender:\n    def __init__(self, title, budget):\n        self.title = title\n        self.budget = budget\n\nt = Tender("Laptops", 50000)\nt.title    # "Laptops"',
+        pw: 'class LoginPage:\n    def __init__(self, page):\n        self.page = page\n\nlogin_page = LoginPage(page)',
+        tip: 'Anything saved on self is available in every method of the object.', mistake: 'Forgetting self as the first parameter gives a TypeError.' },
+      { title: 'Instance vs class attributes', body: 'Class attributes are shared by every object of the class. Instance attributes (on self) belong to one object.',
+        plain: 'class Tender:\n    currency = "BDT"           # class attribute: shared\n    def __init__(self, title):\n        self.title = title     # instance attribute: per object\n\nTender("A").currency    # "BDT"\nTender("B").currency    # "BDT"',
+        pw: 'class LoginPage(BasePage):\n    URL = "/login"               # same for every LoginPage\n    def __init__(self, page):\n        super().__init__(page)   # self.page: this test\u2019s page\n        self.submit = page.get_by_role("button", name="Sign in")',
+        tip: 'Constants like URL belong on the class; anything tied to one test\u2019s page belongs on self.', mistake: 'A list as a class attribute is shared by every object, so one test\u2019s changes leak into the next.' },
+      { title: 'Attributes: store the locators', body: 'Attributes are the data an object holds. In a page object, that\u2019s the page and its locators.',
+        plain: 'class Tender:\n    def __init__(self, title):\n        self.title = title\n        self.status = "draft"',
+        pw: 'class LoginPage:\n    def __init__(self, page):\n        self.page = page\n        self.username = page.get_by_label("Username")\n        self.password = page.get_by_label("Password")\n        self.submit = page.get_by_role("button", name="Sign in")',
+        tip: 'Locators are lazy: creating one doesn\u2019t search the page until you act on it.', mistake: 'Writing username = ... without self. It disappears when __init__ ends.' },
+      { title: 'Methods: the user\u2019s actions', body: 'Methods are functions that belong to the object. In a page object, each method is something a user does on that page.',
+        plain: 'class Tender:\n    def publish(self):\n        self.status = "published"',
+        pw: 'class LoginPage:\n    def open(self):\n        self.page.goto("/login")\n\n    def login(self, user, pwd):\n        self.username.fill(user)\n        self.password.fill(pwd)\n        self.submit.click()',
+        tip: 'Name methods after what the user does, not how it\u2019s done.', mistake: 'Putting assertions inside page methods. Keep checks in the tests.' },
+      { title: 'Inheritance', body: 'A child class gets everything from its parent for free. Put what every page shares into a BasePage.',
+        plain: 'class Document:\n    def print_title(self):\n        print(self.title)\n\nclass Tender(Document):\n    pass   # gets print_title for free',
+        pw: 'class BasePage:\n    def __init__(self, page):\n        self.page = page\n\n    def title(self):\n        return self.page.title()\n\nclass LoginPage(BasePage):\n    URL = "/login"',
+        tip: 'Read "LoginPage(BasePage)" as "a LoginPage is a BasePage".', mistake: 'Long chains of inheritance. One or two levels is plenty.' },
+      { title: 'super()', body: 'When a child writes its own __init__, super() runs the parent\u2019s version first so nothing is lost.',
+        plain: 'class Tender(Document):\n    def __init__(self, title):\n        super().__init__()\n        self.title = title',
+        pw: 'class LoginPage(BasePage):\n    def __init__(self, page):\n        super().__init__(page)   # sets self.page\n        self.submit = page.get_by_role(\n            "button", name="Sign in")',
+        tip: 'Call super().__init__ as the first line of the child\u2019s __init__.', mistake: 'Forgetting super().__init__, so self.page never gets set.' },
+      { title: 'Encapsulation', body: 'Keep the inner details inside the class and expose simple methods. A leading underscore means "internal, don\u2019t touch".',
+        plain: 'class Account:\n    def __init__(self):\n        self._balance = 0      # internal\n\n    def deposit(self, amount):\n        self._balance += amount',
+        pw: 'class LoginPage(BasePage):\n    def __init__(self, page):\n        super().__init__(page)\n        self._submit = page.get_by_role(\n            "button", name="Sign in")\n\n    def login(self, user, pwd): ...\n\n# tests call login(), never _submit',
+        tip: 'Tests use public methods only. That\u2019s what keeps them stable.', mistake: 'Tests reaching into page internals, so UI changes break tests again.' },
+      { title: '@property', body: '@property turns a method into something you read like an attribute. Great for locators and values worked out on demand.',
+        plain: 'class Line:\n    def __init__(self, qty, unit_price):\n        self.qty = qty\n        self.unit_price = unit_price\n\n    @property\n    def total(self):\n        return self.qty * self.unit_price\n\nLine(5, 100).total    # 500, no ()',
+        pw: 'class LoginPage(BasePage):\n    @property\n    def submit(self):\n        return self.page.get_by_role("button", name="Sign in")\n\n    @property\n    def error_message(self) -> str:\n        return self.page.get_by_role("alert").inner_text()\n\nlogin_page.submit.click()',
+        tip: 'Properties keep calls clean: login_page.submit, not login_page.submit().', mistake: 'Clicking or doing slow work inside a property. Readers expect a property to just read.' },
+      { title: '@staticmethod and @classmethod', body: '@staticmethod is a plain helper that lives inside the class. @classmethod receives the class itself, often to build objects in a different way.',
+        plain: 'class Money:\n    def __init__(self, amount):\n        self.amount = amount\n\n    @staticmethod\n    def parse(text):\n        return float(text.replace(",", ""))\n\n    @classmethod\n    def from_text(cls, text):\n        return cls(Money.parse(text))\n\nMoney.from_text("50,000").amount    # 50000.0',
+        pw: 'class TenderPage(BasePage):\n    URL = "/tenders"\n\n    @staticmethod\n    def budget_to_int(text: str) -> int:\n        return int(text.replace("BDT", "").replace(",", ""))\n\n    @classmethod\n    def open(cls, page):\n        page.goto(cls.URL)\n        return cls(page)\n\ntender_page = TenderPage.open(page)',
+        tip: 'A classmethod like open() that returns a ready page object reads nicely in tests.', mistake: 'Making everything static. If it needs self.page, it\u2019s a normal method.' },
+      { title: 'Abstraction', body: 'Hide the how behind a clear name. The test reads like a test case; the steps live inside the page objects.',
+        plain: 'car.start()   # you don\u2019t need to know\n              # how the engine works',
+        pw: 'def test_buyer_can_create_tender(page):\n    LoginPage(page).login("buyer1", "p1")\n    TenderPage(page).create("Laptops", 50000)\n    expect(page.get_by_text("Tender created"))\\\n        .to_be_visible()',
+        tip: 'If a test reads like your written test case, the abstraction is right.', mistake: 'Vague names like do_steps(). Name the business action.' },
+      { title: 'abc and @abstractmethod', body: 'An abstract base class lists methods every child must write. Python refuses to create a child class that forgets one.',
+        plain: 'from abc import ABC, abstractmethod\n\nclass Report(ABC):\n    @abstractmethod\n    def export(self): ...\n\nclass PdfReport(Report):\n    def export(self):\n        return "report.pdf"\n\nReport()    # TypeError: can\u2019t instantiate',
+        pw: 'class BasePage(ABC):\n    def __init__(self, page):\n        self.page = page\n\n    @abstractmethod\n    def is_loaded(self) -> None:\n        """Every page must say how to know it has loaded."""\n\nclass LoginPage(BasePage):\n    def is_loaded(self):\n        expect(self.page.get_by_role(\n            "heading", name="Sign in")).to_be_visible()',
+        tip: 'is_loaded() on every page makes "did navigation work?" checks consistent.', mistake: 'Forgetting to inherit from ABC. Without it, @abstractmethod does nothing.' },
+      { title: 'Polymorphism', body: 'Different classes can answer the same method call in their own way. The caller doesn\u2019t need to know which one it has.',
+        plain: 'class Square:\n    def area(self):\n        return self.side ** 2\n\nclass Circle:\n    def area(self):\n        return 3.14 * self.r ** 2',
+        pw: 'class BasePage:\n    URL = "/"\n    def open(self):\n        self.page.goto(self.URL)\n\nclass LoginPage(BasePage):\n    URL = "/login"\n\nclass TenderPage(BasePage):\n    URL = "/tenders"\n\nfor p in [LoginPage(page), TenderPage(page)]:\n    p.open()   # each opens its own URL',
+        tip: 'Override a small value (like URL) instead of rewriting whole methods.', mistake: 'Writing if/else on the page type instead of letting each class handle it.' },
+      { title: 'Composition', body: 'Some things are parts, not parents. A dashboard has a header; it isn\u2019t a header. Build shared components and put them inside pages.',
+        plain: 'class Car:\n    def __init__(self):\n        self.engine = Engine()   # Car HAS an engine',
+        pw: 'class Header:\n    def __init__(self, page):\n        self.logout_btn = page.get_by_role(\n            "button", name="Log out")\n\n    def logout(self):\n        self.logout_btn.click()\n\nclass DashboardPage(BasePage):\n    def __init__(self, page):\n        super().__init__(page)\n        self.header = Header(page)',
+        tip: 'Use composition for menus, headers, modals and tables that appear on many pages.', mistake: 'Inheriting from Header just to reuse it.' },
+      { title: 'dataclasses for test data', body: 'A dataclass is a class made for holding data. Python writes __init__, a readable print-out and == for you.',
+        plain: 'from dataclasses import dataclass, field\n\n@dataclass\nclass User:\n    username: str\n    password: str\n    role: str = "buyer"\n\nu = User("qa1", "p1")\nu.role                # "buyer" (default)\nu == User("qa1", "p1")  # True',
+        pw: '@dataclass\nclass PurchaseRequest:\n    title: str\n    items: list[str] = field(default_factory=list)\n    budget: int = 0\n\npr = PurchaseRequest("Laptops", ["Dell 5440"], 50000)\nRequisitionPage(page).submit(pr)\n\n# inside the page object\ndef submit(self, pr: PurchaseRequest):\n    self.title.fill(pr.title)\n    self.budget.fill(str(pr.budget))',
+        tip: 'Pass one dataclass instead of seven separate arguments.', mistake: 'Using a list directly as a default (items: list = []). Use field(default_factory=list).' },
+      { title: 'DRY, KISS and Single Responsibility', body: 'Three everyday habits: Don\u2019t Repeat Yourself, Keep It Simple, and give each class or function a Single Responsibility.',
+        plain: '# DRY:  one helper, not ten copies\n# KISS: the simplest code that works\n# SRP:  one reason to change\n\ndef login_create_tender_and_check_email(): ...\n# three jobs in one: hard to reuse, hard to fix',
+        pw: '# each piece has one job\nclass LoginPage(BasePage): ...      # the login screen\nclass TenderPage(BasePage): ...     # the tender screen\n\nclass TenderFlow:                   # the business journey\n    def create_as_buyer(self, user, tender):\n        LoginPage(self.page).login(user.username, user.password)\n        TenderPage(self.page).create(tender)',
+        tip: 'If a class name needs "and", it probably has two jobs.', mistake: 'Over-engineering: five abstract layers for a ten-test suite breaks KISS.' },
+      { title: 'SOLID for test code', body: 'SOLID is five design principles. You don\u2019t need them all on day one, but they explain why good frameworks look the way they do.',
+        plain: 'S  Single responsibility: one job per class\nO  Open/closed: extend by adding, not editing\nL  Liskov substitution: a child can stand in\n   for its parent\nI  Interface segregation: small, focused bases\nD  Dependency inversion: depend on abstractions',
+        pw: '# O: a new page is a new class; BasePage stays untouched\nclass InvoicePage(BasePage): ...\n\n# L: any page works where a BasePage is expected\nfor p in [LoginPage(page), InvoicePage(page)]:\n    p.open()\n    p.is_loaded()\n\n# D: tests receive a client fixture,\n#    not a hardcoded connection\ndef test_invoice_total(api_client): ...',
+        tip: 'In interviews, explain one principle with an example from your own framework.', mistake: 'Listing SOLID from memory with no example. Show where it helped you.' },
+      { title: 'Putting it together', body: 'Here are all the ideas in one small framework. Explore it in the class diagram below, then see it running in the Page Object Model walkthrough (module 09).',
+        plain: 'class BasePage:\n    URL = "/"\n    def __init__(self, page):\n        self.page = page\n    def open(self):\n        self.page.goto(self.URL)\n\nclass LoginPage(BasePage):\n    URL = "/login"\n    def __init__(self, page):\n        super().__init__(page)\n        self._user = page.get_by_label("Username")\n        self._pwd = page.get_by_label("Password")\n        self._submit = page.get_by_role("button", name="Sign in")\n    def login(self, user, pwd):\n        self._user.fill(user)\n        self._pwd.fill(pwd)\n        self._submit.click()',
+        pw: 'def test_login(page):\n    login_page = LoginPage(page)\n    login_page.open()\n    login_page.login("qa1", "p1")\n    expect(page).to_have_url("/dashboard")',
+        tip: 'Class, inheritance, super, encapsulation and polymorphism, all in 20 lines.', mistake: 'Starting with a huge framework. Grow it one page class at a time.' }
+    ];
+    const n = L.length;
+    const lessonNav = L.map((l, i) => {
+      const on = i === st.lesson, done = i < st.lesson;
+      return { title: l.title, num: String(i + 1).padStart(2, '0'), pick: () => this.setState({ lesson: i }),
+        style: 'display:flex;align-items:center;gap:12px;min-height:44px;padding:8px 12px;border-radius:10px;border:none;cursor:pointer;text-align:left;font:' + (on ? '600' : '400') + ' 15px IBM Plex Sans,sans-serif;' + (on ? 'background:#16181D;color:#F4F1EA;' : 'background:transparent;color:#16181D;'),
+        numStyle: 'flex-shrink:0;font:600 12px JetBrains Mono,monospace;width:28px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;' + (on ? 'background:#4B45A1;color:#fff;' : done ? 'background:#E3E1F5;color:#4B45A1;' : 'background:#EAE5DA;color:#6A6E77;') };
+    });
+    const modeDefs = [['split', 'Side by side'], ['plain', 'Plain Python'], ['pw', 'Page object']];
+    const modes = modeDefs.map(([id, label]) => ({ label, pick: () => this.setState({ mode: id }),
+      style: 'min-height:40px;padding:8px 14px;border-radius:8px;border:none;cursor:pointer;font:600 14px IBM Plex Sans,sans-serif;' + (st.mode === id ? 'background:#FFFFFF;color:#16181D;box-shadow:0 1px 3px rgba(0,0,0,.12);' : 'background:transparent;color:#5C606A;') }));
+    const pct = Math.round(((st.lesson + 1) / n) * 100);
+
+    // class diagram
+    const inherited = [{ text: 'page', tag: 'from BasePage', inh: true }, { text: 'open()', tag: 'from BasePage', inh: true }, { text: 'title()', tag: 'from BasePage', inh: true }];
+    const C = [
+      { name: 'BasePage', kind: 'parent', x: 280, y: 26, note: 'shared by every page',
+        members: [{ text: 'page', tag: 'attribute' }, { text: 'URL = "/"', tag: 'attribute' }, { text: 'open()', tag: 'method' }, { text: 'title()', tag: 'method' }],
+        code: 'class BasePage:\n    URL = "/"\n    def __init__(self, page):\n        self.page = page\n    def open(self):\n        self.page.goto(self.URL)\n    def title(self):\n        return self.page.title()' },
+      { name: 'LoginPage', kind: 'is a BasePage', x: 0, y: 250, note: 'inherits + adds its own',
+        members: [{ text: 'URL = "/login"', tag: 'overrides' }, { text: '_username, _password, _submit', tag: 'attributes' }, { text: 'login(user, pwd)', tag: 'method' }].concat(inherited),
+        code: 'class LoginPage(BasePage):\n    URL = "/login"\n    def __init__(self, page):\n        super().__init__(page)\n        self._username = page.get_by_label("Username")\n        self._password = page.get_by_label("Password")\n        self._submit = page.get_by_role("button", name="Sign in")\n    def login(self, user, pwd):\n        self._username.fill(user)\n        self._password.fill(pwd)\n        self._submit.click()' },
+      { name: 'TenderPage', kind: 'is a BasePage', x: 190, y: 250, note: 'inherits + adds its own',
+        members: [{ text: 'URL = "/tenders"', tag: 'overrides' }, { text: '_title, _budget, _save', tag: 'attributes' }, { text: 'create(title, budget)', tag: 'method' }].concat(inherited),
+        code: 'class TenderPage(BasePage):\n    URL = "/tenders"\n    def __init__(self, page):\n        super().__init__(page)\n        self._title = page.get_by_label("Title")\n        self._budget = page.get_by_label("Budget")\n        self._save = page.get_by_role("button", name="Save")\n    def create(self, title, budget):\n        self._title.fill(title)\n        self._budget.fill(str(budget))\n        self._save.click()' },
+      { name: 'DashboardPage', kind: 'is a BasePage', x: 380, y: 250, note: 'inherits + has a Header',
+        members: [{ text: 'URL = "/dashboard"', tag: 'overrides' }, { text: 'header: Header', tag: 'composition' }, { text: 'welcome_text()', tag: 'method' }].concat(inherited),
+        code: 'class DashboardPage(BasePage):\n    URL = "/dashboard"\n    def __init__(self, page):\n        super().__init__(page)\n        self.header = Header(page)\n    def welcome_text(self):\n        return self.page.get_by_role(\n            "heading").inner_text()' },
+      { name: 'Header', kind: 'component', x: 570, y: 250, note: 'used inside other pages',
+        members: [{ text: '_logout_btn', tag: 'attribute' }, { text: 'logout()', tag: 'method' }],
+        code: 'class Header:\n    def __init__(self, page):\n        self._logout_btn = page.get_by_role(\n            "button", name="Log out")\n    def logout(self):\n        self._logout_btn.click()\n\n# usage\nDashboardPage(page).header.logout()' }
+    ];
+    const classes = C.map((c, i) => {
+      const on = i === st.cls;
+      const w = i === 0 ? 180 : 170;
+      const base = 'position:absolute;left:' + c.x + 'px;top:' + c.y + 'px;width:' + w + 'px;height:70px;border-radius:14px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;transition:all .2s;';
+      const look = on ? 'background:#B7A8FF;color:#16181D;border:2px solid #B7A8FF;box-shadow:0 12px 28px -10px rgba(183,168,255,.6);'
+        : c.name === 'Header' ? 'background:#1E2129;color:#B7A8FF;border:2px dashed #B7A8FF;' : 'background:#1E2129;color:#F4F1EA;border:2px solid #3A3E48;';
+      return { name: c.name, kind: c.kind, pick: () => this.setState({ cls: i }), style: base + look };
+    });
+    const s = C[st.cls];
+    const sel = { ...s, members: s.members.map((m) => ({ text: m.text, tag: m.tag,
+      style: 'display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;font:14px JetBrains Mono,monospace;' + (m.inh ? 'background:transparent;border:1px dashed #3A3E48;color:#8A8F9C;' : 'background:#2A2640;color:#E4DEFF;') })) };
+
+    return {
+      lessonNav, cur: L[st.lesson], lessonNum: String(st.lesson + 1), lessonTotal: String(n), modes,
+      showA: st.mode !== 'pw', showB: st.mode !== 'plain',
+      gridStyle: st.mode === 'split' ? 'display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;' : 'display:grid;grid-template-columns:repeat(1,minmax(0,1fr));gap:16px;',
+      prev: () => this.setState({ lesson: Math.max(0, st.lesson - 1) }),
+      next: () => this.setState({ lesson: Math.min(n - 1, st.lesson + 1) }),
+      progressStyle: 'height:100%;border-radius:999px;background:#4B45A1;transition:width .3s;width:' + pct + '%;',
+      progressLabel: pct + '% complete',
+      classes, sel
+    };
+  }
+}
+
+var __TPL=`<div style="width: 1440px; height: 3300px; box-sizing: border-box; display: flex; flex-direction: column; background: #F4F1EA; font-family: 'IBM Plex Sans', system-ui, sans-serif; color: #16181D;">
+
+<!-- HERO -->
+<section style="background: #4B45A1; color: #FFFFFF; padding: 64px 80px 56px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 40px; align-items: end;">
+<div style="grid-column: span 8; display: flex; flex-direction: column; gap: 18px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #D6D3F7;"><a href="PWHub.html" style="color: #FFFFFF;">playwright</a> / module 02 · OOP for Playwright</span>
+<h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 68px; line-height: 0.98; letter-spacing: -0.03em;">OOP, explained with<br>page objects, not animals.</h1>
+<p style="margin: 0; font-size: 19px; line-height: 1.6; color: #E3E1F5; max-width: 680px;">Every OOP idea shown twice: a plain Python example, then the same idea inside a real Playwright page object.</p>
+</div>
+<div style="grid-column: span 4; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px;">
+<span style="background: rgba(255,255,255,0.14); border-radius: 14px; padding: 14px; font-weight: 600;">Class</span>
+<span style="background: rgba(255,255,255,0.14); border-radius: 14px; padding: 14px; font-weight: 600;">Inheritance</span>
+<span style="background: rgba(255,255,255,0.14); border-radius: 14px; padding: 14px; font-weight: 600;">Encapsulation</span>
+<span style="background: rgba(255,255,255,0.14); border-radius: 14px; padding: 14px; font-weight: 600;">Polymorphism</span>
+</div>
+</section>
+
+<!-- LESSONS -->
+<section style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 40px; padding: 64px 80px;">
+<aside style="grid-column: span 3; display: flex; flex-direction: column; gap: 6px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #6A6E77; text-transform: uppercase; letter-spacing: 0.08em; padding: 0 12px 10px;">Lessons</span>
+<sc-for list="{{lessonNav}}" as="l" hint-placeholder-count="19">
+<button onClick="{{l.pick}}" style="{{l.style}}"><span style="{{l.numStyle}}">{{l.num}}</span><span>{{l.title}}</span></button>
+</sc-for>
+<div style="margin-top: 18px; padding: 0 12px; display: flex; flex-direction: column; gap: 8px;">
+<div style="height: 6px; border-radius: 999px; background: #E3DED3; overflow: hidden;"><div style="{{progressStyle}}"></div></div>
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #4B45A1;">{{progressLabel}}</span>
+</div>
+</aside>
+
+<div style="grid-column: span 9; display: flex; flex-direction: column; gap: 24px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 20px;">
+<div style="display: flex; flex-direction: column; gap: 10px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #4B45A1;">lesson {{lessonNum}} of {{lessonTotal}}</span>
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 46px; letter-spacing: -0.02em; line-height: 1.05;">{{cur.title}}</h2>
+</div>
+<div style="display: flex; gap: 6px; background: #EAE5DA; padding: 5px; border-radius: 12px;">
+<sc-for list="{{modes}}" as="m" hint-placeholder-count="3">
+<button onClick="{{m.pick}}" style="{{m.style}}">{{m.label}}</button>
+</sc-for>
+</div>
+</div>
+<p style="margin: 0; font-size: 18px; line-height: 1.7; color: #34373F; max-width: 820px;">{{cur.body}}</p>
+
+<div style="{{gridStyle}}">
+<sc-if value="{{showA}}" hint-placeholder-val="{{ true }}">
+<div style="background: #FFFFFF; border: 1px solid #DDD7CB; border-radius: 16px; overflow: hidden;">
+<div style="padding: 12px 18px; border-bottom: 1px solid #DDD7CB; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #4B45A1;">plain Python</div>
+<pre style="margin: 0; padding: 20px; font-family: 'JetBrains Mono', monospace; font-size: 14px; line-height: 1.75; color: #16181D; white-space: pre; overflow-x: auto;">{{cur.plain}}</pre>
+</div>
+</sc-if>
+<sc-if value="{{showB}}" hint-placeholder-val="{{ true }}">
+<div style="background: #16181D; border-radius: 16px; overflow: hidden;">
+<div style="padding: 12px 18px; border-bottom: 1px solid #2A2D35; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #B7A8FF;">in a page object</div>
+<pre style="margin: 0; padding: 20px; font-family: 'JetBrains Mono', monospace; font-size: 14px; line-height: 1.75; color: #D8DAE0; white-space: pre; overflow-x: auto;">{{cur.pw}}</pre>
+</div>
+</sc-if>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px;">
+<div style="display: flex; gap: 14px; background: #DCEFE3; border-radius: 16px; padding: 20px 22px; align-items: flex-start;">
+<span style="flex-shrink: 0; width: 32px; height: 32px; border-radius: 9px; background: #1F7A52; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 700;">✓</span>
+<div style="display: flex; flex-direction: column; gap: 4px;"><span style="font-weight: 600; color: #174F37;">Remember</span><span style="font-size: 15px; line-height: 1.6; color: #174F37;">{{cur.tip}}</span></div>
+</div>
+<div style="display: flex; gap: 14px; background: #FCE7DD; border-radius: 16px; padding: 20px 22px; align-items: flex-start;">
+<span style="flex-shrink: 0; width: 32px; height: 32px; border-radius: 9px; background: #C4502A; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 700;">!</span>
+<div style="display: flex; flex-direction: column; gap: 4px;"><span style="font-weight: 600; color: #7A2E14;">Common mistake</span><span style="font-size: 15px; line-height: 1.6; color: #7A2E14;">{{cur.mistake}}</span></div>
+</div>
+</div>
+
+<div style="display: flex; justify-content: space-between;">
+<button onClick="{{prev}}" style="min-height: 48px; padding: 12px 22px; border-radius: 12px; border: 1.5px solid #16181D; background: transparent; cursor: pointer; font: 600 15px 'IBM Plex Sans', sans-serif; color: #16181D;">← Previous</button>
+<button onClick="{{next}}" style="min-height: 48px; padding: 12px 22px; border-radius: 12px; border: none; background: #4B45A1; color: #FFFFFF; cursor: pointer; font: 600 15px 'IBM Plex Sans', sans-serif;">Next lesson →</button>
+</div>
+</div>
+</section>
+
+<!-- CLASS DIAGRAM -->
+<section style="background: #16181D; color: #F4F1EA; padding: 88px 80px; display: flex; flex-direction: column; gap: 36px;">
+<div style="display: flex; flex-direction: column; gap: 14px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #B7A8FF;">visualize · a small framework as classes</span>
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 48px; letter-spacing: -0.02em;">Click a class to look inside</h2>
+</div>
+<div style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 32px;">
+<div style="grid-column: span 7; display: flex; flex-direction: column; gap: 16px;">
+<div style="position: relative; width: 740px; height: 360px;">
+<svg width="740" height="360" viewBox="0 0 740 360" fill="none" style="position: absolute; left: 0; top: 0;">
+<path d="M370 96 L370 160 L85 160 L85 250" stroke="#5A5F6B" stroke-width="2"></path>
+<path d="M370 160 L275 160 L275 250" stroke="#5A5F6B" stroke-width="2"></path>
+<path d="M370 160 L465 160 L465 250" stroke="#5A5F6B" stroke-width="2"></path>
+<path d="M362 108 L370 96 L378 108" stroke="#5A5F6B" stroke-width="2"></path>
+<path d="M550 285 L570 285" stroke="#B7A8FF" stroke-width="2" stroke-dasharray="4 4"></path>
+<text x="382" y="140" fill="#8A8F9C" font-family="JetBrains Mono, monospace" font-size="12">inherits</text>
+<text x="600" y="345" fill="#B7A8FF" font-family="JetBrains Mono, monospace" font-size="12">has a</text>
+</svg>
+<sc-for list="{{classes}}" as="c" hint-placeholder-count="5">
+<button onClick="{{c.pick}}" style="{{c.style}}"><span style="font-family: 'JetBrains Mono', monospace; font-size: 15px; font-weight: 600;">{{c.name}}</span><span style="font-size: 12px; opacity: 0.75;">{{c.kind}}</span></button>
+</sc-for>
+</div>
+<div style="display: flex; gap: 20px; font-size: 13px; color: #A9AEBA;">
+<span style="display: flex; align-items: center; gap: 8px;"><span style="width: 18px; height: 2px; background: #5A5F6B;"></span>inheritance: "is a"</span>
+<span style="display: flex; align-items: center; gap: 8px;"><span style="width: 18px; height: 0; border-top: 2px dashed #B7A8FF;"></span>composition: "has a"</span>
+</div>
+</div>
+<div style="grid-column: span 5; display: flex; flex-direction: column; gap: 16px;">
+<div style="background: #1E2129; border: 1px solid #2E323C; border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 12px;">
+<div style="display: flex; justify-content: space-between; align-items: center;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 20px; font-weight: 600; color: #FFFFFF;">{{sel.name}}</span><span style="font-size: 13px; color: #B7A8FF;">{{sel.note}}</span></div>
+<sc-for list="{{sel.members}}" as="mb" hint-placeholder-count="5">
+<div style="{{mb.style}}"><span>{{mb.text}}</span><span style="font-size: 11px; opacity: 0.8;">{{mb.tag}}</span></div>
+</sc-for>
+</div>
+<pre style="margin: 0; background: #1E2129; border: 1px solid #2E323C; border-radius: 16px; padding: 18px 20px; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #D8DAE0; white-space: pre; overflow-x: auto;">{{sel.code}}</pre>
+</div>
+</div>
+</section>
+
+<section style="flex-grow: 1; padding: 64px 80px; display: flex; justify-content: space-between; align-items: center; gap: 30px;">
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #6A6E77;">next in the path</span>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 34px; font-weight: 800;">Module 03 · Playwright Architecture</span>
+</div>
+<a href="Arch.html" style="text-decoration: none; padding: 16px 26px; border-radius: 12px; background: #2F5D8A; color: #FFFFFF; font-weight: 600;">Continue →</a>
+</section>
+</div>`;
+window.__mountDC(__TPL, Component);
+</script>
+</body>
+</html>

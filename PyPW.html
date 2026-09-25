@@ -1,0 +1,457 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440">
+<title>Python for Playwright — Module 01</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap">
+<style>html,body{margin:0;background:#F4F1EA;font-family:'IBM Plex Sans',system-ui,sans-serif} #app > div{margin:0 auto}</style>
+</head>
+<body>
+
+<style>
+.snav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:16px 40px;background:#16181D;color:#F4F1EA;font-family:'IBM Plex Sans',sans-serif;flex-wrap:wrap;gap:12px}
+.snav a{color:#F4F1EA;text-decoration:none}
+.snav .brand{display:flex;align-items:center;gap:10px;font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:18px}
+.snav .brand span.logo{width:34px;height:34px;border-radius:9px;background:#7EE2A8;color:#16181D;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:14px}
+.snav ul{list-style:none;display:flex;gap:6px;margin:0;padding:0;align-items:center;flex-wrap:wrap}
+.snav > ul > li{position:relative}
+.snav > ul > li > a,.snav > ul > li > span{display:block;padding:9px 14px;border-radius:9px;font-size:15px;font-weight:500;cursor:pointer;white-space:nowrap}
+.snav > ul > li:hover > a,.snav > ul > li:hover > span,.snav .cur{background:#2A2D35}
+.snav .caret{font-size:11px;opacity:.7;margin-left:4px}
+.snav .drop{position:absolute;top:100%;left:0;min-width:220px;background:#1E2129;border:1px solid #2E323C;border-radius:12px;padding:8px;display:none;flex-direction:column;gap:2px;box-shadow:0 18px 40px -16px rgba(0,0,0,.6)}
+.snav > ul > li:hover .drop{display:flex}
+.snav .drop a{padding:9px 12px;border-radius:8px;font-size:14px;color:#D8DAE0}
+.snav .drop a:hover{background:#2A2D35;color:#fff}
+.snav .drop .grp{font-family:'JetBrains Mono',monospace;font-size:11px;color:#8A8F9C;text-transform:uppercase;letter-spacing:.06em;padding:8px 12px 2px}
+.snav .cta{padding:9px 18px;border-radius:999px;background:#1F7A52;color:#fff;font-weight:600}
+.snav .menubtn{display:none;background:none;border:1.5px solid #3A3E48;color:#F4F1EA;border-radius:9px;padding:8px 12px;font-size:15px;cursor:pointer}
+@media(max-width:1100px){
+  .snav .menubtn{display:block}
+  .snav > ul{display:none;flex-direction:column;align-items:stretch;width:100%;order:3}
+  .snav.open > ul{display:flex}
+  .snav .drop{position:static;display:flex;border:none;box-shadow:none;background:transparent;padding:0 0 6px 14px}
+  .snav > ul > li:hover .drop{display:flex}
+}
+</style>
+<nav class="snav" id="snav">
+<a class="brand" href="index.html"><span class="logo">S✓</span>Shamima Sultana</a>
+<button class="menubtn" onclick="document.getElementById('snav').classList.toggle('open')">Menu ☰</button>
+<ul>
+<li><a href="index.html" class="">Home</a></li>
+<li><span class="">About <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="about.html">Intro &amp; journey</a>
+    <a href="skills.html">Skills</a>
+    <a href="certifications.html">Certifications</a>
+    <a href="research.html">Research</a>
+    <a href="achievements.html">Achievements</a>
+  </div></li>
+<li><span class="">Work <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="projects.html">Projects</a>
+  </div></li>
+<li><span class="cur">Learn <span class="caret">▾</span></span>
+  <div class="drop">
+    <span class="grp">Automation</span>
+    <a href="PWHub.html">Playwright path</a>
+    <a href="Selenium.html">Selenium with Java</a>
+    <a href="MobileTest.html">Mobile testing</a>
+    <span class="grp">Performance</span>
+    <a href="K6Hub.html">k6</a>
+    <a href="JMeter.html">JMeter</a>
+    <span class="grp">Data &amp; APIs</span>
+    <a href="SQLHub.html">SQL</a>
+    <a href="API.html">API testing</a>
+    <span class="grp">Core &amp; specialised</span>
+    <a href="Manual.html">Manual testing</a>
+    <a href="AITest.html">AI / LLM testing</a>
+    <a href="DevTools.html">DevTools</a>
+    <a href="Git.html">Git &amp; GitHub</a>
+    <a href="A11y.html">Accessibility</a>
+    <a href="Security.html">Security</a>
+  </div></li>
+<li><span class="">Writing <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="K6Hub.html">Tutorials &amp; articles</a>
+  </div></li>
+<li><span class="">More <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="News.html">News</a>
+    <a href="Interview.html">Interview prep</a>
+    <a href="ISTQB.html">ISTQB prep</a>
+  </div></li>
+<li><a class="cta" href="mailto:shamimasultanamiley605@gmail.com">Contact</a></li>
+</ul>
+</nav>
+
+<div id="app"></div>
+<script>/* Minimal renderer: replaces Claude's canvas engine so pages run anywhere. */
+(function(){
+  function resolve(scopes, path){
+    path=path.trim();
+    var parts=path.split('.'), head=parts[0], base, found=false;
+    for(var i=scopes.length-1;i>=0;i--){ if(scopes[i] && Object.prototype.hasOwnProperty.call(scopes[i],head)){ base=scopes[i][head]; found=true; break; } }
+    if(!found) return undefined;
+    for(var j=1;j<parts.length;j++){ if(base==null) return undefined; base=base[parts[j]]; }
+    return base;
+  }
+  function subst(str, scopes){
+    return str.replace(/\{\{([^}]+)\}\}/g, function(_,e){ var v=resolve(scopes,e); return v==null?'':String(v); });
+  }
+  function firstExpr(str){ var m=str.match(/\{\{([^}]+)\}\}/); return m?m[1].trim():null; }
+  function processNode(node, scopes, out){
+    if(node.nodeType===3){ // text
+      var t=node.nodeValue;
+      if(t.indexOf('{{')>=0) out.push(document.createTextNode(subst(t,scopes)));
+      else out.push(document.createTextNode(t));
+      return;
+    }
+    if(node.nodeType!==1){ return; }
+    var tag=node.tagName.toLowerCase();
+    if(tag==='sc-for'){
+      var listExpr=firstExpr(node.getAttribute('list')||'');
+      var as=node.getAttribute('as');
+      var arr=listExpr?resolve(scopes,listExpr):null;
+      if(Array.isArray(arr)){
+        for(var k=0;k<arr.length;k++){
+          var sc=scopes.concat([{__k:as, [as]:arr[k]}]);
+          for(var c=0;c<node.childNodes.length;c++) processNode(node.childNodes[c], sc, out);
+        }
+      }
+      return;
+    }
+    if(tag==='sc-if'){
+      var valExpr=firstExpr(node.getAttribute('value')||'');
+      var cond=valExpr?resolve(scopes,valExpr):false;
+      if(cond){ for(var c2=0;c2<node.childNodes.length;c2++) processNode(node.childNodes[c2], scopes, out); }
+      return;
+    }
+    var el=document.createElement(tag);
+    for(var a=0;a<node.attributes.length;a++){
+      var at=node.attributes[a], name=at.name, val=at.value;
+      if(name.indexOf('hint-')===0) continue;
+      if(name==='onclick'){ var h=firstExpr(val); (function(expr){ el.addEventListener('click', function(ev){ var fn=resolve(scopes,expr); if(typeof fn==='function') fn(ev); }); })(h); continue; }
+      if(name==='onchange'){ var h2=firstExpr(val); (function(expr){ el.addEventListener('input', function(ev){ var fn=resolve(scopes,expr); if(typeof fn==='function') fn(ev); }); })(h2); continue; }
+      var sv=val.indexOf('{{')>=0?subst(val,scopes):val;
+      if(name==='value' && (tag==='input'||tag==='textarea')){ el.value=sv; el.setAttribute('value',sv); }
+      else el.setAttribute(name, sv);
+    }
+    var kids=[];
+    for(var cc=0;cc<node.childNodes.length;cc++) processNode(node.childNodes[cc], scopes, kids);
+    for(var ki=0;ki<kids.length;ki++) el.appendChild(kids[ki]);
+    out.push(el);
+  }
+  window.__mountDC=function(templateHTML, ComponentClass){
+    var tplRoot=document.createElement('div'); tplRoot.innerHTML=templateHTML;
+    var mount=document.getElementById('app');
+    var comp=new ComponentClass({});
+    function doRender(){
+      var vals;
+      try{ vals=comp.renderVals(); }catch(e){ console.error('render error',e); return; }
+      var frag=document.createDocumentFragment();
+      var buf=[];
+      for(var i=0;i<tplRoot.childNodes.length;i++) processNode(tplRoot.childNodes[i], [vals], buf);
+      for(var b=0;b<buf.length;b++) frag.appendChild(buf[b]);
+      // preserve focus in search/textarea across re-render
+      var active=document.activeElement, sel=null, id=null;
+      mount.innerHTML=''; mount.appendChild(frag);
+    }
+    comp.setState=function(s){ Object.assign(comp.state, s); doRender(); };
+    doRender();
+  };
+  window.DCLogic=function(){};
+})();
+</script>
+<script>
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { lesson: 0, mode: 'split', f: 0 };
+  }
+  renderVals() {
+    const st = this.state;
+    const L = [
+      { title: 'Variables and data types', body: 'A variable is a name for a value. Python works out the type for you: text, whole numbers, decimals, True/False, or None for "nothing yet".',
+        plain: 'base_url = "https://demo.example.com"  # str\ntimeout = 5000        # int (milliseconds)\nprice = 99.5          # float\nis_logged_in = False  # bool\ntoken = None          # nothing yet',
+        pw: 'BASE_URL = "https://demo.example.com"\n\npage.goto(BASE_URL + "/login")\npage.set_default_timeout(5000)',
+        tip: 'Values that never change (like a base URL) go in UPPER_CASE by convention.', mistake: 'Python is case-sensitive: True and None, not true and null.' },
+      { title: 'Strings and f-strings', body: 'Tests build a lot of text: URLs, button names, expected messages. f-strings put variables straight into text.',
+        plain: 'name = "qa1"\nmsg = f"Hello {name}"      # Hello qa1\npath = "/tenders/" + str(42)\n"Sign In".lower()          # "sign in"',
+        pw: 'tender_id = 42\npage.goto(f"{BASE_URL}/tenders/{tender_id}")\npage.get_by_role("link", name=f"Tender {tender_id}").click()',
+        tip: 'f-strings are the cleanest way to build URLs and dynamic names.', mistake: 'Forgetting the f: "{tender_id}" prints the braces literally.' },
+      { title: 'Lists and dictionaries', body: 'Lists hold many values in order. Dictionaries hold named values. Together they make readable test data.',
+        plain: 'users = ["qa1", "qa2", "qa3"]\nusers[0]           # "qa1"\nlen(users)         # 3\nusers.append("qa4")\n\nuser = {"username": "qa1", "role": "buyer"}\nuser["role"]       # "buyer"',
+        pw: 'accounts = [\n    {"username": "buyer1", "password": "p1"},\n    {"username": "vendor1", "password": "p2"},\n]\n\nfor acc in accounts:\n    login(page, acc["username"], acc["password"])',
+        tip: 'A list of dictionaries reads like a table of test data.', mistake: 'A typo like user["rol"] raises KeyError. Use user.get("rol") when a key may be missing.' },
+      { title: 'Tuples, sets and comprehensions', body: 'Tuples are lists that can\u2019t change. Sets hold unique values only. Comprehensions build a new list from another in one line.',
+        plain: 'point = (1920, 1080)       # tuple: fixed\nw, h = point               # unpacking\n\nstatuses = {"draft", "draft", "open"}\n# {"draft", "open"}: duplicates removed\n\nnums = [1, 2, 3, 4]\nsquares = [n * n for n in nums]\nevens = [n for n in nums if n % 2 == 0]',
+        pw: '# every status in the table, no duplicates\nstatuses = set(page.get_by_role("cell").all_inner_texts())\n\n# clean the texts read from the page\nnames = [t.strip() for t in page.locator(".name").all_inner_texts()]\nassert names == sorted(names)   # table is sorted A-Z',
+        tip: 'Comprehensions are perfect for cleaning a list of texts read from the page.', mistake: 'Writing (5) for a one-item tuple. That\u2019s just 5; a one-item tuple needs a comma: (5,).' },
+      { title: 'Conditions and loops', body: 'if/elif/else picks a path. for repeats. The indentation (4 spaces) is the block, there are no braces.',
+        plain: 'if status == 200:\n    print("ok")\nelif status == 401:\n    print("login needed")\nelse:\n    print("failed")\n\nfor i in range(3):\n    print(i)   # 0 1 2',
+        pw: 'rows = page.get_by_role("row")\nfor i in range(rows.count()):\n    print(rows.nth(i).inner_text())\n\nif page.get_by_text("Session expired").is_visible():\n    login(page, "qa1", "pass123")',
+        tip: 'Loops are handy for reading tables and walking through test data.', mistake: 'Using if to quietly skip a failing check. Tests should fail loudly with assertions instead.' },
+      { title: 'Functions', body: 'A function is a named, reusable set of steps. Default values make arguments optional.',
+        plain: 'def add(a, b):\n    return a + b\n\ndef greet(name="tester"):\n    return f"Hi {name}"\n\ngreet()        # "Hi tester"',
+        pw: 'def login(page, user, pwd="pass123"):\n    page.goto("/login")\n    page.get_by_label("Username").fill(user)\n    page.get_by_label("Password").fill(pwd)\n    page.get_by_role("button", name="Sign in").click()',
+        tip: 'One function per user action keeps tests short and readable.', mistake: 'Forgetting return. The function then gives back None.' },
+      { title: '*args, **kwargs and lambda', body: '*args collects extra positional values into a tuple. **kwargs collects extra named values into a dict. lambda is a tiny one-line function.',
+        plain: 'def total(*args):\n    return sum(args)\ntotal(1, 2, 3)            # 6\n\ndef show(**kwargs):\n    print(kwargs)\nshow(user="qa1", role="buyer")\n# {"user": "qa1", "role": "buyer"}\n\nsorted(tenders, key=lambda t: t["budget"])',
+        pw: 'def open_page(page, path, **options):\n    page.goto(path, **options)   # pass options through\n\nopen_page(page, "/tenders",\n          wait_until="networkidle", timeout=10_000)\n\n# keyword arguments keep calls readable\npage.get_by_role("button", name="Save", exact=True)',
+        tip: 'Use **kwargs to pass options straight through to Playwright methods.', mistake: 'Putting a default argument before a required one: def f(a=1, b) is a SyntaxError.' },
+      { title: 'Imports and project structure', body: 'import brings in code from libraries and from your own files. Each folder of Python files becomes a package you can import from.',
+        plain: 'import os\nfrom datetime import date\n\n# project/\n#   pages/login_page.py\n#   tests/test_login.py',
+        pw: 'from playwright.sync_api import Page, expect\nfrom pages.login_page import LoginPage\n\ndef test_login(page: Page):\n    LoginPage(page).open()',
+        tip: 'from X import Y pulls in just the name you need.', mistake: 'Naming your own file playwright.py. It hides the real library and imports break.' },
+      { title: 'venv, pip and requirements.txt', body: 'A virtual environment keeps each project\u2019s packages separate. requirements.txt lists them so anyone can install the same set. poetry and uv do the same job with extra features.',
+        plain: 'python -m venv .venv\n\n# activate it\n.venv\\Scripts\\activate        # Windows\nsource .venv/bin/activate     # macOS / Linux\n\npip install pytest-playwright\npip freeze > requirements.txt',
+        pw: '# requirements.txt\npytest-playwright\npytest-html\nallure-pytest\npython-dotenv\nfaker\n\n# a teammate sets up in two commands\npip install -r requirements.txt\nplaywright install',
+        tip: 'Add .venv/ to .gitignore and commit requirements.txt instead. Pin versions once the suite is stable.', mistake: 'Installing packages globally, then the project breaks on another machine.' },
+      { title: 'Assertions', body: 'An assertion is the "Expected Result" of your test case. Playwright adds expect(), which waits for the page to catch up.',
+        plain: 'assert 2 + 2 == 4\nassert "qa" in "qa1", "username should contain qa"',
+        pw: 'expect(page).to_have_url("/dashboard")\nexpect(page.get_by_text("Welcome")).to_be_visible()\nexpect(page.get_by_role("row")).to_have_count(5)',
+        tip: 'expect() retries until its timeout. A plain assert checks only once.', mistake: 'assert page.get_by_text("Welcome").is_visible() checks instantly and makes tests flaky. Use expect().' },
+      { title: 'Exceptions: try / except', body: 'try runs code that might fail, except handles the failure, finally always runs.',
+        plain: 'try:\n    value = int("abc")\nexcept ValueError:\n    print("not a number")\nfinally:\n    print("always runs")',
+        pw: 'from playwright.sync_api import TimeoutError as PWTimeout\n\ntry:\n    page.get_by_role("button", name="Accept cookies").click(timeout=2000)\nexcept PWTimeout:\n    pass  # no banner this time, carry on',
+        tip: 'Catch only what you expect, like an optional popup.', mistake: 'A bare except: catches everything and hides real bugs.' },
+      { title: 'Raising and custom exceptions', body: 'raise stops the code with an error. Your own exception classes give failures a clear name and a message that explains what went wrong.',
+        plain: 'class DataFileError(Exception):\n    pass\n\ndef load_users(path):\n    if not path.exists():\n        raise DataFileError(f"Test data missing: {path}")\n    ...',
+        pw: 'class PageNotLoadedError(Exception):\n    pass\n\nclass TenderPage(BasePage):\n    def wait_until_loaded(self):\n        try:\n            expect(self.heading).to_be_visible()\n        except AssertionError as e:\n            raise PageNotLoadedError(\n                "Tender page did not load") from e',
+        tip: 'A good error message says what was expected and what actually happened.', mistake: 'raise Exception("error"): a vague name and message make failures slow to debug.' },
+      { title: 'with and context managers', body: 'with opens something and guarantees it gets closed, even if an error happens in the middle.',
+        plain: 'with open("users.csv") as f:\n    data = f.read()\n# file is closed automatically here',
+        pw: 'from playwright.sync_api import sync_playwright\n\nwith sync_playwright() as p:\n    browser = p.chromium.launch(headless=False)\n    page = browser.new_page()\n    page.goto("https://demo.example.com")\n    browser.close()',
+        tip: 'pytest-playwright does this setup for you, but this is what happens underneath.', mistake: 'Using page after the with block ends. Playwright has already stopped.' },
+      { title: 'Generators and yield', body: 'A function with yield pauses there and hands back a value, then carries on later. This is exactly how pytest fixtures do setup and teardown.',
+        plain: 'def count_up():\n    print("start")\n    yield 1\n    yield 2\n    print("end")\n\nfor n in count_up():\n    print(n)\n# start, 1, 2, end',
+        pw: '@pytest.fixture\ndef tender(api):\n    t = api.create_tender("Laptops")   # setup\n    yield t                            # the test runs here\n    api.delete_tender(t["id"])         # teardown',
+        tip: 'Everything before yield is setup; everything after it is cleanup.', mistake: 'Using return in a fixture that needs cleanup. The cleanup code never runs.' },
+      { title: 'pytest and fixtures', body: 'pytest finds functions starting with test_ and runs them. Fixtures prepare what a test needs and clean up afterwards. You ask for one just by naming it as a parameter.',
+        plain: 'import pytest\n\n@pytest.fixture\ndef user():\n    return {"username": "qa1"}\n\ndef test_name(user):\n    assert user["username"] == "qa1"',
+        pw: '# conftest.py\n@pytest.fixture\ndef logged_in_page(page):\n    login(page, "qa1")\n    yield page          # the test runs here\n    page.close()        # cleanup afterwards\n\ndef test_dashboard(logged_in_page):\n    expect(logged_in_page).to_have_url("/dashboard")',
+        tip: 'Put shared fixtures in conftest.py; every test in the folder can use them.', mistake: 'Calling a fixture like a function. pytest passes it in for you.' },
+      { title: 'Decorators and parametrize', body: 'A decorator (the @ line) adds behaviour to a function. parametrize runs one test with many rows of data, each as its own test.',
+        plain: '@pytest.mark.parametrize("a, b, total", [\n    (1, 2, 3),\n    (5, 5, 10),\n])\ndef test_add(a, b, total):\n    assert a + b == total',
+        pw: '@pytest.mark.parametrize("user, pwd, msg", [\n    ("qa1", "wrong", "Invalid password"),\n    ("", "pass123", "Username is required"),\n])\ndef test_login_errors(page, user, pwd, msg):\n    login(page, user, pwd)\n    expect(page.get_by_text(msg)).to_be_visible()',
+        tip: 'Great for negative testing: one test, many invalid inputs.', mistake: 'The names in the string must match the function\u2019s parameter names exactly.' },
+      { title: 'Files: pathlib, JSON, CSV, YAML, Excel', body: 'pathlib builds file paths that work on every OS. Test data usually lives in JSON, CSV, YAML or Excel files.',
+        plain: 'from pathlib import Path\nimport json, csv, yaml   # yaml: pip install pyyaml\n\nDATA = Path(__file__).parent / "test_data"\n\nusers = json.loads((DATA / "users.json").read_text())\n\nwith open(DATA / "tenders.csv", newline="") as f:\n    rows = list(csv.DictReader(f))\n\nconfig = yaml.safe_load((DATA / "config.yaml").read_text())',
+        pw: 'from openpyxl import load_workbook\n\nwb = load_workbook(DATA / "items.xlsx")\nsheet = wb.active\nitems = list(sheet.iter_rows(min_row=2, values_only=True))\n\n@pytest.mark.parametrize("name, qty", items)\ndef test_add_item(page, name, qty):\n    ...',
+        tip: 'Build paths from __file__ so tests work no matter which folder you run pytest from.', mistake: 'Hardcoding C:\\Users\\... paths that only exist on your laptop.' },
+      { title: 'Type hints', body: 'Type hints say what a function expects and returns. Python doesn\u2019t enforce them, but your editor uses them for autocomplete and warnings.',
+        plain: 'from typing import Optional\n\ndef full_name(first: str, last: str) -> str:\n    return f"{first} {last}"\n\ndef find_user(users: list[dict], name: str) -> Optional[dict]:\n    ...',
+        pw: 'from playwright.sync_api import Page, Locator\n\nclass LoginPage:\n    def __init__(self, page: Page) -> None:\n        self.page = page\n        self.submit: Locator = page.get_by_role(\n            "button", name="Sign in")\n\n    def error_text(self) -> str:\n        return self.page.get_by_role("alert").inner_text()',
+        tip: 'Typing page: Page gives you autocomplete for every Playwright method.', mistake: 'Expecting hints to block wrong values at runtime. They don\u2019t; they\u2019re for people and tools.' },
+      { title: 'The logging module', body: 'logging records what happened with levels (DEBUG, INFO, WARNING, ERROR), timestamps and a destination. print() can do none of that.',
+        plain: 'import logging\n\nlogging.basicConfig(\n    level=logging.INFO,\n    format="%(asctime)s %(levelname)s %(name)s: %(message)s")\nlog = logging.getLogger(__name__)\n\nlog.info("Starting run")\nlog.warning("Slow response: %s ms", 2300)',
+        pw: 'log = logging.getLogger(__name__)\n\nclass TenderPage(BasePage):\n    def create(self, title: str, budget: int) -> None:\n        log.info("Creating tender %s", title)\n        ...\n\n# pytest.ini: show logs live while tests run\n[pytest]\nlog_cli = true\nlog_cli_level = INFO',
+        tip: 'log_cli in pytest.ini shows log lines live during the run.', mistake: 'Leaving print() calls everywhere. They have no levels and can\u2019t be switched off.' },
+      { title: 'Environment variables and python-dotenv', body: 'Credentials and URLs never go in code. Keep them in environment variables, and use a git-ignored .env file on your machine.',
+        plain: '# .env   (never committed)\nBASE_URL=https://qa.example.com\nQA_USER=buyer1\nQA_PASSWORD=********\n\nimport os\nfrom dotenv import load_dotenv\n\nload_dotenv()\nbase_url = os.getenv("BASE_URL")',
+        pw: '@pytest.fixture(scope="session")\ndef creds():\n    return os.environ["QA_USER"], os.environ["QA_PASSWORD"]\n\ndef test_login(page, creds):\n    user, pwd = creds\n    LoginPage(page).login(user, pwd)',
+        tip: 'Commit a .env.example with the variable names but no real values.', mistake: 'Committing .env to Git. If it happens, change those passwords.' },
+      { title: 'Regex with re', body: 'Regular expressions match patterns instead of exact text. Playwright accepts them for URLs, text and locator names.',
+        plain: 'import re\n\nre.search(r"PT-\\d+", "Ticket PT-214 opened").group()\n# "PT-214"\n\nre.fullmatch(r"\\d{4}-\\d{2}-\\d{2}", "2026-09-23")   # a date',
+        pw: 'expect(page).to_have_url(re.compile(r".*/tenders/\\d+$"))\nexpect(toast).to_have_text(re.compile(r"Tender TN-\\d+ created"))\npage.get_by_role("button", name=re.compile("save", re.I)).click()',
+        tip: 'Always write patterns as raw strings: r"...".', mistake: 'Forgetting that . means "any character". To match a real dot, write \\. ' },
+      { title: 'datetime, random and Faker', body: 'Fixed test data collides ("tender already exists"). Generate fresh values every run instead.',
+        plain: 'from datetime import date, timedelta\nimport random\n\ndeadline = date.today() + timedelta(days=7)\ndeadline.strftime("%d/%m/%Y")\n\nrandom.randint(1000, 9999)\nrandom.choice(["draft", "open"])',
+        pw: '# pip install faker\nfrom faker import Faker\nfake = Faker()\n\ndef test_create_vendor(page):\n    name = fake.company()\n    VendorPage(page).create(\n        name=name,\n        email=fake.company_email(),\n        phone=fake.phone_number())\n    expect(page.get_by_text(name)).to_be_visible()',
+        tip: 'Faker("bn_BD") generates Bangladeshi-style names and addresses.', mistake: 'Random data you never log. When the test fails you can\u2019t reproduce it; log it or use Faker.seed(123).' },
+      { title: 'Sync vs async', body: 'Playwright has two versions of the same API. Sync runs one step after another. Async needs await and an event loop.',
+        plain: '# sync: one step after another\nresult = fetch()\n\n# async: must be awaited\nresult = await fetch()',
+        pw: '# recommended for tests\nfrom playwright.sync_api import Page\npage.goto("/login")\n\n# same API, async version\nfrom playwright.async_api import Page\nawait page.goto("/login")',
+        tip: 'pytest-playwright uses the sync API. Start there.', mistake: 'Mixing sync and async imports in the same project.' }
+    ];
+    const n = L.length;
+    const lessonNav = L.map((l, i) => {
+      const on = i === st.lesson, done = i < st.lesson;
+      return { title: l.title, num: String(i + 1).padStart(2, '0'), pick: () => this.setState({ lesson: i }),
+        style: 'display:flex;align-items:center;gap:12px;min-height:44px;padding:8px 12px;border-radius:10px;border:none;cursor:pointer;text-align:left;font:' + (on ? '600' : '400') + ' 15px IBM Plex Sans,sans-serif;' + (on ? 'background:#16181D;color:#F4F1EA;' : 'background:transparent;color:#16181D;'),
+        numStyle: 'flex-shrink:0;font:600 12px JetBrains Mono,monospace;width:28px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;' + (on ? 'background:#E8B64C;color:#16181D;' : done ? 'background:#F6E7B8;color:#8A5A00;' : 'background:#EAE5DA;color:#6A6E77;') };
+    });
+    const modeDefs = [['split', 'Side by side'], ['plain', 'Plain Python'], ['pw', 'In Playwright']];
+    const modes = modeDefs.map(([id, label]) => ({ label, pick: () => this.setState({ mode: id }),
+      style: 'min-height:40px;padding:8px 14px;border-radius:8px;border:none;cursor:pointer;font:600 14px IBM Plex Sans,sans-serif;' + (st.mode === id ? 'background:#FFFFFF;color:#16181D;box-shadow:0 1px 3px rgba(0,0,0,.12);' : 'background:transparent;color:#5C606A;') }));
+    const pct = Math.round(((st.lesson + 1) / n) * 100);
+
+    // fixture lifecycle
+    const F = [
+      { key: 'collect', head: 'pytest collects your tests', body: 'It scans for files named test_*.py and functions starting with test_.', code: '$ pytest\ncollected 2 items' },
+      { key: 'session', head: 'The browser starts once', body: 'The browser fixture has session scope: one browser for the whole run, which keeps things fast.', code: '# built into pytest-playwright\nbrowser  -> scope="session"' },
+      { key: 'test', head: 'A fresh page for each test', body: 'context and page are created new for every test, so tests never share cookies or state.', code: 'def test_dashboard(page):\n    ...  # brand-new page' },
+      { key: 'setup', head: 'Your fixture\u2019s setup runs', body: 'Everything before yield in your own fixture runs first, like logging in.', code: '@pytest.fixture\ndef logged_in_page(page):\n    login(page, "qa1")   # <- here\n    yield page' },
+      { key: 'body', head: 'The test body runs', body: 'pytest pauses the fixture at yield and runs your test with the value it yielded.', code: 'def test_dashboard(logged_in_page):\n    expect(logged_in_page)\\\n        .to_have_url("/dashboard")' },
+      { key: 'teardown', head: 'Teardown cleans up', body: 'After the test, the code after yield runs, even if the test failed.', code: '    yield page\n    page.close()   # <- here' },
+      { key: 'report', head: 'The result is reported', body: 'Each test is marked passed or failed, with screenshots or traces if you enabled them.', code: 'tests/test_dash.py::test_dashboard PASSED\n1 passed in 2.1s' }
+    ];
+    const cur = F[st.f].key;
+    const order = ['collect', 'session', 'test', 'setup', 'body', 'teardown', 'report'];
+    const idx = (k) => order.indexOf(k);
+    const box = (k, extra) => {
+      const on = k === cur, done = idx(k) < st.f;
+      return 'display:flex;flex-direction:column;gap:6px;border-radius:14px;padding:16px;transition:all .2s;' + extra +
+        (on ? 'background:#E8B64C;color:#16181D;border:2px solid #E8B64C;' : done ? 'background:#2A2618;color:#E8B64C;border:2px solid #5A4A1E;' : 'background:#1E2129;color:#A9AEBA;border:2px solid #2E323C;');
+    };
+    const wrap = (k, extra) => {
+      const on = k === cur;
+      return 'display:flex;flex-direction:column;gap:12px;border-radius:18px;padding:16px;flex-grow:1;transition:all .2s;' + extra +
+        (on ? 'border:2px solid #E8B64C;background:rgba(232,182,76,.12);color:#E8B64C;' : 'border:2px dashed #3A3E48;background:transparent;color:#8A8F9C;');
+    };
+    const fs = {
+      collect: box('collect', 'justify-content:center;width:110px;flex-shrink:0;'),
+      session: wrap('session', ''),
+      test: wrap('test', ''),
+      setup: box('setup', 'flex-grow:1;'),
+      body: box('body', 'flex-grow:1;'),
+      teardown: box('teardown', 'flex-grow:1;'),
+      report: box('report', 'justify-content:center;width:110px;flex-shrink:0;')
+    };
+
+    return {
+      lessonNav, cur: L[st.lesson], lessonNum: String(st.lesson + 1), lessonTotal: String(n), modes,
+      showA: st.mode !== 'pw', showB: st.mode !== 'plain',
+      gridStyle: st.mode === 'split' ? 'display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;' : 'display:grid;grid-template-columns:repeat(1,minmax(0,1fr));gap:16px;',
+      prev: () => this.setState({ lesson: Math.max(0, st.lesson - 1) }),
+      next: () => this.setState({ lesson: Math.min(n - 1, st.lesson + 1) }),
+      progressStyle: 'height:100%;border-radius:999px;background:#C99A2E;transition:width .3s;width:' + pct + '%;',
+      progressLabel: pct + '% complete',
+      fs, fCur: F[st.f], fLabel: (st.f + 1) + ' / ' + F.length,
+      fPrev: () => this.setState({ f: Math.max(0, st.f - 1) }),
+      fNext: () => this.setState({ f: Math.min(F.length - 1, st.f + 1) })
+    };
+  }
+}
+
+var __TPL=`<div style="width: 1440px; height: 3500px; box-sizing: border-box; display: flex; flex-direction: column; background: #F4F1EA; font-family: 'IBM Plex Sans', system-ui, sans-serif; color: #16181D;">
+
+<!-- HERO -->
+<section style="background: #F6E7B8; padding: 64px 80px 56px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 40px; align-items: end;">
+<div style="grid-column: span 8; display: flex; flex-direction: column; gap: 18px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #8A5A00;"><a href="PWHub.html" style="color: #3E2A00;">playwright</a> / module 01 · Python for Playwright</span>
+<h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 68px; line-height: 0.98; letter-spacing: -0.03em; color: #2A1D00;">The Python you'll<br>actually use in tests.</h1>
+<p style="margin: 0; font-size: 19px; line-height: 1.6; color: #5E4513; max-width: 680px;">Twenty-three lessons. Each one shows the plain Python idea next to how it looks inside a real Playwright test.</p>
+</div>
+<div style="grid-column: span 4; display: flex; flex-direction: column; gap: 10px; background: #16181D; border-radius: 18px; padding: 22px 24px; font-family: 'JetBrains Mono', monospace; font-size: 14px; line-height: 1.8; color: #D8DAE0;">
+<div style="color: #8A8F9C;"># setup once</div>
+<div><span style="color: #7EE2A8;">$</span> pip install pytest-playwright</div>
+<div><span style="color: #7EE2A8;">$</span> playwright install</div>
+<div><span style="color: #7EE2A8;">$</span> pytest --headed</div>
+</div>
+</section>
+
+<!-- LESSONS -->
+<section style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 40px; padding: 64px 80px;">
+<aside style="grid-column: span 3; display: flex; flex-direction: column; gap: 6px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #6A6E77; text-transform: uppercase; letter-spacing: 0.08em; padding: 0 12px 10px;">Lessons</span>
+<sc-for list="{{lessonNav}}" as="l" hint-placeholder-count="23">
+<button onClick="{{l.pick}}" style="{{l.style}}"><span style="{{l.numStyle}}">{{l.num}}</span><span>{{l.title}}</span></button>
+</sc-for>
+<div style="margin-top: 18px; padding: 0 12px; display: flex; flex-direction: column; gap: 8px;">
+<div style="height: 6px; border-radius: 999px; background: #E3DED3; overflow: hidden;"><div style="{{progressStyle}}"></div></div>
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #8A5A00;">{{progressLabel}}</span>
+</div>
+</aside>
+
+<div style="grid-column: span 9; display: flex; flex-direction: column; gap: 24px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 20px;">
+<div style="display: flex; flex-direction: column; gap: 10px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #8A5A00;">lesson {{lessonNum}} of {{lessonTotal}}</span>
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 46px; letter-spacing: -0.02em; line-height: 1.05;">{{cur.title}}</h2>
+</div>
+<div style="display: flex; gap: 6px; background: #EAE5DA; padding: 5px; border-radius: 12px;">
+<sc-for list="{{modes}}" as="m" hint-placeholder-count="3">
+<button onClick="{{m.pick}}" style="{{m.style}}">{{m.label}}</button>
+</sc-for>
+</div>
+</div>
+<p style="margin: 0; font-size: 18px; line-height: 1.7; color: #34373F; max-width: 820px;">{{cur.body}}</p>
+
+<div style="{{gridStyle}}">
+<sc-if value="{{showA}}" hint-placeholder-val="{{ true }}">
+<div style="background: #FFFFFF; border: 1px solid #DDD7CB; border-radius: 16px; overflow: hidden;">
+<div style="padding: 12px 18px; border-bottom: 1px solid #DDD7CB; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #8A5A00;">plain Python</div>
+<pre style="margin: 0; padding: 20px; font-family: 'JetBrains Mono', monospace; font-size: 14px; line-height: 1.75; color: #16181D; white-space: pre; overflow-x: auto;">{{cur.plain}}</pre>
+</div>
+</sc-if>
+<sc-if value="{{showB}}" hint-placeholder-val="{{ true }}">
+<div style="background: #16181D; border-radius: 16px; overflow: hidden;">
+<div style="padding: 12px 18px; border-bottom: 1px solid #2A2D35; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #7EE2A8;">in a Playwright test</div>
+<pre style="margin: 0; padding: 20px; font-family: 'JetBrains Mono', monospace; font-size: 14px; line-height: 1.75; color: #D8DAE0; white-space: pre; overflow-x: auto;">{{cur.pw}}</pre>
+</div>
+</sc-if>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px;">
+<div style="display: flex; gap: 14px; background: #DCEFE3; border-radius: 16px; padding: 20px 22px; align-items: flex-start;">
+<span style="flex-shrink: 0; width: 32px; height: 32px; border-radius: 9px; background: #1F7A52; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 700;">✓</span>
+<div style="display: flex; flex-direction: column; gap: 4px;"><span style="font-weight: 600; color: #174F37;">Remember</span><span style="font-size: 15px; line-height: 1.6; color: #174F37;">{{cur.tip}}</span></div>
+</div>
+<div style="display: flex; gap: 14px; background: #FCE7DD; border-radius: 16px; padding: 20px 22px; align-items: flex-start;">
+<span style="flex-shrink: 0; width: 32px; height: 32px; border-radius: 9px; background: #C4502A; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 700;">!</span>
+<div style="display: flex; flex-direction: column; gap: 4px;"><span style="font-weight: 600; color: #7A2E14;">Common mistake</span><span style="font-size: 15px; line-height: 1.6; color: #7A2E14;">{{cur.mistake}}</span></div>
+</div>
+</div>
+
+<div style="display: flex; justify-content: space-between;">
+<button onClick="{{prev}}" style="min-height: 48px; padding: 12px 22px; border-radius: 12px; border: 1.5px solid #16181D; background: transparent; cursor: pointer; font: 600 15px 'IBM Plex Sans', sans-serif; color: #16181D;">← Previous</button>
+<button onClick="{{next}}" style="min-height: 48px; padding: 12px 22px; border-radius: 12px; border: none; background: #16181D; color: #F6E7B8; cursor: pointer; font: 600 15px 'IBM Plex Sans', sans-serif;">Next lesson →</button>
+</div>
+</div>
+</section>
+
+<!-- FIXTURE LIFECYCLE VISUAL -->
+<section style="background: #16181D; color: #F4F1EA; padding: 88px 80px; display: flex; flex-direction: column; gap: 36px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 40px;">
+<div style="display: flex; flex-direction: column; gap: 14px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #E8B64C;">visualize · what pytest does when you run a test</span>
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 48px; letter-spacing: -0.02em;">Fixtures, from start to finish</h2>
+</div>
+<div style="display: flex; gap: 10px; align-items: center;">
+<button onClick="{{fPrev}}" aria-label="Previous step" style="width: 48px; height: 48px; border-radius: 12px; border: 1.5px solid #3A3E48; background: transparent; color: #F4F1EA; cursor: pointer; font-size: 18px;">←</button>
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; min-width: 60px; text-align: center;">{{fLabel}}</span>
+<button onClick="{{fNext}}" aria-label="Next step" style="width: 48px; height: 48px; border-radius: 12px; border: none; background: #E8B64C; color: #16181D; cursor: pointer; font-size: 18px;">→</button>
+</div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 32px;">
+<div style="grid-column: span 8; display: flex; align-items: stretch; gap: 14px;">
+<div style="{{fs.collect}}"><span style="font-family: 'JetBrains Mono', monospace; font-size: 12px;">1</span><span style="font-weight: 600;">collect</span><span style="font-size: 12px; opacity: 0.8;">find test_*</span></div>
+<div style="{{fs.session}}">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px;">2 · browser · scope=session</span>
+<div style="{{fs.test}}">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px;">3 · page · fresh for every test</span>
+<div style="display: flex; gap: 10px;">
+<div style="{{fs.setup}}"><span style="font-family: 'JetBrains Mono', monospace; font-size: 12px;">4</span><span style="font-weight: 600;">setup</span><span style="font-size: 12px; opacity: 0.8;">code before yield</span></div>
+<div style="{{fs.body}}"><span style="font-family: 'JetBrains Mono', monospace; font-size: 12px;">5</span><span style="font-weight: 600;">test body</span><span style="font-size: 12px; opacity: 0.8;">at yield</span></div>
+<div style="{{fs.teardown}}"><span style="font-family: 'JetBrains Mono', monospace; font-size: 12px;">6</span><span style="font-weight: 600;">teardown</span><span style="font-size: 12px; opacity: 0.8;">code after yield</span></div>
+</div>
+</div>
+<span style="font-size: 12px; color: #8A8F9C;">steps 3–6 repeat for each test; the browser stays open</span>
+</div>
+<div style="{{fs.report}}"><span style="font-family: 'JetBrains Mono', monospace; font-size: 12px;">7</span><span style="font-weight: 600;">report</span><span style="font-size: 12px; opacity: 0.8;">pass / fail</span></div>
+</div>
+<div style="grid-column: span 4; display: flex; flex-direction: column; gap: 16px;">
+<div style="background: #E8B64C; color: #16181D; border-radius: 20px; padding: 26px; display: flex; flex-direction: column; gap: 10px;">
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 26px; font-weight: 700; line-height: 1.15;">{{fCur.head}}</span>
+<span style="font-size: 15px; line-height: 1.6;">{{fCur.body}}</span>
+</div>
+<pre style="margin: 0; background: #1E2129; border: 1px solid #2E323C; border-radius: 16px; padding: 18px 20px; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #D8DAE0; white-space: pre;">{{fCur.code}}</pre>
+</div>
+</div>
+</section>
+
+<section style="flex-grow: 1; padding: 64px 80px; display: flex; justify-content: space-between; align-items: center; gap: 30px;">
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #6A6E77;">next in the path</span>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 34px; font-weight: 800;">Module 02 · OOP for Playwright</span>
+</div>
+<a href="OOPPW.html" style="text-decoration: none; padding: 16px 26px; border-radius: 12px; background: #4B45A1; color: #FFFFFF; font-weight: 600;">Continue →</a>
+</section>
+</div>`;
+window.__mountDC(__TPL, Component);
+</script>
+</body>
+</html>

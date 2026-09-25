@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440">
+<title>API Testing — Course</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap">
+<style>html,body{margin:0;background:#F4F1EA;font-family:'IBM Plex Sans',system-ui,sans-serif} #app > div{margin:0 auto}</style>
+</head>
+<body>
+
+<style>
+.snav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:16px 40px;background:#16181D;color:#F4F1EA;font-family:'IBM Plex Sans',sans-serif;flex-wrap:wrap;gap:12px}
+.snav a{color:#F4F1EA;text-decoration:none}
+.snav .brand{display:flex;align-items:center;gap:10px;font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:18px}
+.snav .brand span.logo{width:34px;height:34px;border-radius:9px;background:#7EE2A8;color:#16181D;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:14px}
+.snav ul{list-style:none;display:flex;gap:6px;margin:0;padding:0;align-items:center;flex-wrap:wrap}
+.snav > ul > li{position:relative}
+.snav > ul > li > a,.snav > ul > li > span{display:block;padding:9px 14px;border-radius:9px;font-size:15px;font-weight:500;cursor:pointer;white-space:nowrap}
+.snav > ul > li:hover > a,.snav > ul > li:hover > span,.snav .cur{background:#2A2D35}
+.snav .caret{font-size:11px;opacity:.7;margin-left:4px}
+.snav .drop{position:absolute;top:100%;left:0;min-width:220px;background:#1E2129;border:1px solid #2E323C;border-radius:12px;padding:8px;display:none;flex-direction:column;gap:2px;box-shadow:0 18px 40px -16px rgba(0,0,0,.6)}
+.snav > ul > li:hover .drop{display:flex}
+.snav .drop a{padding:9px 12px;border-radius:8px;font-size:14px;color:#D8DAE0}
+.snav .drop a:hover{background:#2A2D35;color:#fff}
+.snav .drop .grp{font-family:'JetBrains Mono',monospace;font-size:11px;color:#8A8F9C;text-transform:uppercase;letter-spacing:.06em;padding:8px 12px 2px}
+.snav .cta{padding:9px 18px;border-radius:999px;background:#1F7A52;color:#fff;font-weight:600}
+.snav .menubtn{display:none;background:none;border:1.5px solid #3A3E48;color:#F4F1EA;border-radius:9px;padding:8px 12px;font-size:15px;cursor:pointer}
+@media(max-width:1100px){
+  .snav .menubtn{display:block}
+  .snav > ul{display:none;flex-direction:column;align-items:stretch;width:100%;order:3}
+  .snav.open > ul{display:flex}
+  .snav .drop{position:static;display:flex;border:none;box-shadow:none;background:transparent;padding:0 0 6px 14px}
+  .snav > ul > li:hover .drop{display:flex}
+}
+</style>
+<nav class="snav" id="snav">
+<a class="brand" href="index.html"><span class="logo">S✓</span>Shamima Sultana</a>
+<button class="menubtn" onclick="document.getElementById('snav').classList.toggle('open')">Menu ☰</button>
+<ul>
+<li><a href="index.html" class="">Home</a></li>
+<li><span class="">About <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="about.html">Intro &amp; journey</a>
+    <a href="skills.html">Skills</a>
+    <a href="certifications.html">Certifications</a>
+    <a href="research.html">Research</a>
+    <a href="achievements.html">Achievements</a>
+  </div></li>
+<li><span class="">Work <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="projects.html">Projects</a>
+  </div></li>
+<li><span class="cur">Learn <span class="caret">▾</span></span>
+  <div class="drop">
+    <span class="grp">Automation</span>
+    <a href="PWHub.html">Playwright path</a>
+    <a href="Selenium.html">Selenium with Java</a>
+    <a href="MobileTest.html">Mobile testing</a>
+    <span class="grp">Performance</span>
+    <a href="K6Hub.html">k6</a>
+    <a href="JMeter.html">JMeter</a>
+    <span class="grp">Data &amp; APIs</span>
+    <a href="SQLHub.html">SQL</a>
+    <a href="API.html">API testing</a>
+    <span class="grp">Core &amp; specialised</span>
+    <a href="Manual.html">Manual testing</a>
+    <a href="AITest.html">AI / LLM testing</a>
+    <a href="DevTools.html">DevTools</a>
+    <a href="Git.html">Git &amp; GitHub</a>
+    <a href="A11y.html">Accessibility</a>
+    <a href="Security.html">Security</a>
+  </div></li>
+<li><span class="">Writing <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="K6Hub.html">Tutorials &amp; articles</a>
+  </div></li>
+<li><span class="">More <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="News.html">News</a>
+    <a href="Interview.html">Interview prep</a>
+    <a href="ISTQB.html">ISTQB prep</a>
+  </div></li>
+<li><a class="cta" href="mailto:shamimasultanamiley605@gmail.com">Contact</a></li>
+</ul>
+</nav>
+
+<div id="app"></div>
+<script>/* Minimal renderer: replaces Claude's canvas engine so pages run anywhere. */
+(function(){
+  function resolve(scopes, path){
+    path=path.trim();
+    var parts=path.split('.'), head=parts[0], base, found=false;
+    for(var i=scopes.length-1;i>=0;i--){ if(scopes[i] && Object.prototype.hasOwnProperty.call(scopes[i],head)){ base=scopes[i][head]; found=true; break; } }
+    if(!found) return undefined;
+    for(var j=1;j<parts.length;j++){ if(base==null) return undefined; base=base[parts[j]]; }
+    return base;
+  }
+  function subst(str, scopes){
+    return str.replace(/\{\{([^}]+)\}\}/g, function(_,e){ var v=resolve(scopes,e); return v==null?'':String(v); });
+  }
+  function firstExpr(str){ var m=str.match(/\{\{([^}]+)\}\}/); return m?m[1].trim():null; }
+  function processNode(node, scopes, out){
+    if(node.nodeType===3){ // text
+      var t=node.nodeValue;
+      if(t.indexOf('{{')>=0) out.push(document.createTextNode(subst(t,scopes)));
+      else out.push(document.createTextNode(t));
+      return;
+    }
+    if(node.nodeType!==1){ return; }
+    var tag=node.tagName.toLowerCase();
+    if(tag==='sc-for'){
+      var listExpr=firstExpr(node.getAttribute('list')||'');
+      var as=node.getAttribute('as');
+      var arr=listExpr?resolve(scopes,listExpr):null;
+      if(Array.isArray(arr)){
+        for(var k=0;k<arr.length;k++){
+          var sc=scopes.concat([{__k:as, [as]:arr[k]}]);
+          for(var c=0;c<node.childNodes.length;c++) processNode(node.childNodes[c], sc, out);
+        }
+      }
+      return;
+    }
+    if(tag==='sc-if'){
+      var valExpr=firstExpr(node.getAttribute('value')||'');
+      var cond=valExpr?resolve(scopes,valExpr):false;
+      if(cond){ for(var c2=0;c2<node.childNodes.length;c2++) processNode(node.childNodes[c2], scopes, out); }
+      return;
+    }
+    var el=document.createElement(tag);
+    for(var a=0;a<node.attributes.length;a++){
+      var at=node.attributes[a], name=at.name, val=at.value;
+      if(name.indexOf('hint-')===0) continue;
+      if(name==='onclick'){ var h=firstExpr(val); (function(expr){ el.addEventListener('click', function(ev){ var fn=resolve(scopes,expr); if(typeof fn==='function') fn(ev); }); })(h); continue; }
+      if(name==='onchange'){ var h2=firstExpr(val); (function(expr){ el.addEventListener('input', function(ev){ var fn=resolve(scopes,expr); if(typeof fn==='function') fn(ev); }); })(h2); continue; }
+      var sv=val.indexOf('{{')>=0?subst(val,scopes):val;
+      if(name==='value' && (tag==='input'||tag==='textarea')){ el.value=sv; el.setAttribute('value',sv); }
+      else el.setAttribute(name, sv);
+    }
+    var kids=[];
+    for(var cc=0;cc<node.childNodes.length;cc++) processNode(node.childNodes[cc], scopes, kids);
+    for(var ki=0;ki<kids.length;ki++) el.appendChild(kids[ki]);
+    out.push(el);
+  }
+  window.__mountDC=function(templateHTML, ComponentClass){
+    var tplRoot=document.createElement('div'); tplRoot.innerHTML=templateHTML;
+    var mount=document.getElementById('app');
+    var comp=new ComponentClass({});
+    function doRender(){
+      var vals;
+      try{ vals=comp.renderVals(); }catch(e){ console.error('render error',e); return; }
+      var frag=document.createDocumentFragment();
+      var buf=[];
+      for(var i=0;i<tplRoot.childNodes.length;i++) processNode(tplRoot.childNodes[i], [vals], buf);
+      for(var b=0;b<buf.length;b++) frag.appendChild(buf[b]);
+      // preserve focus in search/textarea across re-render
+      var active=document.activeElement, sel=null, id=null;
+      mount.innerHTML=''; mount.appendChild(frag);
+    }
+    comp.setState=function(s){ Object.assign(comp.state, s); doRender(); };
+    doRender();
+  };
+  window.DCLogic=function(){};
+})();
+</script>
+<script>
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { m: 0, l: 0, mode: 'split', f: 0, done: {} };
+  }
+  renderVals() {
+    const st = this.state;
+    const MODS = [{"num": "01", "title": "API basics", "blurb": "What an API is, how REST works, and the practice API used in this course.", "lessons": [{"title": "What an API is", "body": "An API is how one program talks to another. When you click Book in a hotel app, the screen calls an API, and the API talks to the database.", "code": "Browser / mobile app\n      │  HTTP request:  POST /booking  { ...details }\n      ▼\n   API server  ── checks rules ──►  database\n      │\n      │  HTTP response: 200 OK  { \"bookingid\": 42, ... }\n      ▼\nScreen shows \"Booking confirmed\"", "out": "Testing the API directly finds bugs faster than the UI:\nno clicking, exact inputs, exact outputs.", "tip": "Most modern apps are a UI on top of APIs. Test the API and you test the real logic.", "mistake": "Thinking API testing is only for developers.", "viz": "flow"}, {"title": "REST and resources", "body": "REST APIs organise data into resources (like bookings) with URLs, and use HTTP methods to act on them.", "code": "Resource: booking\n\nGET    /booking          list bookings\nGET    /booking/42       one booking\nPOST   /booking          create a booking\nPUT    /booking/42       replace booking 42\nPATCH  /booking/42       change some fields\nDELETE /booking/42       delete booking 42", "out": "Same URL, different method, different action.\nNouns in URLs, verbs in methods.", "tip": "Read the API docs (often Swagger/OpenAPI) before testing; they are the API's requirements.", "mistake": "Expecting every API to follow REST perfectly. Test what it actually does.", "viz": ""}, {"title": "JSON", "body": "Most APIs send and receive JSON: text made of keys and values, objects and arrays.", "code": "{\n  \"firstname\": \"Ayesha\",\n  \"lastname\": \"Rahman\",\n  \"totalprice\": 5400,\n  \"depositpaid\": true,\n  \"bookingdates\": {\n    \"checkin\": \"2026-11-03\",\n    \"checkout\": \"2026-11-05\"\n  },\n  \"additionalneeds\": \"Breakfast\"\n}", "out": "string   \"Ayesha\"        number   5400\nboolean  true            object   { ... }\narray    [ ... ]         null     null", "tip": "Check types, not just values: 5400 and \"5400\" are different in JSON.", "mistake": "Invalid JSON: trailing commas and single quotes break it.", "viz": ""}, {"title": "The practice API: Restful Booker", "body": "Restful Booker is a free public API built for practising API testing. It even has a few deliberate bugs to find.", "code": "Base URL   https://restful-booker.herokuapp.com\n\nGET  /ping              health check\nPOST /auth              get a token\nGET  /booking           list booking IDs\nGET  /booking/:id       one booking\nPOST /booking           create\nPUT  /booking/:id       update (token needed)\nPATCH /booking/:id      partial update (token)\nDELETE /booking/:id     delete (token)", "out": "Its data resets regularly, and other learners use it too,\nso IDs you create may disappear.", "tip": "Practise every lesson against it with Postman or Python.", "mistake": "Using it for load tests. It's a shared learning API; use k6 on your own targets.", "viz": ""}]}, {"num": "02", "title": "HTTP in depth", "blurb": "Methods, status codes, headers and parameters: the language of APIs.", "lessons": [{"title": "Methods and idempotency", "body": "Each method has a meaning. Idempotent means calling it many times has the same effect as once.", "code": "Method   Purpose            Idempotent  Safe\nGET      read               yes         yes\nPOST     create             no          no\nPUT      replace            yes         no\nPATCH    partial update     usually     no\nDELETE   remove             yes         no", "out": "Test idea: send the same POST twice.\nDo you get two bookings? Is that allowed?", "tip": "Double-submitting POSTs is a classic source of duplicate records.", "mistake": "Using GET to change data. GET should never change anything.", "viz": ""}, {"title": "Status codes", "body": "The three-digit code tells you what happened. Testers must check it on every request.", "code": "2xx success\n  200 OK            201 Created       204 No Content\n4xx client error (your request is wrong)\n  400 Bad Request   401 Unauthorized  403 Forbidden\n  404 Not Found     409 Conflict      422 Unprocessable\n  429 Too Many Requests\n5xx server error (their side broke)\n  500 Internal Server Error  502 Bad Gateway  503 Unavailable", "out": "A 500 for bad input is always a bug:\nthe server should answer 400 or 422 with a clear message.", "tip": "401 = who are you? (not logged in). 403 = I know you, but no (no permission).", "mistake": "Only checking for 200 and ignoring the body.", "viz": ""}, {"title": "Headers", "body": "Headers carry information about the request or response: format, auth, caching.", "code": "Request headers\n  Content-Type: application/json   what I'm sending\n  Accept: application/json         what I want back\n  Authorization: Bearer eyJhbGc…   who I am\n  Cookie: token=abc123\n\nResponse headers\n  Content-Type: application/json; charset=utf-8\n  Cache-Control, Set-Cookie, X-RateLimit-Remaining", "out": "Test idea: send XML with Content-Type: application/json.\nDoes the API reject it cleanly?", "tip": "Restful Booker needs Accept: application/json on some endpoints to return JSON.", "mistake": "Forgetting Content-Type on POST and getting a confusing 400 or 500.", "viz": ""}, {"title": "Path, query and body", "body": "Three places to put data in a request.", "code": "Path      /booking/42                     which item\nQuery     /booking?firstname=Ayesha       filters, paging\nBody      { \"firstname\": \"Ayesha\", ... }  data to create/update\n\nFull example\nGET https://restful-booker.herokuapp.com/booking?checkin=2026-11-01", "out": "Test each place with bad input:\n/booking/abc   /booking/-1   /booking/99999999\n?checkin=not-a-date   body with missing fields", "tip": "Path IDs that don't exist should give 404, not 500 or 200 with empty data.", "mistake": "Only testing the values the UI can send. The API accepts anything.", "viz": ""}]}, {"num": "03", "title": "Postman", "blurb": "Send requests, organise collections, write tests and run them from the command line.", "lessons": [{"title": "Your first request", "body": "Postman is a free app for sending API requests and inspecting responses.", "code": "1. Install Postman (postman.com/downloads)\n2. New → HTTP request\n3. Method: GET\n4. URL:    https://restful-booker.herokuapp.com/booking/1\n5. Headers: Accept: application/json\n6. Send", "out": "Status: 200 OK   Time: 312 ms   Size: 432 B\n{\n  \"firstname\": \"Sally\",\n  \"lastname\": \"Brown\",\n  \"totalprice\": 111,\n  ...\n}", "tip": "Look at status, time and body on every response, every time.", "mistake": "Only reading the body and missing that the status was an error.", "viz": ""}, {"title": "Collections and environments", "body": "Collections group requests. Environments hold variables like the base URL, so one collection works on QA and staging.", "code": "Environment \"QA\"\n  baseUrl   = https://restful-booker.herokuapp.com\n  username  = admin\n  password  = (stored as secret)\n\nRequest URL\n  {{baseUrl}}/booking/{{bookingId}}", "out": "Switch environment in the top-right dropdown:\nthe same requests now hit a different server.", "tip": "Never hardcode URLs or passwords in requests. Use variables.", "mistake": "Committing an environment file with real passwords to Git.", "viz": ""}, {"title": "Tests in Postman", "body": "The Tests (post-response) tab runs JavaScript after each response. pm.test and pm.expect turn a request into an automated check.", "code": "pm.test(\"status is 200\", () => {\n  pm.response.to.have.status(200);\n});\n\npm.test(\"has booking fields\", () => {\n  const b = pm.response.json();\n  pm.expect(b).to.have.property(\"firstname\");\n  pm.expect(b.totalprice).to.be.a(\"number\");\n});\n\npm.test(\"responds in under 1 s\", () => {\n  pm.expect(pm.response.responseTime).to.be.below(1000);\n});", "out": "Test Results tab\n  ✓ status is 200\n  ✓ has booking fields\n  ✓ responds in under 1 s", "tip": "Test the body and types, not just the status code.", "mistake": "Tests that only check status 200.", "viz": ""}, {"title": "Chaining requests", "body": "Save a value from one response and use it in the next request, like a token or a new booking ID.", "code": "// Tests tab of POST /auth\nconst token = pm.response.json().token;\npm.environment.set(\"token\", token);\n\n// Tests tab of POST /booking\npm.environment.set(\"bookingId\", pm.response.json().bookingid);\n\n// Next request: PUT {{baseUrl}}/booking/{{bookingId}}\n// Header:       Cookie: token={{token}}", "out": "Run the collection in order: auth → create → update →\nget → delete. A full CRUD flow with no copy-paste.", "tip": "Order matters. Use the Collection Runner to run requests in sequence.", "mistake": "Copying a token by hand into every request.", "viz": ""}, {"title": "Newman: Postman from the command line", "body": "Newman runs a Postman collection in the terminal, which means it can run in CI.", "code": "npm install -g newman newman-reporter-htmlextra\n\nnewman run booker.postman_collection.json \\\n  -e qa.postman_environment.json \\\n  -r cli,htmlextra \\\n  --reporter-htmlextra-export reports/api.html", "out": "┌─────────────────────────┬──────────┬──────────┐\n│                         │ executed │   failed │\n├─────────────────────────┼──────────┼──────────┤\n│              requests   │        6 │        0 │\n│            assertions   │       18 │        1 │\n└─────────────────────────┴──────────┴──────────┘\n+ reports/api.html", "tip": "Export collections and environments to your Git repo so the team shares one source.", "mistake": "Tests that only work when run by hand in a particular order on your laptop.", "viz": ""}]}, {"num": "04", "title": "What to test in an API", "blurb": "A checklist that turns any endpoint into a full set of test cases.", "lessons": [{"title": "Positive and negative tests", "body": "For each endpoint, test valid requests and every kind of invalid one.", "code": "POST /booking\n\nPositive\n  Verify that a valid booking returns 200 and a bookingid\n\nNegative\n  Missing firstname\n  totalprice as text: \"abc\"\n  totalprice negative: -100\n  checkout before checkin\n  Empty body {}\n  Invalid JSON", "out": "Expected for negatives: 400/422 with a clear message.\nRestful Booker returns 500 for some of these;\nthat's one of its intentional bugs to report.", "tip": "Each negative case should fail in a controlled, informative way.", "mistake": "Treating any non-200 response as 'correct' for negative tests. 500 is still a bug.", "viz": ""}, {"title": "Response validation", "body": "A response can have the right status and still be wrong. Check the body thoroughly.", "code": "Check\n  Status code\n  Required fields present\n  Field types (number, string, boolean, date format)\n  Values match what you sent\n  No extra sensitive data (passwords, internal IDs)\n  Headers (Content-Type)\n  Response time", "out": "Sent totalprice: 5400  → returned 5400?\nSent checkin 2026-11-03 → returned same, same format?", "tip": "Compare the response with the request field by field for create and update.", "mistake": "Only checking that the response 'looks fine'.", "viz": ""}, {"title": "Schema validation", "body": "A JSON schema describes the expected shape of a response. Validating against it catches missing fields and wrong types automatically.", "code": "{\n  \"type\": \"object\",\n  \"required\": [\"firstname\", \"lastname\", \"totalprice\",\n               \"depositpaid\", \"bookingdates\"],\n  \"properties\": {\n    \"firstname\":   { \"type\": \"string\" },\n    \"totalprice\":  { \"type\": \"number\" },\n    \"depositpaid\": { \"type\": \"boolean\" },\n    \"bookingdates\": {\n      \"type\": \"object\",\n      \"required\": [\"checkin\", \"checkout\"]\n    }\n  }\n}", "out": "Postman: pm.response.to.have.jsonSchema(schema)\nPython:  jsonschema.validate(body, schema)", "tip": "If the API has an OpenAPI/Swagger spec, the schemas are already written there.", "mistake": "Hand-checking 20 fields in every test instead of one schema check.", "viz": ""}, {"title": "Auth and permissions", "body": "Check who can do what. Permission bugs are among the most serious API bugs.", "code": "Test matrix for DELETE /booking/42\n  No token                 → 401 or 403\n  Expired / invalid token  → 401 or 403\n  Valid token, owner       → success\n  Valid token, other user  → 403  (not the owner!)\n  Admin token              → success", "out": "The 'other user' row catches broken object-level\nauthorization: one user editing another's data.", "tip": "Always test with at least two different normal users, not only admin.", "mistake": "Testing everything as admin, where every permission check passes.", "viz": ""}, {"title": "Filtering, paging and sorting", "body": "List endpoints hide lots of bugs in their parameters.", "code": "GET /booking?firstname=Ayesha           filter\nGET /products?page=2&size=20            paging\nGET /products?sort=price&order=desc     sorting\n\nTest ideas\n  Filter that matches nothing → 200 with []\n  page=0, page=-1, page=9999\n  size=0, size=100000\n  Sort by a field that doesn't exist\n  Totals: do page counts add up?", "out": "Very large size values can also be a performance\nand security issue (dumping the whole table).", "tip": "Check the last page and one past the last page.", "mistake": "Only testing page 1 with default settings.", "viz": ""}, {"title": "Boundary and data tests", "body": "Apply manual test design techniques (BVA, EP) to API fields.", "code": "totalprice: 0, 1, -1, 99999999, 1.5, \"100\", null\nfirstname: \"\", \"a\", 255 chars, 256 chars,\n           \"O'Brien\", \"আয়েশা\", \"<script>\", null\ndates: 2026-02-29 (not a leap year), 2028-02-29,\n       \"03/11/2026\", \"\", past dates", "out": "The API should either accept each value correctly\nor reject it with a clear 4xx, never a 500.", "tip": "Keep a reusable list of tricky values and run it against every field.", "mistake": "Only sending values the UI would allow.", "viz": ""}]}, {"num": "05", "title": "Authentication", "blurb": "API keys, tokens, JWT and OAuth: how APIs know who you are, and how to test them.", "lessons": [{"title": "API keys and Basic auth", "body": "The simplest methods: a secret key in a header, or a username and password encoded in a header.", "code": "API key\n  X-API-Key: 4f9a…c21\n\nBasic auth  (Restful Booker supports it for updates)\n  Authorization: Basic YWRtaW46cGFzc3dvcmQxMjM=\n  (base64 of admin:password123)", "out": "Base64 is encoding, not encryption: anyone can decode it.\nSo Basic auth must only ever be used over HTTPS.", "tip": "Test that a wrong key is rejected and that the key isn't leaked in responses or logs.", "mistake": "Thinking Base64 hides the password.", "viz": ""}, {"title": "Tokens and JWT", "body": "Log in once, get a token, send it with every request. JWTs are tokens that carry readable information.", "code": "POST https://restful-booker.herokuapp.com/auth\n{ \"username\": \"admin\", \"password\": \"password123\" }\n→ { \"token\": \"abc123def456\" }\n\nUse it\n  Cookie: token=abc123def456          (Restful Booker)\n  Authorization: Bearer eyJhbGciOi…   (most APIs)", "out": "A JWT has three parts: header.payload.signature\nDecode the payload (e.g. at jwt.io) to see user, role, expiry.", "tip": "Test expired tokens, tampered tokens, and tokens from a logged-out session.", "mistake": "Pasting real production tokens into public websites.", "viz": ""}, {"title": "OAuth 2.0 in one lesson", "body": "OAuth lets an app act for a user without seeing their password, like 'Log in with Google'.", "code": "1. App sends user to the login server\n2. User logs in and approves\n3. Login server gives the app a code\n4. App swaps the code for an access token\n5. App calls the API with the token\n6. Token expires → app uses a refresh token\n\nPostman: Authorization tab → OAuth 2.0 → Get New Access Token", "out": "As a tester you mostly check: expiry, refresh,\nscopes (what the token is allowed to do), and logout.", "tip": "Ask developers which OAuth flow the app uses; the tests differ.", "mistake": "Trying to test OAuth by hand-crafting every step instead of using Postman's helper.", "viz": ""}]}, {"num": "06", "title": "Automating with Python", "blurb": "requests + pytest, schema checks, and Playwright's API client.", "lessons": [{"title": "requests: your first API test", "body": "The requests library sends HTTP calls from Python. Add pytest and you have automated API tests.", "code": "# pip install requests pytest\nimport requests\n\nBASE = \"https://restful-booker.herokuapp.com\"\n\ndef test_get_booking():\n    res = requests.get(f\"{BASE}/booking/1\",\n                       headers={\"Accept\": \"application/json\"})\n    assert res.status_code == 200\n    body = res.json()\n    assert \"firstname\" in body\n    assert isinstance(body[\"totalprice\"], int)", "out": "$ pytest -v\ntest_booking.py::test_get_booking PASSED", "tip": "Keep BASE in an environment variable so tests run against any server.", "mistake": "No timeout on requests; a hanging server hangs your whole suite. Add timeout=10.", "viz": ""}, {"title": "Fixtures for tokens and data", "body": "Use pytest fixtures to log in once and to create and clean up test data.", "code": "import os, pytest, requests\nBASE = os.getenv(\"BASE_URL\", \"https://restful-booker.herokuapp.com\")\n\n@pytest.fixture(scope=\"session\")\ndef token():\n    res = requests.post(f\"{BASE}/auth\", json={\n        \"username\": os.environ[\"BOOKER_USER\"],\n        \"password\": os.environ[\"BOOKER_PASS\"]}, timeout=10)\n    return res.json()[\"token\"]\n\n@pytest.fixture\ndef booking(token):\n    res = requests.post(f\"{BASE}/booking\", json=NEW_BOOKING, timeout=10)\n    booking_id = res.json()[\"bookingid\"]\n    yield booking_id\n    requests.delete(f\"{BASE}/booking/{booking_id}\",\n                    cookies={\"token\": token}, timeout=10)", "out": "Each test gets a fresh booking and it's deleted afterwards,\neven if the test fails.", "tip": "Cleanup in fixtures keeps shared environments clean.", "mistake": "Tests that depend on data created by another test.", "viz": ""}, {"title": "Parametrized negative tests", "body": "One test function, many bad inputs.", "code": "@pytest.mark.parametrize(\"field, value\", [\n    (\"totalprice\", \"abc\"),\n    (\"totalprice\", -100),\n    (\"firstname\", \"\"),\n    (\"bookingdates\", None),\n])\ndef test_invalid_booking_rejected(field, value):\n    body = {**NEW_BOOKING, field: value}\n    res = requests.post(f\"{BASE}/booking\", json=body, timeout=10)\n    assert res.status_code in (400, 422), res.text", "out": "test_invalid_booking_rejected[totalprice-abc]     FAILED\n  AssertionError: 500 Internal Server Error\n→ a real finding: bad input causes a server error", "tip": "Include res.text in the assertion message so failures show the server's answer.", "mistake": "Asserting status != 200 for negatives. That also passes on 500.", "viz": ""}, {"title": "Schema validation in Python", "body": "Validate the whole response shape in one line.", "code": "# pip install jsonschema\nfrom jsonschema import validate\n\nBOOKING_SCHEMA = { ... }   # from module 04\n\ndef test_booking_schema(booking):\n    res = requests.get(f\"{BASE}/booking/{booking}\",\n                       headers={\"Accept\": \"application/json\"}, timeout=10)\n    validate(instance=res.json(), schema=BOOKING_SCHEMA)", "out": "Passes silently, or raises ValidationError explaining\nexactly which field is missing or has the wrong type.", "tip": "Store schemas in files under tests/schemas/ and reuse them.", "mistake": "Writing a schema so loose (no 'required') that it can't fail.", "viz": ""}, {"title": "API tests with Playwright", "body": "Playwright has a built-in API client. Perfect for hybrid tests: set up by API, check in the UI.", "code": "def test_booking_via_api(playwright):\n    api = playwright.request.new_context(base_url=\"https://restful-booker.herokuapp.com\")\n    res = api.post(\"/booking\", data=NEW_BOOKING)\n    assert res.ok\n    booking_id = res.json()[\"bookingid\"]\n\n    got = api.get(f\"/booking/{booking_id}\",\n                  headers={\"Accept\": \"application/json\"})\n    assert got.json()[\"firstname\"] == NEW_BOOKING[\"firstname\"]\n    api.dispose()", "out": "Same pytest runner, same reports (Allure),\nsame fixtures as your UI tests.", "tip": "Create data via API, then open the UI to verify it. Much faster than clicking.", "mistake": "Doing all setup through slow UI steps.", "viz": ""}]}, {"num": "07", "title": "Advanced API testing", "blurb": "Contracts, mocks, rate limits, security and GraphQL.", "lessons": [{"title": "Contract testing with OpenAPI", "body": "An OpenAPI (Swagger) file is the API's contract. Test that the real API matches it.", "code": "openapi: 3.0.0\npaths:\n  /booking/{id}:\n    get:\n      responses:\n        \"200\":\n          content:\n            application/json:\n              schema: { $ref: \"#/components/schemas/Booking\" }\n        \"404\": { description: Not found }", "out": "Tools: Schemathesis (Python) generates tests from the spec\nand hunts for responses that break the contract.", "tip": "Ask for the OpenAPI file on day one; it's the API's requirements document.", "mistake": "Letting the spec and the real API drift apart without anyone noticing.", "viz": ""}, {"title": "Mocking", "body": "When a dependency isn't ready or is unreliable, a mock returns fake responses so you can keep testing.", "code": "Postman: Mock Servers (from a collection's saved examples)\nPython:  responses / requests-mock libraries\nTools:   WireMock, Mockoon\n\nExample: mock the payment provider to return\n  200 success, 402 card declined, 504 timeout\nand test how your app handles each.", "out": "Mocks let you test error paths (timeouts, declines)\nthat are hard to trigger for real.", "tip": "Always run final tests against the real integration too.", "mistake": "Only testing against mocks and calling it done.", "viz": ""}, {"title": "Rate limiting and resilience", "body": "APIs limit how often you can call them. Check limits are enforced and reported properly.", "code": "Send 100 requests in 10 seconds:\n  Expected after the limit: 429 Too Many Requests\n  Headers: Retry-After, X-RateLimit-Remaining\n\nAlso test\n  Timeouts: what does the client show?\n  Retries: does a retry create duplicates?", "out": "For heavier load, move to k6 (performance path),\non systems you own or have permission to test.", "tip": "Check the 429 body tells the client when to try again.", "mistake": "Load testing shared public APIs.", "viz": ""}, {"title": "API security basics", "body": "The OWASP API Security Top 10 lists the most common API weaknesses. Several can be tested by hand.", "code": "Broken object level authorization (BOLA / IDOR)\n  GET /orders/1044 with user A's token (order belongs to B)\nBroken authentication\n  Weak tokens, no expiry, tokens accepted after logout\nExcessive data exposure\n  Response includes password hashes, internal fields\nMass assignment\n  PATCH /users/me  { \"role\": \"admin\" }  → accepted?\nInjection\n  Unescaped input reaching SQL (see the SQL path)", "out": "BOLA is the number one API risk in OWASP's list.\nTwo users and one changed ID can find it.", "tip": "Only test systems you're authorised to test; report findings privately.", "mistake": "Assuming the UI hides a field, so the API must reject it.", "viz": ""}, {"title": "GraphQL basics", "body": "GraphQL uses one endpoint and lets the client ask for exactly the fields it wants.", "code": "POST /graphql\n{\n  \"query\": \"query { booking(id: 42) { firstname totalprice } }\"\n}\n\nResponse\n{ \"data\": { \"booking\": { \"firstname\": \"Ayesha\", \"totalprice\": 5400 } } }", "out": "Test differences\n  Errors often come back with status 200 and an \"errors\" array\n  Deeply nested queries can overload the server\n  Check permissions per field, not per endpoint", "tip": "Always check the errors array, not just the status code.", "mistake": "Assuming 200 means success in GraphQL.", "viz": ""}]}, {"num": "08", "title": "CI & reporting", "blurb": "Run API tests automatically and publish results the team can read.", "lessons": [{"title": "Newman in GitHub Actions", "body": "Run your Postman collection on every push.", "code": "# .github/workflows/api-tests.yml\nname: api-tests\non: [push, workflow_dispatch]\njobs:\n  newman:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - uses: actions/setup-node@v4\n        with: { node-version: 20 }\n      - run: npm install -g newman newman-reporter-htmlextra\n      - run: newman run api/collection.json -e api/qa.json -r cli,htmlextra --reporter-htmlextra-export reports/api.html\n      - uses: actions/upload-artifact@v4\n        if: always()\n        with: { name: api-report, path: reports/ }", "out": "Failed assertions → non-zero exit → red build.\nThe HTML report is attached to every run.", "tip": "Store passwords in GitHub Secrets, never in the environment file.", "mistake": "No if: always() on the upload, so failure reports are lost.", "viz": ""}, {"title": "pytest reports and Allure", "body": "Python API tests get the same reporting as your Playwright UI tests.", "code": "pytest tests/api --junitxml=reports/junit.xml \\\n                  --html=reports/api.html --self-contained-html\n\npytest tests/api --alluredir=allure-results\nallure serve allure-results", "out": "Attach the request and response to Allure on failure:\nallure.attach(res.text, name=\"response\",\n              attachment_type=allure.attachment_type.JSON)", "tip": "Attaching the response body to failed tests saves hours of debugging.", "mistake": "Reports that say 'assert False' with no request details.", "viz": ""}, {"title": "A complete API test project", "body": "Put everything together as a portfolio project.", "code": "api-tests/\n├── postman/\n│   ├── booker.postman_collection.json\n│   └── qa.postman_environment.json   (no secrets)\n├── tests/\n│   ├── conftest.py        token + booking fixtures\n│   ├── schemas/booking.json\n│   ├── test_crud.py       create, read, update, delete\n│   ├── test_negative.py   parametrized bad inputs\n│   └── test_auth.py       401 / 403 matrix\n├── .github/workflows/api-tests.yml\n└── README.md              how to run, bugs found", "out": "Include a 'Bugs found' section in the README:\nreal findings (like 500s on bad input) impress interviewers.", "tip": "Write the README as if a new teammate had to run it in five minutes.", "mistake": "A repo with tests but no explanation of what they cover.", "viz": ""}]}, {"num": "09", "title": "Interview prep", "blurb": "The API testing questions QA interviews ask most.", "lessons": [{"title": "Concept questions", "body": "Short answers to the most common questions.", "code": "Q PUT vs PATCH?\nA PUT replaces the whole resource; PATCH changes some fields.\nQ 401 vs 403?\nA 401: not authenticated. 403: authenticated but not allowed.\nQ What is idempotency?\nA Repeating the call has the same effect as calling once.\nQ REST vs SOAP?\nA REST: resources over HTTP, usually JSON. SOAP: XML envelope, strict contract (WSDL).\nQ What do you check in a response?\nA Status, body values, types/schema, headers, time, no sensitive data.", "out": "Give one example from your practice project\nafter each answer.", "tip": "Mention a real bug you found, like a 500 on invalid input.", "mistake": "Answers with no example.", "viz": ""}, {"title": "Scenario questions", "body": "Structure your answer the same way every time.", "code": "Q How would you test POST /booking?\nA Functional   valid booking → 200 + id; data saved (GET it)\n  Validation   missing/invalid fields → 400 with message\n  Boundaries   price 0, huge values, date rules\n  Auth         (if protected) no/invalid/other user's token\n  Idempotency  same POST twice → duplicates?\n  Schema       response matches the contract\n  Performance  response time, then k6 for load\n  Security     extra fields ignored (mass assignment)", "out": "The categories show structured thinking;\ntwo examples per category are enough.", "tip": "Ask clarifying questions first: 'Is this endpoint authenticated? What's the contract?'", "mistake": "Jumping into random cases without structure.", "viz": ""}]}];
+    const FLOW = [{"name": "Client", "desc": "The app, Postman or your test builds a request: method, URL, headers, body.", "next": "Next: the request travels over the network.", "code": "POST /booking HTTP/1.1\nHost: restful-booker.herokuapp.com\nContent-Type: application/json\n\n{ \"firstname\": \"Ayesha\", ... }"}, {"name": "DNS + TLS", "desc": "The hostname becomes an IP address and a secure HTTPS connection is set up.", "next": "Next: the server receives it.", "code": "restful-booker.herokuapp.com → IP address\nTLS handshake → encrypted connection"}, {"name": "Gateway", "desc": "Often a load balancer or API gateway checks rate limits and routes the request.", "next": "Too many requests? → 429 here.", "code": "rate limit ok?  → forward\nelse            → 429 Too Many Requests"}, {"name": "Auth", "desc": "The server checks who you are (token, key, cookie) and whether you're allowed.", "next": "No/invalid credentials → 401. Not allowed → 403.", "code": "token valid?      else 401\npermission ok?    else 403"}, {"name": "Validation", "desc": "The body and parameters are checked against the rules.", "next": "Bad input → 400 or 422 with a message (not 500!).", "code": "firstname present?  totalprice a number?\ncheckout after checkin?\n→ else 400 Bad Request"}, {"name": "Logic + DB", "desc": "The business logic runs and the database is read or written.", "next": "An unhandled error here becomes a 500.", "code": "INSERT INTO bookings (...) VALUES (...)\n→ new id 42"}, {"name": "Response", "desc": "The server sends back a status code, headers and a body. Your tests check all three.", "next": "Back to the client, with timing you can measure.", "code": "HTTP/1.1 200 OK\nContent-Type: application/json\n\n{ \"bookingid\": 42, \"booking\": { ... } }"}];
+    const A = '#0B6FA4', AD = '#8FD0F2';
+    const mod = MODS[st.m];
+    const cur = mod.lessons[st.l] || mod.lessons[0];
+    const key = (m, l) => m + '-' + l;
+    let total = 0, doneN = 0;
+    MODS.forEach((mm, i) => mm.lessons.forEach((_, j) => { total++; if (st.done[key(i, j)]) doneN++; }));
+    const modTabs = MODS.map((mm, i) => {
+      const on = i === st.m;
+      const d = mm.lessons.filter((_, j) => st.done[key(i, j)]).length;
+      return { num: mm.num + (d === mm.lessons.length ? ' ✓' : ''), title: mm.title, pick: () => this.setState({ m: i, l: 0 }),
+        style: 'display:flex;flex-direction:column;align-items:flex-start;gap:4px;min-height:64px;padding:10px 12px;border:none;border-radius:14px 14px 0 0;cursor:pointer;text-align:left;font:600 13px IBM Plex Sans,sans-serif;flex:1;' + (on ? 'background:#F4F1EA;color:#16181D;' : 'background:rgba(0,0,0,0.06);color:#0A2F45;') };
+    });
+    const lessonNav = mod.lessons.map((ls, j) => {
+      const on = j === st.l, dn = !!st.done[key(st.m, j)];
+      return { title: ls.title, num: dn ? '✓' : String(j + 1).padStart(2, '0'), pick: () => this.setState({ l: j }),
+        style: 'display:flex;align-items:center;gap:12px;min-height:44px;padding:8px 12px;border-radius:10px;border:none;cursor:pointer;text-align:left;font:' + (on ? '600' : '400') + ' 15px IBM Plex Sans,sans-serif;' + (on ? 'background:#16181D;color:#F4F1EA;' : 'background:transparent;color:#16181D;'),
+        numStyle: 'flex-shrink:0;font:600 12px JetBrains Mono,monospace;width:28px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;' + (on ? 'background:' + A + ';color:#fff;' : dn ? 'background:#DCEFE3;color:#1F7A52;' : 'background:#EAE5DA;color:#6A6E77;') };
+    });
+    const modeDefs = [['split', 'Side by side'], ['code', 'Request'], ['out', 'Response']];
+    const modes = modeDefs.map(([id, label]) => ({ label, pick: () => this.setState({ mode: id }),
+      style: 'min-height:40px;padding:8px 14px;border-radius:8px;border:none;cursor:pointer;font:600 14px IBM Plex Sans,sans-serif;' + (st.mode === id ? 'background:#FFFFFF;color:#16181D;box-shadow:0 1px 3px rgba(0,0,0,.12);' : 'background:transparent;color:#5C606A;') }));
+    const isFirst = st.m === 0 && st.l === 0;
+    const isLast = st.m === MODS.length - 1 && st.l === mod.lessons.length - 1;
+    const go = (dir) => {
+      let m = st.m, l = st.l + dir;
+      if (l < 0) { if (m === 0) return; m -= 1; l = MODS[m].lessons.length - 1; }
+      if (l >= MODS[m].lessons.length) { if (m === MODS.length - 1) return; m += 1; l = 0; }
+      this.setState({ m, l });
+    };
+    const k = key(st.m, st.l); const isDone = !!st.done[k];
+    const pct = Math.round((doneN / total) * 100);
+    const fi = Math.min(st.f, FLOW.length - 1);
+    const fSteps = FLOW.map((s, i) => ({ num: String(i + 1), name: s.name, pick: () => this.setState({ f: i }),
+      style: 'display:flex;flex-direction:column;align-items:flex-start;gap:2px;min-height:52px;padding:8px 14px;border-radius:12px;cursor:pointer;font:600 14px IBM Plex Sans,sans-serif;text-align:left;' + (i === fi ? 'background:' + AD + ';color:#16181D;border:1.5px solid ' + AD + ';' : i < fi ? 'background:#2A2D35;color:#F4F1EA;border:1.5px solid #3A3E48;' : 'background:transparent;color:#A9AEBA;border:1.5px solid #3A3E48;') }));
+    return {
+      mod, cur, modTabs, lessonNav, modes,
+      lessonNum: String(st.l + 1), lessonTotal: String(mod.lessons.length),
+      showA: st.mode !== 'out', showB: st.mode !== 'code',
+      gridStyle: st.mode === 'split' ? 'display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;' : 'display:grid;grid-template-columns:repeat(1,minmax(0,1fr));gap:16px;',
+      prev: () => go(-1), next: () => go(1),
+      prevLabel: isFirst ? 'Start' : 'Previous', nextLabel: isLast ? 'Finished' : 'Next lesson',
+      markDone: () => this.setState({ done: { ...st.done, [k]: !isDone } }),
+      doneLabel: isDone ? '✓ Done' : 'Mark as done',
+      doneBtnStyle: 'min-height:48px;padding:12px 22px;border-radius:12px;cursor:pointer;font:600 15px IBM Plex Sans,sans-serif;' + (isDone ? 'background:#DCEFE3;color:#1F7A52;border:1.5px solid #7FC8A0;' : 'background:#FFFFFF;color:#16181D;border:1.5px solid #DDD7CB;'),
+      overallLabel: doneN + ' / ' + total + ' lessons',
+      overallStyle: 'height:100%;border-radius:999px;background:' + A + ';transition:width .3s;width:' + pct + '%;',
+      vizFlow: cur.viz === 'flow', fSteps, fCur: FLOW[fi], fLabel: (fi + 1) + ' / ' + FLOW.length,
+      fPrev: () => this.setState({ f: Math.max(0, fi - 1) }), fNext: () => this.setState({ f: Math.min(FLOW.length - 1, fi + 1) })
+    };
+  }
+}
+
+var __TPL=`<div style="width: 1440px; height: 2900px; box-sizing: border-box; display: flex; flex-direction: column; background: #F4F1EA; font-family: 'IBM Plex Sans', system-ui, sans-serif; color: #16181D;">
+
+<section style="background: #DCEEF8; padding: 48px 80px 0; display: flex; flex-direction: column; gap: 26px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 40px;">
+<div style="display: flex; flex-direction: column; gap: 14px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #25597A;">api testing · module {{mod.num}}</span>
+<h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 56px; line-height: 1; letter-spacing: -0.03em; color: #0A2F45;">{{mod.title}}</h1>
+<p style="margin: 0; font-size: 18px; line-height: 1.6; color: #25597A; max-width: 760px;">{{mod.blurb}}</p>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px; min-width: 300px;">
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 22px; font-weight: 800; color: #0A2F45;">API testing: zero → automation</span>
+<div style="display: flex; justify-content: space-between; font-size: 14px; color: #0A2F45;"><span>Course progress</span><span style="font-family: 'JetBrains Mono', monospace;">{{overallLabel}}</span></div>
+<div style="height: 8px; border-radius: 999px; background: rgba(0,0,0,0.1); overflow: hidden;"><div style="{{overallStyle}}"></div></div>
+<span style="font-size: 13px; color: #25597A;">Practice API: Restful Booker (free, public).</span>
+</div>
+</div>
+<div style="display: flex; gap: 6px;">
+<sc-for list="{{modTabs}}" as="t" hint-placeholder-count="9">
+<button onClick="{{t.pick}}" style="{{t.style}}"><span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; opacity: 0.8;">{{t.num}}</span><span>{{t.title}}</span></button>
+</sc-for>
+</div>
+</section>
+
+<section style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 40px; padding: 56px 80px 48px;">
+<aside style="grid-column: span 3; display: flex; flex-direction: column; gap: 6px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #6A6E77; text-transform: uppercase; letter-spacing: 0.08em; padding: 0 12px 10px;">module {{mod.num}} · lessons</span>
+<sc-for list="{{lessonNav}}" as="l" hint-placeholder-count="7">
+<button onClick="{{l.pick}}" style="{{l.style}}"><span style="{{l.numStyle}}">{{l.num}}</span><span>{{l.title}}</span></button>
+</sc-for>
+</aside>
+<div style="grid-column: span 9; display: flex; flex-direction: column; gap: 22px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 20px;">
+<div style="display: flex; flex-direction: column; gap: 10px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #0B6FA4;">module {{mod.num}} · lesson {{lessonNum}} of {{lessonTotal}}</span>
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 44px; letter-spacing: -0.02em; line-height: 1.05;">{{cur.title}}</h2>
+</div>
+<div style="display: flex; gap: 6px; background: #EAE5DA; padding: 5px; border-radius: 12px;">
+<sc-for list="{{modes}}" as="m" hint-placeholder-count="3"><button onClick="{{m.pick}}" style="{{m.style}}">{{m.label}}</button></sc-for>
+</div>
+</div>
+<p style="margin: 0; font-size: 18px; line-height: 1.7; color: #34373F; max-width: 840px;">{{cur.body}}</p>
+<div style="{{gridStyle}}">
+<sc-if value="{{showA}}" hint-placeholder-val="{{ true }}">
+<div style="background: #16181D; border-radius: 16px; overflow: hidden;">
+<div style="padding: 12px 18px; border-bottom: 1px solid #2A2D35; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #8FD0F2;">request / code</div>
+<pre style="margin: 0; padding: 20px; font-family: 'JetBrains Mono', monospace; font-size: 13.5px; line-height: 1.7; color: #D8DAE0; white-space: pre-wrap;">{{cur.code}}</pre>
+</div>
+</sc-if>
+<sc-if value="{{showB}}" hint-placeholder-val="{{ true }}">
+<div style="background: #FFFFFF; border: 1px solid #DDD7CB; border-radius: 16px; overflow: hidden;">
+<div style="padding: 12px 18px; border-bottom: 1px solid #DDD7CB; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #0B6FA4;">response / meaning</div>
+<pre style="margin: 0; padding: 20px; font-family: 'JetBrains Mono', monospace; font-size: 13.5px; line-height: 1.7; color: #16181D; white-space: pre-wrap;">{{cur.out}}</pre>
+</div>
+</sc-if>
+</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px;">
+<div style="display: flex; gap: 14px; background: #DCEFE3; border-radius: 16px; padding: 20px 22px; align-items: flex-start;">
+<span style="flex-shrink: 0; width: 32px; height: 32px; border-radius: 9px; background: #1F7A52; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 700;">✓</span>
+<div style="display: flex; flex-direction: column; gap: 4px;"><span style="font-weight: 600; color: #174F37;">Remember</span><span style="font-size: 15px; line-height: 1.6; color: #174F37;">{{cur.tip}}</span></div>
+</div>
+<div style="display: flex; gap: 14px; background: #FCE7DD; border-radius: 16px; padding: 20px 22px; align-items: flex-start;">
+<span style="flex-shrink: 0; width: 32px; height: 32px; border-radius: 9px; background: #C4502A; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 700;">!</span>
+<div style="display: flex; flex-direction: column; gap: 4px;"><span style="font-weight: 600; color: #7A2E14;">Common mistake</span><span style="font-size: 15px; line-height: 1.6; color: #7A2E14;">{{cur.mistake}}</span></div>
+</div>
+</div>
+<div style="display: flex; justify-content: space-between; align-items: center;">
+<button onClick="{{prev}}" style="min-height: 48px; padding: 12px 22px; border-radius: 12px; border: 1.5px solid #16181D; background: transparent; cursor: pointer; font: 600 15px 'IBM Plex Sans', sans-serif; color: #16181D;">← {{prevLabel}}</button>
+<button onClick="{{markDone}}" style="{{doneBtnStyle}}">{{doneLabel}}</button>
+<button onClick="{{next}}" style="min-height: 48px; padding: 12px 22px; border-radius: 12px; border: none; background: #0B6FA4; color: #FFFFFF; cursor: pointer; font: 600 15px 'IBM Plex Sans', sans-serif;">{{nextLabel}} →</button>
+</div>
+</div>
+</section>
+
+<sc-if value="{{vizFlow}}" hint-placeholder-val="{{ false }}">
+<section style="margin: 0 80px 64px; background: #16181D; color: #F4F1EA; border-radius: 28px; padding: 44px; display: flex; flex-direction: column; gap: 26px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 30px;">
+<div style="display: flex; flex-direction: column; gap: 10px;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #8FD0F2;">visualize · one request, end to end</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 36px; font-weight: 800;">Where each status code comes from</span></div>
+<div style="display: flex; gap: 10px; align-items: center;">
+<button onClick="{{fPrev}}" aria-label="Previous step" style="width: 48px; height: 48px; border-radius: 12px; border: 1.5px solid #3A3E48; background: transparent; color: #F4F1EA; cursor: pointer; font-size: 18px;">←</button>
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; min-width: 60px; text-align: center;">{{fLabel}}</span>
+<button onClick="{{fNext}}" aria-label="Next step" style="width: 48px; height: 48px; border-radius: 12px; border: none; background: #8FD0F2; color: #16181D; cursor: pointer; font-size: 18px;">→</button>
+</div>
+</div>
+<div style="display: flex; gap: 8px; flex-wrap: wrap;">
+<sc-for list="{{fSteps}}" as="fs" hint-placeholder-count="7"><button onClick="{{fs.pick}}" style="{{fs.style}}"><span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; opacity: 0.75;">{{fs.num}}</span><span>{{fs.name}}</span></button></sc-for>
+</div>
+<div style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 24px;">
+<div style="grid-column: span 6; background: #8FD0F2; color: #16181D; border-radius: 20px; padding: 26px; display: flex; flex-direction: column; gap: 10px;">
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 28px; font-weight: 800;">{{fCur.name}}</span>
+<span style="font-size: 16px; line-height: 1.6;">{{fCur.desc}}</span>
+<span style="font-size: 14px; font-weight: 600;">{{fCur.next}}</span>
+</div>
+<pre style="grid-column: span 6; margin: 0; background: #1E2129; border: 1px solid #2E323C; border-radius: 20px; padding: 22px; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #D8DAE0; white-space: pre-wrap;">{{fCur.code}}</pre>
+</div>
+</section>
+</sc-if>
+
+<div style="flex-grow: 1;"></div>
+<section style="padding: 0 80px 64px; display: flex; justify-content: space-between; align-items: center; gap: 30px;">
+<div style="display: flex; flex-direction: column; gap: 8px;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #6A6E77;">go further</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 30px; font-weight: 800;">Load test your APIs with k6</span></div>
+<a href="K6Hub.html" style="text-decoration: none; padding: 16px 26px; border-radius: 12px; background: #16181D; color: #8FD0F2; font-weight: 600;">k6 path →</a>
+</section>
+</div>`;
+window.__mountDC(__TPL, Component);
+</script>
+</body>
+</html>

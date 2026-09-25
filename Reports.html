@@ -1,0 +1,499 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440">
+<title>Reporting &amp; Evidence — Module 08</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap">
+<style>html,body{margin:0;background:#F4F1EA;font-family:'IBM Plex Sans',system-ui,sans-serif} #app > div{margin:0 auto}</style>
+</head>
+<body>
+
+<style>
+.snav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:16px 40px;background:#16181D;color:#F4F1EA;font-family:'IBM Plex Sans',sans-serif;flex-wrap:wrap;gap:12px}
+.snav a{color:#F4F1EA;text-decoration:none}
+.snav .brand{display:flex;align-items:center;gap:10px;font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:18px}
+.snav .brand span.logo{width:34px;height:34px;border-radius:9px;background:#7EE2A8;color:#16181D;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:14px}
+.snav ul{list-style:none;display:flex;gap:6px;margin:0;padding:0;align-items:center;flex-wrap:wrap}
+.snav > ul > li{position:relative}
+.snav > ul > li > a,.snav > ul > li > span{display:block;padding:9px 14px;border-radius:9px;font-size:15px;font-weight:500;cursor:pointer;white-space:nowrap}
+.snav > ul > li:hover > a,.snav > ul > li:hover > span,.snav .cur{background:#2A2D35}
+.snav .caret{font-size:11px;opacity:.7;margin-left:4px}
+.snav .drop{position:absolute;top:100%;left:0;min-width:220px;background:#1E2129;border:1px solid #2E323C;border-radius:12px;padding:8px;display:none;flex-direction:column;gap:2px;box-shadow:0 18px 40px -16px rgba(0,0,0,.6)}
+.snav > ul > li:hover .drop{display:flex}
+.snav .drop a{padding:9px 12px;border-radius:8px;font-size:14px;color:#D8DAE0}
+.snav .drop a:hover{background:#2A2D35;color:#fff}
+.snav .drop .grp{font-family:'JetBrains Mono',monospace;font-size:11px;color:#8A8F9C;text-transform:uppercase;letter-spacing:.06em;padding:8px 12px 2px}
+.snav .cta{padding:9px 18px;border-radius:999px;background:#1F7A52;color:#fff;font-weight:600}
+.snav .menubtn{display:none;background:none;border:1.5px solid #3A3E48;color:#F4F1EA;border-radius:9px;padding:8px 12px;font-size:15px;cursor:pointer}
+@media(max-width:1100px){
+  .snav .menubtn{display:block}
+  .snav > ul{display:none;flex-direction:column;align-items:stretch;width:100%;order:3}
+  .snav.open > ul{display:flex}
+  .snav .drop{position:static;display:flex;border:none;box-shadow:none;background:transparent;padding:0 0 6px 14px}
+  .snav > ul > li:hover .drop{display:flex}
+}
+</style>
+<nav class="snav" id="snav">
+<a class="brand" href="index.html"><span class="logo">S✓</span>Shamima Sultana</a>
+<button class="menubtn" onclick="document.getElementById('snav').classList.toggle('open')">Menu ☰</button>
+<ul>
+<li><a href="index.html" class="">Home</a></li>
+<li><span class="">About <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="about.html">Intro &amp; journey</a>
+    <a href="skills.html">Skills</a>
+    <a href="certifications.html">Certifications</a>
+    <a href="research.html">Research</a>
+    <a href="achievements.html">Achievements</a>
+  </div></li>
+<li><span class="">Work <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="projects.html">Projects</a>
+  </div></li>
+<li><span class="cur">Learn <span class="caret">▾</span></span>
+  <div class="drop">
+    <span class="grp">Automation</span>
+    <a href="PWHub.html">Playwright path</a>
+    <a href="Selenium.html">Selenium with Java</a>
+    <a href="MobileTest.html">Mobile testing</a>
+    <span class="grp">Performance</span>
+    <a href="K6Hub.html">k6</a>
+    <a href="JMeter.html">JMeter</a>
+    <span class="grp">Data &amp; APIs</span>
+    <a href="SQLHub.html">SQL</a>
+    <a href="API.html">API testing</a>
+    <span class="grp">Core &amp; specialised</span>
+    <a href="Manual.html">Manual testing</a>
+    <a href="AITest.html">AI / LLM testing</a>
+    <a href="DevTools.html">DevTools</a>
+    <a href="Git.html">Git &amp; GitHub</a>
+    <a href="A11y.html">Accessibility</a>
+    <a href="Security.html">Security</a>
+  </div></li>
+<li><span class="">Writing <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="K6Hub.html">Tutorials &amp; articles</a>
+  </div></li>
+<li><span class="">More <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="News.html">News</a>
+    <a href="Interview.html">Interview prep</a>
+    <a href="ISTQB.html">ISTQB prep</a>
+  </div></li>
+<li><a class="cta" href="mailto:shamimasultanamiley605@gmail.com">Contact</a></li>
+</ul>
+</nav>
+
+<div id="app"></div>
+<script>/* Minimal renderer: replaces Claude's canvas engine so pages run anywhere. */
+(function(){
+  function resolve(scopes, path){
+    path=path.trim();
+    var parts=path.split('.'), head=parts[0], base, found=false;
+    for(var i=scopes.length-1;i>=0;i--){ if(scopes[i] && Object.prototype.hasOwnProperty.call(scopes[i],head)){ base=scopes[i][head]; found=true; break; } }
+    if(!found) return undefined;
+    for(var j=1;j<parts.length;j++){ if(base==null) return undefined; base=base[parts[j]]; }
+    return base;
+  }
+  function subst(str, scopes){
+    return str.replace(/\{\{([^}]+)\}\}/g, function(_,e){ var v=resolve(scopes,e); return v==null?'':String(v); });
+  }
+  function firstExpr(str){ var m=str.match(/\{\{([^}]+)\}\}/); return m?m[1].trim():null; }
+  function processNode(node, scopes, out){
+    if(node.nodeType===3){ // text
+      var t=node.nodeValue;
+      if(t.indexOf('{{')>=0) out.push(document.createTextNode(subst(t,scopes)));
+      else out.push(document.createTextNode(t));
+      return;
+    }
+    if(node.nodeType!==1){ return; }
+    var tag=node.tagName.toLowerCase();
+    if(tag==='sc-for'){
+      var listExpr=firstExpr(node.getAttribute('list')||'');
+      var as=node.getAttribute('as');
+      var arr=listExpr?resolve(scopes,listExpr):null;
+      if(Array.isArray(arr)){
+        for(var k=0;k<arr.length;k++){
+          var sc=scopes.concat([{__k:as, [as]:arr[k]}]);
+          for(var c=0;c<node.childNodes.length;c++) processNode(node.childNodes[c], sc, out);
+        }
+      }
+      return;
+    }
+    if(tag==='sc-if'){
+      var valExpr=firstExpr(node.getAttribute('value')||'');
+      var cond=valExpr?resolve(scopes,valExpr):false;
+      if(cond){ for(var c2=0;c2<node.childNodes.length;c2++) processNode(node.childNodes[c2], scopes, out); }
+      return;
+    }
+    var el=document.createElement(tag);
+    for(var a=0;a<node.attributes.length;a++){
+      var at=node.attributes[a], name=at.name, val=at.value;
+      if(name.indexOf('hint-')===0) continue;
+      if(name==='onclick'){ var h=firstExpr(val); (function(expr){ el.addEventListener('click', function(ev){ var fn=resolve(scopes,expr); if(typeof fn==='function') fn(ev); }); })(h); continue; }
+      if(name==='onchange'){ var h2=firstExpr(val); (function(expr){ el.addEventListener('input', function(ev){ var fn=resolve(scopes,expr); if(typeof fn==='function') fn(ev); }); })(h2); continue; }
+      var sv=val.indexOf('{{')>=0?subst(val,scopes):val;
+      if(name==='value' && (tag==='input'||tag==='textarea')){ el.value=sv; el.setAttribute('value',sv); }
+      else el.setAttribute(name, sv);
+    }
+    var kids=[];
+    for(var cc=0;cc<node.childNodes.length;cc++) processNode(node.childNodes[cc], scopes, kids);
+    for(var ki=0;ki<kids.length;ki++) el.appendChild(kids[ki]);
+    out.push(el);
+  }
+  window.__mountDC=function(templateHTML, ComponentClass){
+    var tplRoot=document.createElement('div'); tplRoot.innerHTML=templateHTML;
+    var mount=document.getElementById('app');
+    var comp=new ComponentClass({});
+    function doRender(){
+      var vals;
+      try{ vals=comp.renderVals(); }catch(e){ console.error('render error',e); return; }
+      var frag=document.createDocumentFragment();
+      var buf=[];
+      for(var i=0;i<tplRoot.childNodes.length;i++) processNode(tplRoot.childNodes[i], [vals], buf);
+      for(var b=0;b<buf.length;b++) frag.appendChild(buf[b]);
+      // preserve focus in search/textarea across re-render
+      var active=document.activeElement, sel=null, id=null;
+      mount.innerHTML=''; mount.appendChild(frag);
+    }
+    comp.setState=function(s){ Object.assign(comp.state, s); doRender(); };
+    doRender();
+  };
+  window.DCLogic=function(){};
+})();
+</script>
+<script>
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { lesson: 0, mode: 'split', rep: 3 };
+  }
+  renderVals() {
+    const st = this.state;
+    const L = [
+      { title: 'Why reports matter', body: 'A failed test only helps if someone can quickly see what failed, why, and whether it failed before. Different readers need different views of the same run.',
+        code: '$ pytest\n..F.s\n1 failed, 3 passed, 1 skipped',
+        out: 'Developer  → steps, screenshot, trace, error\nManager    → pass rate, trend over time\nCI         → machine-readable results\nYou        → which test, why, since when',
+        tip: 'Decide who reads the report before choosing the tool.', practice: 'List the three questions your team lead asks after every regression run.' },
+      { title: 'Console output and useful flags', body: 'Before any report tool, get the most out of pytest\u2019s own output. These flags answer most day-to-day questions.',
+        code: 'pytest -v           # one line per test\npytest -rA          # summary of every outcome\npytest --tb=short   # shorter tracebacks\npytest -x           # stop at first failure\npytest --lf         # rerun only last failures\npytest -m smoke     # run one marker',
+        out: 'test_login.py::test_valid_login PASSED\ntest_tender.py::test_create_tender FAILED\n\nFAILED test_create_tender - AssertionError:\n  Locator expected to be visible',
+        tip: 'pytest --lf is the fastest way to recheck a fix.', practice: 'Run your suite with -v -rA and read the summary section.' },
+      { title: 'JUnit XML for CI', body: 'JUnit XML is the standard format CI tools read to show a test results tab, count failures and mark a build red.',
+        code: 'pytest --junitxml=reports/junit.xml',
+        out: '<testsuite tests="5" failures="1" skipped="1">\n  <testcase name="test_valid_login"/>\n  <testcase name="test_create_tender">\n    <failure message="..."/>\n  </testcase>\n</testsuite>',
+        tip: 'GitHub Actions, Jenkins, GitLab and Azure DevOps all understand this file.', practice: 'Generate junit.xml and open it: find your failed test.' },
+      { title: 'pytest-html', body: 'One self-contained HTML file with a summary, filters and the log of every test. Easy to email or attach to a ticket.',
+        code: 'pip install pytest-html\n\npytest --html=reports/report.html \\\n       --self-contained-html\n\n# conftest.py: custom title\ndef pytest_html_report_title(report):\n    report.title = "Procurement smoke"',
+        out: 'reports/report.html\n  ├─ summary: 3 passed, 1 failed, 1 skipped\n  ├─ filter by outcome\n  └─ per-test logs and errors',
+        tip: '--self-contained-html puts CSS and images inside the one file.', practice: 'Generate a report and attach it to a Jira ticket as evidence.' },
+      { title: 'Screenshots, video and traces', body: 'pytest-playwright can capture evidence automatically. Keep it only for failures so runs stay fast and folders stay small.',
+        code: 'pytest --screenshot=only-on-failure \\\n       --video=retain-on-failure \\\n       --tracing=retain-on-failure\n\n# open a trace\nplaywright show-trace test-results/<test>/trace.zip',
+        out: 'test-results/\n└─ tests-test-tender-py-test-create-tender-chromium/\n   ├─ test-failed-1.png\n   ├─ video.webm\n   └─ trace.zip',
+        tip: 'A trace shows every action, DOM snapshot, network call and console log.', practice: 'Break a locator on purpose, run with tracing, and find the failure in Trace Viewer.' },
+      { title: 'Failure screenshots via a hook', body: 'A pytest hook runs after each test. Use it to grab a screenshot the moment a test fails and attach it to your report.',
+        code: '# conftest.py\nimport allure, pytest\n\n@pytest.hookimpl(hookwrapper=True)\ndef pytest_runtest_makereport(item, call):\n    outcome = yield\n    report = outcome.get_result()\n    if report.when == "call" and report.failed:\n        page = item.funcargs.get("page")\n        if page:\n            allure.attach(\n                page.screenshot(full_page=True),\n                name="failure",\n                attachment_type=allure.attachment_type.PNG)',
+        out: 'Every failed test now carries a full-page\nscreenshot taken at the moment of failure.',
+        tip: 'report.when == "call" skips setup and teardown failures, or remove it to catch those too.', practice: 'Add the hook and confirm the screenshot shows in your report.' },
+      { title: 'Allure: setup and first report', body: 'Allure is a report framework with dashboards, history and rich test details. pytest writes raw results; the Allure command line turns them into a website.',
+        code: 'pip install allure-pytest\n# install the Allure CLI (needs Java)\n#   Windows: scoop install allure\n#   macOS:   brew install allure\n\npytest --alluredir=allure-results\n\nallure serve allure-results        # open now\nallure generate allure-results \\\n  -o allure-report --clean         # static site',
+        out: 'allure-results/   raw JSON + attachments\nallure-report/    the generated website\n                  Overview · Suites · Graphs\n                  Timeline · Behaviors',
+        tip: 'allure-results is data; allure-report is the site you share.', practice: 'Run allure serve on your suite and explore every tab.' },
+      { title: 'Allure labels: epic, feature, story, severity', body: 'Labels organise tests the way the business sees them, so a manager can find "everything about tenders" or "all critical failures".',
+        code: 'import allure\n\n@allure.epic("Procurement")\n@allure.feature("Tender")\n@allure.story("Create tender")\n@allure.severity(allure.severity_level.CRITICAL)\n@allure.title("Buyer can create a tender")\n@allure.link("https://jira.example.com/browse/PT-101",\n             name="PT-101")\ndef test_create_tender(page):\n    ...',
+        out: 'Behaviors tab\n▾ Procurement\n  ▾ Tender\n    ▸ Create tender   CRITICAL   PT-101 ↗',
+        tip: 'Map epic/feature/story to your Jira epics and user stories.', practice: 'Label five tests with a feature and a severity, then filter by severity.' },
+      { title: 'Allure steps and attachments', body: 'Steps turn a test into readable, timed stages. Attachments add evidence at exactly the step where it matters.',
+        code: 'def test_create_tender(page):\n    with allure.step("Log in as buyer"):\n        LoginPage(page).login("buyer1", "p1")\n    with allure.step("Create tender"):\n        TenderPage(page).create("Laptops", 50000)\n    with allure.step("Verify success message"):\n        expect(page.get_by_text("Tender created"))\\\n            .to_be_visible()\n\n# or decorate page methods once\nclass TenderPage(BasePage):\n    @allure.step("Create tender {title}")\n    def create(self, title, budget): ...\n\n# attach a trace file\nallure.attach.file("trace.zip", name="trace",\n                   extension="zip")',
+        out: '✓ Log in as buyer ............ 1.2 s\n✓ Create tender Laptops ....... 3.8 s\n✗ Verify success message ...... 5.0 s\n    attached: failure.png\n    attached: trace.zip',
+        tip: '@allure.step on page methods gives every test steps for free.', practice: 'Add steps to one end-to-end test so it reads like its manual test case.' },
+      { title: 'History, environment and categories', body: 'Three extras that make Allure a real dashboard: trends across runs, the environment each run used, and failures grouped by cause.',
+        code: '# keep trends: copy history before generating\ncp -r allure-report/history allure-results/history\n\n# allure-results/environment.properties\nBrowser=chromium\nEnvironment=QA\nBaseURL=https://qa.example.com\n\n# allure-results/categories.json\n[{"name": "Timeouts",\n  "messageRegex": ".*Timeout.*"},\n {"name": "Assertion failures",\n  "matchedStatuses": ["failed"]}]',
+        out: 'Overview now shows:\n  · Trend graph across runs\n  · Environment widget (browser, env, URL)\n  · Categories: Timeouts 1 · Assertions 2',
+        tip: 'In CI, restore the previous report\u2019s history folder before generating.', practice: 'Create a categories.json that separates timeouts from assertion failures.' },
+      { title: 'Publishing and sharing', body: 'A report on your laptop helps only you. Publish it from CI so the whole team sees every run.',
+        code: '# .github/workflows/tests.yml\n- run: pytest --alluredir=allure-results \\\n         --junitxml=reports/junit.xml\n- uses: actions/upload-artifact@v4\n  if: always()\n  with:\n    name: allure-results\n    path: allure-results\n\n# other options\n#  · publish allure-report to GitHub Pages\n#  · ReportPortal (pytest-reportportal): live\n#    dashboards and AI failure grouping\n#  · post pass rate + link to Slack or Teams',
+        out: 'Every push → tests run → report published\n→ link posted to the team channel',
+        tip: 'if: always() uploads results even when tests fail, which is exactly when you need them.', practice: 'Upload your Allure results as a CI artifact on every run.' }
+    ];
+    const n = L.length;
+    const lessonNav = L.map((l, i) => {
+      const on = i === st.lesson, done = i < st.lesson;
+      return { title: l.title, num: String(i + 1).padStart(2, '0'), pick: () => this.setState({ lesson: i }),
+        style: 'display:flex;align-items:center;gap:12px;min-height:44px;padding:8px 12px;border-radius:10px;border:none;cursor:pointer;text-align:left;font:' + (on ? '600' : '400') + ' 15px IBM Plex Sans,sans-serif;' + (on ? 'background:#16181D;color:#F4F1EA;' : 'background:transparent;color:#16181D;'),
+        numStyle: 'flex-shrink:0;font:600 12px JetBrains Mono,monospace;width:28px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;' + (on ? 'background:#0F6E78;color:#fff;' : done ? 'background:#D5F1F3;color:#0F6E78;' : 'background:#EAE5DA;color:#6A6E77;') };
+    });
+    const modeDefs = [['split', 'Side by side'], ['code', 'Code'], ['out', 'Result']];
+    const modes = modeDefs.map(([id, label]) => ({ label, pick: () => this.setState({ mode: id }),
+      style: 'min-height:40px;padding:8px 14px;border-radius:8px;border:none;cursor:pointer;font:600 14px IBM Plex Sans,sans-serif;' + (st.mode === id ? 'background:#FFFFFF;color:#16181D;box-shadow:0 1px 3px rgba(0,0,0,.12);' : 'background:transparent;color:#5C606A;') }));
+    const pct = Math.round(((st.lesson + 1) / n) * 100);
+
+    const R = [
+      { key: 'console', label: 'Console', name: 'Console output', file: 'terminal', desc: 'What pytest prints. Always there, zero setup, but gone once the window closes.', best: 'Running tests locally while you write them.', cmd: 'pytest -v -rA' },
+      { key: 'junit', label: 'JUnit XML', name: 'JUnit XML', file: 'reports/junit.xml', desc: 'A plain XML file that machines read. Not pretty, but every CI tool understands it.', best: 'CI test tabs and build pass/fail status.', cmd: 'pytest --junitxml=reports/junit.xml' },
+      { key: 'html', label: 'pytest-html', name: 'pytest-html', file: 'reports/report.html', desc: 'One self-contained HTML page with a summary, a filterable results table and errors.', best: 'A quick report to email or attach to a ticket.', cmd: 'pip install pytest-html\npytest --html=reports/report.html \\\n  --self-contained-html' },
+      { key: 'allure', label: 'Allure', name: 'Allure Report', file: 'allure-report/index.html', desc: 'A full dashboard: overview, trends, suites, timeline, business-style behaviors, steps and attachments.', best: 'Team-wide reporting, regression history and manager-friendly views.', cmd: 'pip install allure-pytest\npytest --alluredir=allure-results\nallure serve allure-results' },
+      { key: 'trace', label: 'Trace Viewer', name: 'Playwright Trace Viewer', file: 'trace.zip', desc: 'A replay of one test: every action, a DOM snapshot before and after, network, console and source.', best: 'Debugging exactly why one test failed.', cmd: 'pytest --tracing=retain-on-failure\nplaywright show-trace trace.zip' }
+    ];
+    const repTabs = R.map((r, i) => ({ label: r.label, pick: () => this.setState({ rep: i }),
+      style: 'min-height:44px;padding:10px 16px;border-radius:10px;border:none;cursor:pointer;font:600 14px IBM Plex Sans,sans-serif;' + (i === st.rep ? 'background:#7FD6DC;color:#16181D;' : 'background:transparent;color:#A9AEBA;') }));
+    const rep = R[st.rep];
+
+    const Y = (t) => ({ text: t, tone: 'y' }), P = (t) => ({ text: t, tone: 'p' }), X = (t) => ({ text: t, tone: 'n' });
+    const rows = [
+      ['Setup effort', [Y('none'), Y('one flag'), Y('one plugin'), P('plugin + CLI'), Y('one flag'), X('server')]],
+      ['Easy to share', [X('no'), P('CI only'), Y('one file'), Y('website'), P('zip file'), Y('web app')]],
+      ['Steps inside tests', [X('no'), X('no'), X('no'), Y('yes'), Y('every action'), Y('yes')]],
+      ['Screenshots & files', [X('no'), X('no'), P('with hooks'), Y('yes'), Y('built in'), Y('yes')]],
+      ['History & trends', [X('no'), P('via CI'), X('no'), Y('yes'), X('no'), Y('yes')]],
+      ['Business labels', [X('no'), X('no'), X('no'), Y('epic/feature/story'), X('no'), Y('yes')]],
+      ['Best for', [P('writing tests'), P('CI status'), P('quick evidence'), Y('team dashboard'), P('debugging'), P('large teams')]]
+    ];
+    const toneStyle = { y: 'color:#1F7A52;font-weight:600;', p: 'color:#8A5A00;', n: 'color:#9A958A;' };
+    const cmpRows = rows.map(([label, cells]) => ({ label, cells: cells.map((c, j) => ({ text: c.text, style: 'padding:14px 10px;' + toneStyle[c.tone] + (j === 3 ? 'background:#EEF8F9;' : '') })) }));
+
+    return {
+      lessonNav, cur: L[st.lesson], lessonNum: String(st.lesson + 1), modes,
+      showA: st.mode !== 'out', showB: st.mode !== 'code',
+      gridStyle: st.mode === 'split' ? 'display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;' : 'display:grid;grid-template-columns:repeat(1,minmax(0,1fr));gap:16px;',
+      prev: () => this.setState({ lesson: Math.max(0, st.lesson - 1) }),
+      next: () => this.setState({ lesson: Math.min(n - 1, st.lesson + 1) }),
+      progressStyle: 'height:100%;border-radius:999px;background:#0F6E78;transition:width .3s;width:' + pct + '%;',
+      progressLabel: pct + '% complete',
+      repTabs, rep,
+      isConsole: rep.key === 'console', isJunit: rep.key === 'junit', isHtml: rep.key === 'html', isAllure: rep.key === 'allure', isTrace: rep.key === 'trace',
+      cmpRows
+    };
+  }
+}
+
+var __TPL=`<div style="width: 1440px; height: 4100px; box-sizing: border-box; display: flex; flex-direction: column; background: #F4F1EA; font-family: 'IBM Plex Sans', system-ui, sans-serif; color: #16181D;">
+
+<!-- HERO -->
+<section style="background: #0F6E78; color: #FFFFFF; padding: 64px 80px 60px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 40px; align-items: center;">
+<div style="grid-column: span 7; display: flex; flex-direction: column; gap: 18px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #BFE9EC;"><a href="PWHub.html" style="color: #FFFFFF;">playwright</a> / module 08 · Reporting &amp; Evidence</span>
+<h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 68px; line-height: 0.98; letter-spacing: -0.03em;">If nobody can read<br>the result, the test<br>didn't really run.</h1>
+<p style="margin: 0; font-size: 19px; line-height: 1.6; color: #D5F1F3; max-width: 620px;">From terminal output to Allure dashboards: how to turn a test run into evidence developers can act on and managers can trust.</p>
+</div>
+<div style="grid-column: span 5; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px;">
+<div style="background: rgba(255,255,255,0.12); border-radius: 16px; padding: 18px; display: flex; flex-direction: column; gap: 4px;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #BFE9EC;">for developers</span><span style="font-weight: 600;">steps, screenshot, trace</span></div>
+<div style="background: rgba(255,255,255,0.12); border-radius: 16px; padding: 18px; display: flex; flex-direction: column; gap: 4px;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #BFE9EC;">for managers</span><span style="font-weight: 600;">pass rate, trends</span></div>
+<div style="background: rgba(255,255,255,0.12); border-radius: 16px; padding: 18px; display: flex; flex-direction: column; gap: 4px;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #BFE9EC;">for CI</span><span style="font-weight: 600;">JUnit XML, artifacts</span></div>
+<div style="background: rgba(255,255,255,0.12); border-radius: 16px; padding: 18px; display: flex; flex-direction: column; gap: 4px;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #BFE9EC;">for you</span><span style="font-weight: 600;">what broke, since when</span></div>
+</div>
+</section>
+
+<!-- LESSONS -->
+<section style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 40px; padding: 64px 80px;">
+<aside style="grid-column: span 3; display: flex; flex-direction: column; gap: 6px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #6A6E77; text-transform: uppercase; letter-spacing: 0.08em; padding: 0 12px 10px;">Lessons</span>
+<sc-for list="{{lessonNav}}" as="l" hint-placeholder-count="11">
+<button onClick="{{l.pick}}" style="{{l.style}}"><span style="{{l.numStyle}}">{{l.num}}</span><span>{{l.title}}</span></button>
+</sc-for>
+<div style="margin-top: 18px; padding: 0 12px; display: flex; flex-direction: column; gap: 8px;">
+<div style="height: 6px; border-radius: 999px; background: #E3DED3; overflow: hidden;"><div style="{{progressStyle}}"></div></div>
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #0F6E78;">{{progressLabel}}</span>
+</div>
+</aside>
+
+<div style="grid-column: span 9; display: flex; flex-direction: column; gap: 24px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 20px;">
+<div style="display: flex; flex-direction: column; gap: 10px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #0F6E78;">lesson {{lessonNum}} of 11</span>
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 46px; letter-spacing: -0.02em; line-height: 1.05;">{{cur.title}}</h2>
+</div>
+<div style="display: flex; gap: 6px; background: #EAE5DA; padding: 5px; border-radius: 12px;">
+<sc-for list="{{modes}}" as="m" hint-placeholder-count="3">
+<button onClick="{{m.pick}}" style="{{m.style}}">{{m.label}}</button>
+</sc-for>
+</div>
+</div>
+<p style="margin: 0; font-size: 18px; line-height: 1.7; color: #34373F; max-width: 820px;">{{cur.body}}</p>
+
+<div style="{{gridStyle}}">
+<sc-if value="{{showA}}" hint-placeholder-val="{{ true }}">
+<div style="background: #16181D; border-radius: 16px; overflow: hidden;">
+<div style="padding: 12px 18px; border-bottom: 1px solid #2A2D35; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #7FD6DC;">run / code</div>
+<pre style="margin: 0; padding: 20px; font-family: 'JetBrains Mono', monospace; font-size: 14px; line-height: 1.75; color: #D8DAE0; white-space: pre; overflow-x: auto;">{{cur.code}}</pre>
+</div>
+</sc-if>
+<sc-if value="{{showB}}" hint-placeholder-val="{{ true }}">
+<div style="background: #FFFFFF; border: 1px solid #DDD7CB; border-radius: 16px; overflow: hidden;">
+<div style="padding: 12px 18px; border-bottom: 1px solid #DDD7CB; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #0F6E78;">what you get</div>
+<pre style="margin: 0; padding: 20px; font-family: 'JetBrains Mono', monospace; font-size: 14px; line-height: 1.75; color: #16181D; white-space: pre-wrap;">{{cur.out}}</pre>
+</div>
+</sc-if>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px;">
+<div style="display: flex; gap: 14px; background: #DCEFE3; border-radius: 16px; padding: 20px 22px; align-items: flex-start;">
+<span style="flex-shrink: 0; width: 32px; height: 32px; border-radius: 9px; background: #1F7A52; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 700;">✓</span>
+<div style="display: flex; flex-direction: column; gap: 4px;"><span style="font-weight: 600; color: #174F37;">Remember</span><span style="font-size: 15px; line-height: 1.6; color: #174F37;">{{cur.tip}}</span></div>
+</div>
+<div style="display: flex; gap: 14px; background: #F6E7B8; border-radius: 16px; padding: 20px 22px; align-items: flex-start;">
+<span style="flex-shrink: 0; width: 32px; height: 32px; border-radius: 9px; background: #8A5A00; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 700;">?</span>
+<div style="display: flex; flex-direction: column; gap: 4px;"><span style="font-weight: 600; color: #5E3E00;">Practice</span><span style="font-size: 15px; line-height: 1.6; color: #5E3E00;">{{cur.practice}}</span></div>
+</div>
+</div>
+
+<div style="display: flex; justify-content: space-between;">
+<button onClick="{{prev}}" style="min-height: 48px; padding: 12px 22px; border-radius: 12px; border: 1.5px solid #16181D; background: transparent; cursor: pointer; font: 600 15px 'IBM Plex Sans', sans-serif; color: #16181D;">← Previous</button>
+<button onClick="{{next}}" style="min-height: 48px; padding: 12px 22px; border-radius: 12px; border: none; background: #0F6E78; color: #FFFFFF; cursor: pointer; font: 600 15px 'IBM Plex Sans', sans-serif;">Next lesson →</button>
+</div>
+</div>
+</section>
+
+<!-- REPORT GALLERY -->
+<section style="background: #16181D; color: #F4F1EA; padding: 88px 80px; display: flex; flex-direction: column; gap: 36px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 40px;">
+<div style="display: flex; flex-direction: column; gap: 14px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #7FD6DC;">visualize · the same run, five ways</span>
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 48px; letter-spacing: -0.02em;">What each report looks like</h2>
+</div>
+<div style="display: flex; gap: 6px; background: #22252D; padding: 6px; border-radius: 14px;">
+<sc-for list="{{repTabs}}" as="r" hint-placeholder-count="5"><button onClick="{{r.pick}}" style="{{r.style}}">{{r.label}}</button></sc-for>
+</div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 28px;">
+<div style="grid-column: span 8; background: #F4F1EA; color: #16181D; border-radius: 20px; overflow: hidden; min-height: 460px; display: flex; flex-direction: column;">
+<div style="display: flex; align-items: center; gap: 8px; padding: 12px 16px; background: #E3DED3;">
+<span style="width: 10px; height: 10px; border-radius: 50%; background: #E0663A;"></span><span style="width: 10px; height: 10px; border-radius: 50%; background: #E8B64C;"></span><span style="width: 10px; height: 10px; border-radius: 50%; background: #2BB673;"></span>
+<span style="margin-left: 10px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #4A4E57;">{{rep.file}}</span>
+<span style="margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #6A6E77;">sample data</span>
+</div>
+
+<sc-if value="{{isConsole}}" hint-placeholder-val="{{ false }}">
+<pre style="margin: 0; flex-grow: 1; background: #0D0F13; color: #D8DAE0; padding: 24px; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.8; white-space: pre;">$ pytest -v
+tests/test_login.py::test_valid_login <span style="color: #7EE2A8;">PASSED</span>         [ 20%]
+tests/test_login.py::test_wrong_password <span style="color: #7EE2A8;">PASSED</span>      [ 40%]
+tests/test_tender.py::test_create_tender <span style="color: #F08A62;">FAILED</span>      [ 60%]
+tests/test_tender.py::test_edit_tender <span style="color: #7EE2A8;">PASSED</span>        [ 80%]
+tests/test_tender.py::test_close_tender <span style="color: #E8B64C;">SKIPPED</span>      [100%]
+
+<span style="color: #F08A62;">FAILED tests/test_tender.py::test_create_tender</span>
+  AssertionError: Locator expected to be visible
+  waiting for get_by_text("Tender created")
+
+<span style="color: #F08A62;">1 failed</span>, <span style="color: #7EE2A8;">3 passed</span>, <span style="color: #E8B64C;">1 skipped</span> in 14.2s</pre>
+</sc-if>
+
+<sc-if value="{{isJunit}}" hint-placeholder-val="{{ false }}">
+<pre style="margin: 0; flex-grow: 1; background: #FFFFFF; padding: 24px; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.8; white-space: pre; color: #16181D;"><span style="color: #0F6E78;">&lt;testsuite</span> name="pytest" tests="5" failures="1" skipped="1" time="14.2"<span style="color: #0F6E78;">&gt;</span>
+  <span style="color: #0F6E78;">&lt;testcase</span> classname="tests.test_login" name="test_valid_login" time="2.1"<span style="color: #0F6E78;">/&gt;</span>
+  <span style="color: #0F6E78;">&lt;testcase</span> classname="tests.test_tender" name="test_create_tender" time="6.4"<span style="color: #0F6E78;">&gt;</span>
+    <span style="color: #C4502A;">&lt;failure</span> message="Locator expected to be visible"<span style="color: #C4502A;">&gt;</span>
+      waiting for get_by_text("Tender created")
+    <span style="color: #C4502A;">&lt;/failure&gt;</span>
+  <span style="color: #0F6E78;">&lt;/testcase&gt;</span>
+  <span style="color: #0F6E78;">&lt;testcase</span> classname="tests.test_tender" name="test_close_tender"<span style="color: #0F6E78;">&gt;</span>
+    <span style="color: #8A5A00;">&lt;skipped</span> message="waiting on PT-214"<span style="color: #8A5A00;">/&gt;</span>
+  <span style="color: #0F6E78;">&lt;/testcase&gt;</span>
+<span style="color: #0F6E78;">&lt;/testsuite&gt;</span></pre>
+</sc-if>
+
+<sc-if value="{{isHtml}}" hint-placeholder-val="{{ false }}">
+<div style="flex-grow: 1; background: #FFFFFF; padding: 24px; display: flex; flex-direction: column; gap: 16px;">
+<span style="font-size: 22px; font-weight: 700;">Procurement smoke — report.html</span>
+<div style="display: flex; gap: 10px; font-size: 13px;">
+<span style="padding: 6px 10px; border-radius: 6px; background: #DCEFE3; color: #1F7A52;">3 passed</span><span style="padding: 6px 10px; border-radius: 6px; background: #FCE7DD; color: #C4502A;">1 failed</span><span style="padding: 6px 10px; border-radius: 6px; background: #F6E7B8; color: #8A5A00;">1 skipped</span><span style="margin-left: auto; color: #6A6E77;">14.2 s · chromium · QA</span>
+</div>
+<div style="display: grid; grid-template-columns: 90px minmax(0, 1fr) 80px; font-size: 13px; border: 1px solid #E3DED3; border-radius: 10px; overflow: hidden;">
+<span style="padding: 10px; background: #F4F1EA; font-weight: 600;">Result</span><span style="padding: 10px; background: #F4F1EA; font-weight: 600;">Test</span><span style="padding: 10px; background: #F4F1EA; font-weight: 600;">Time</span>
+<span style="padding: 10px; color: #1F7A52;">Passed</span><span style="padding: 10px; font-family: 'JetBrains Mono', monospace;">test_valid_login</span><span style="padding: 10px;">2.1 s</span>
+<span style="padding: 10px; color: #C4502A; background: #FFF6F2;">Failed</span><span style="padding: 10px; font-family: 'JetBrains Mono', monospace; background: #FFF6F2;">test_create_tender</span><span style="padding: 10px; background: #FFF6F2;">6.4 s</span>
+<span style="grid-column: span 3; padding: 12px; background: #FFF6F2; display: flex; gap: 12px; align-items: center; border-top: 1px dashed #F2C3AE;"><span style="width: 120px; height: 70px; border-radius: 6px; background: #E3DED3; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #6A6E77;">screenshot</span><span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #9A3B1C;">AssertionError: Locator expected to be visible</span></span>
+<span style="padding: 10px; color: #1F7A52;">Passed</span><span style="padding: 10px; font-family: 'JetBrains Mono', monospace;">test_edit_tender</span><span style="padding: 10px;">3.0 s</span>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{isAllure}}" hint-placeholder-val="{{ true }}">
+<div style="flex-grow: 1; display: flex;">
+<div style="width: 150px; flex-shrink: 0; background: #1F2733; color: #C9D2DD; padding: 18px 12px; display: flex; flex-direction: column; gap: 6px; font-size: 13px;">
+<span style="font-weight: 700; color: #FFFFFF; font-size: 15px; padding: 0 6px 10px;">Allure</span>
+<span style="padding: 7px 8px; border-radius: 6px; background: #2E3A4A; color: #FFFFFF;">Overview</span><span style="padding: 7px 8px;">Categories</span><span style="padding: 7px 8px;">Suites</span><span style="padding: 7px 8px;">Graphs</span><span style="padding: 7px 8px;">Timeline</span><span style="padding: 7px 8px;">Behaviors</span>
+</div>
+<div style="flex-grow: 1; background: #FFFFFF; padding: 20px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px;">
+<div style="border: 1px solid #E3DED3; border-radius: 10px; padding: 14px; display: flex; gap: 16px; align-items: center;">
+<svg width="110" height="110" viewBox="0 0 42 42"><circle cx="21" cy="21" r="15.9" fill="none" stroke="#E3DED3" stroke-width="5"></circle><circle cx="21" cy="21" r="15.9" fill="none" stroke="#97CC64" stroke-width="5" stroke-dasharray="60 40" stroke-dashoffset="25"></circle><circle cx="21" cy="21" r="15.9" fill="none" stroke="#FD5A3E" stroke-width="5" stroke-dasharray="20 80" stroke-dashoffset="-35"></circle><circle cx="21" cy="21" r="15.9" fill="none" stroke="#FFD050" stroke-width="5" stroke-dasharray="0 100" stroke-dashoffset="-55"></circle><circle cx="21" cy="21" r="15.9" fill="none" stroke="#AAAAAA" stroke-width="5" stroke-dasharray="20 80" stroke-dashoffset="-55"></circle><text x="21" y="23" text-anchor="middle" font-size="7" font-weight="700" fill="#16181D">60%</text></svg>
+<div style="display: flex; flex-direction: column; gap: 4px; font-size: 12px;"><span style="font-weight: 600; font-size: 13px;">5 test cases</span><span style="color: #5A8F2E;">● passed 3</span><span style="color: #D6452A;">● failed 1</span><span style="color: #B08A00;">● broken 0</span><span style="color: #888;">● skipped 1</span></div>
+</div>
+<div style="border: 1px solid #E3DED3; border-radius: 10px; padding: 14px; display: flex; flex-direction: column; gap: 8px;">
+<span style="font-weight: 600; font-size: 13px;">Trend (last 6 runs)</span>
+<div style="display: flex; align-items: flex-end; gap: 8px; height: 70px;">
+<div style="flex-grow: 1; height: 60%; background: #97CC64; border-radius: 3px;"></div><div style="flex-grow: 1; height: 75%; background: #97CC64; border-radius: 3px;"></div><div style="flex-grow: 1; height: 70%; background: #97CC64; border-top: 12px solid #FD5A3E; border-radius: 3px;"></div><div style="flex-grow: 1; height: 90%; background: #97CC64; border-radius: 3px;"></div><div style="flex-grow: 1; height: 95%; background: #97CC64; border-radius: 3px;"></div><div style="flex-grow: 1; height: 80%; background: #97CC64; border-top: 14px solid #FD5A3E; border-radius: 3px;"></div>
+</div>
+</div>
+<div style="grid-column: span 2; border: 1px solid #E3DED3; border-radius: 10px; padding: 14px; display: flex; flex-direction: column; gap: 6px; font-size: 13px;">
+<span style="font-weight: 600;">Behaviors</span>
+<span>▾ Procurement <span style="color: #6A6E77;">(epic)</span></span>
+<span style="padding-left: 18px;">▾ Tender <span style="color: #6A6E77;">(feature)</span></span>
+<span style="padding-left: 36px; display: flex; gap: 8px; align-items: center;"><span style="width: 8px; height: 8px; border-radius: 2px; background: #FD5A3E;"></span>Create tender <span style="color: #6A6E77;">(story) · CRITICAL</span></span>
+<span style="padding-left: 54px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #4A4E57;">✓ Log in as buyer · 1.2 s</span>
+<span style="padding-left: 54px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #4A4E57;">✓ Create tender · 3.8 s</span>
+<span style="padding-left: 54px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #D6452A;">✗ Verify success message · attached: screenshot, trace.zip</span>
+</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{isTrace}}" hint-placeholder-val="{{ false }}">
+<div style="flex-grow: 1; display: flex; background: #FFFFFF;">
+<div style="width: 250px; flex-shrink: 0; border-right: 1px solid #E3DED3; display: flex; flex-direction: column; font-family: 'JetBrains Mono', monospace; font-size: 12px;">
+<span style="padding: 10px 14px; font-weight: 600; background: #F4F1EA;">Actions</span>
+<span style="padding: 10px 14px;">page.goto /login</span><span style="padding: 10px 14px;">get_by_label("Username").fill</span><span style="padding: 10px 14px;">get_by_role("button").click</span><span style="padding: 10px 14px;">get_by_label("Title").fill</span><span style="padding: 10px 14px; background: #FCE7DD; color: #9A3B1C;">expect.to_be_visible ✗</span>
+</div>
+<div style="flex-grow: 1; display: flex; flex-direction: column;">
+<div style="display: flex; gap: 0; font-size: 12px; border-bottom: 1px solid #E3DED3;"><span style="padding: 10px 14px; border-bottom: 2px solid #0F6E78; font-weight: 600;">After</span><span style="padding: 10px 14px; color: #6A6E77;">Before</span><span style="padding: 10px 14px; color: #6A6E77;">Network</span><span style="padding: 10px 14px; color: #6A6E77;">Console</span><span style="padding: 10px 14px; color: #6A6E77;">Source</span></div>
+<div style="flex-grow: 1; padding: 18px; display: flex; flex-direction: column; gap: 10px; background: #F9F8F5;">
+<div style="height: 26px; border-radius: 6px; background: #16181D;"></div>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px;"><div style="height: 60px; border-radius: 6px; background: #E3DED3;"></div><div style="height: 60px; border-radius: 6px; background: #E3DED3;"></div><div style="height: 60px; border-radius: 6px; background: #E3DED3;"></div></div>
+<div style="padding: 10px; border-radius: 6px; background: #FCE7DD; color: #9A3B1C; font-size: 12px;">Error banner: "Budget must be a number"</div>
+<span style="font-size: 12px; color: #4A4E57;">The DOM snapshot shows the real reason: a validation error, not a missing message.</span>
+</div>
+</div>
+</div>
+</sc-if>
+</div>
+
+<div style="grid-column: span 4; display: flex; flex-direction: column; gap: 16px;">
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 30px; font-weight: 800;">{{rep.name}}</span>
+<span style="font-size: 16px; line-height: 1.6; color: #D8DAE0;">{{rep.desc}}</span>
+<div style="background: #1E2129; border: 1px solid #2E323C; border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 6px;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #7FD6DC;">best for</span><span style="font-size: 15px;">{{rep.best}}</span></div>
+<pre style="margin: 0; background: #1E2129; border: 1px solid #2E323C; border-radius: 14px; padding: 16px; font-family: 'JetBrains Mono', monospace; font-size: 12px; line-height: 1.7; color: #D8DAE0; white-space: pre-wrap;">{{rep.cmd}}</pre>
+</div>
+</div>
+</section>
+
+<!-- COMPARISON -->
+<section style="padding: 88px 80px 40px; display: flex; flex-direction: column; gap: 28px;">
+<div style="display: flex; flex-direction: column; gap: 14px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #0F6E78;">compare</span>
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 48px; letter-spacing: -0.02em;">Which report should I use?</h2>
+<p style="margin: 0; font-size: 17px; color: #4A4E57;">Short answer: JUnit XML for CI, pytest-html for a quick shareable file, Allure for a real team dashboard, traces for debugging.</p>
+</div>
+<div style="background: #FFFFFF; border: 1px solid #DDD7CB; border-radius: 20px; overflow: hidden;">
+<div style="display: grid; grid-template-columns: 220px repeat(6, minmax(0, 1fr)); background: #16181D; color: #F4F1EA; font-family: 'JetBrains Mono', monospace; font-size: 12px;">
+<span style="padding: 14px 18px;"></span><span style="padding: 14px 10px;">Console</span><span style="padding: 14px 10px;">JUnit XML</span><span style="padding: 14px 10px;">pytest-html</span><span style="padding: 14px 10px; color: #7FD6DC;">Allure</span><span style="padding: 14px 10px;">Trace Viewer</span><span style="padding: 14px 10px;">ReportPortal</span>
+</div>
+<sc-for list="{{cmpRows}}" as="row" hint-placeholder-count="7">
+<div style="display: grid; grid-template-columns: 220px repeat(6, minmax(0, 1fr)); border-top: 1px solid #EAE5DA; font-size: 14px;">
+<span style="padding: 14px 18px; font-weight: 600;">{{row.label}}</span>
+<sc-for list="{{row.cells}}" as="cell" hint-placeholder-count="6"><span style="{{cell.style}}">{{cell.text}}</span></sc-for>
+</div>
+</sc-for>
+</div>
+</section>
+
+<section style="flex-grow: 1; padding: 40px 80px 72px; display: flex; justify-content: space-between; align-items: center; gap: 30px;">
+<div style="display: flex; flex-direction: column; gap: 8px;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #6A6E77;">back to the path</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 30px; font-weight: 800;">Next up: Module 09 · Framework Architecture</span></div>
+<a href="PWFramework.html" style="text-decoration: none; padding: 16px 26px; border-radius: 12px; background: #16181D; color: #7EE2A8; font-weight: 600;">Continue →</a>
+</section>
+</div>`;
+window.__mountDC(__TPL, Component);
+</script>
+</body>
+</html>

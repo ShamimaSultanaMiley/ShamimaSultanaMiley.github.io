@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440">
+<title>Tutorial — Page Object Model with Playwright</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap">
+<style>html,body{margin:0;background:#F4F1EA;font-family:'IBM Plex Sans',system-ui,sans-serif} #app > div{margin:0 auto}</style>
+</head>
+<body>
+
+<style>
+.snav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:16px 40px;background:#16181D;color:#F4F1EA;font-family:'IBM Plex Sans',sans-serif;flex-wrap:wrap;gap:12px}
+.snav a{color:#F4F1EA;text-decoration:none}
+.snav .brand{display:flex;align-items:center;gap:10px;font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:18px}
+.snav .brand span.logo{width:34px;height:34px;border-radius:9px;background:#7EE2A8;color:#16181D;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:14px}
+.snav ul{list-style:none;display:flex;gap:6px;margin:0;padding:0;align-items:center;flex-wrap:wrap}
+.snav > ul > li{position:relative}
+.snav > ul > li > a,.snav > ul > li > span{display:block;padding:9px 14px;border-radius:9px;font-size:15px;font-weight:500;cursor:pointer;white-space:nowrap}
+.snav > ul > li:hover > a,.snav > ul > li:hover > span,.snav .cur{background:#2A2D35}
+.snav .caret{font-size:11px;opacity:.7;margin-left:4px}
+.snav .drop{position:absolute;top:100%;left:0;min-width:220px;background:#1E2129;border:1px solid #2E323C;border-radius:12px;padding:8px;display:none;flex-direction:column;gap:2px;box-shadow:0 18px 40px -16px rgba(0,0,0,.6)}
+.snav > ul > li:hover .drop{display:flex}
+.snav .drop a{padding:9px 12px;border-radius:8px;font-size:14px;color:#D8DAE0}
+.snav .drop a:hover{background:#2A2D35;color:#fff}
+.snav .drop .grp{font-family:'JetBrains Mono',monospace;font-size:11px;color:#8A8F9C;text-transform:uppercase;letter-spacing:.06em;padding:8px 12px 2px}
+.snav .cta{padding:9px 18px;border-radius:999px;background:#1F7A52;color:#fff;font-weight:600}
+.snav .menubtn{display:none;background:none;border:1.5px solid #3A3E48;color:#F4F1EA;border-radius:9px;padding:8px 12px;font-size:15px;cursor:pointer}
+@media(max-width:1100px){
+  .snav .menubtn{display:block}
+  .snav > ul{display:none;flex-direction:column;align-items:stretch;width:100%;order:3}
+  .snav.open > ul{display:flex}
+  .snav .drop{position:static;display:flex;border:none;box-shadow:none;background:transparent;padding:0 0 6px 14px}
+  .snav > ul > li:hover .drop{display:flex}
+}
+</style>
+<nav class="snav" id="snav">
+<a class="brand" href="index.html"><span class="logo">S✓</span>Shamima Sultana</a>
+<button class="menubtn" onclick="document.getElementById('snav').classList.toggle('open')">Menu ☰</button>
+<ul>
+<li><a href="index.html" class="">Home</a></li>
+<li><span class="">About <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="about.html">Intro &amp; journey</a>
+    <a href="skills.html">Skills</a>
+    <a href="certifications.html">Certifications</a>
+    <a href="research.html">Research</a>
+    <a href="achievements.html">Achievements</a>
+  </div></li>
+<li><span class="">Work <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="projects.html">Projects</a>
+  </div></li>
+<li><span class="cur">Learn <span class="caret">▾</span></span>
+  <div class="drop">
+    <span class="grp">Automation</span>
+    <a href="PWHub.html">Playwright path</a>
+    <a href="Selenium.html">Selenium with Java</a>
+    <a href="MobileTest.html">Mobile testing</a>
+    <span class="grp">Performance</span>
+    <a href="K6Hub.html">k6</a>
+    <a href="JMeter.html">JMeter</a>
+    <span class="grp">Data &amp; APIs</span>
+    <a href="SQLHub.html">SQL</a>
+    <a href="API.html">API testing</a>
+    <span class="grp">Core &amp; specialised</span>
+    <a href="Manual.html">Manual testing</a>
+    <a href="AITest.html">AI / LLM testing</a>
+    <a href="DevTools.html">DevTools</a>
+    <a href="Git.html">Git &amp; GitHub</a>
+    <a href="A11y.html">Accessibility</a>
+    <a href="Security.html">Security</a>
+  </div></li>
+<li><span class="">Writing <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="K6Hub.html">Tutorials &amp; articles</a>
+  </div></li>
+<li><span class="">More <span class="caret">▾</span></span>
+  <div class="drop">
+    <a href="News.html">News</a>
+    <a href="Interview.html">Interview prep</a>
+    <a href="ISTQB.html">ISTQB prep</a>
+  </div></li>
+<li><a class="cta" href="mailto:shamimasultanamiley605@gmail.com">Contact</a></li>
+</ul>
+</nav>
+
+<div id="app"></div>
+<script>/* Minimal renderer: replaces Claude's canvas engine so pages run anywhere. */
+(function(){
+  function resolve(scopes, path){
+    path=path.trim();
+    var parts=path.split('.'), head=parts[0], base, found=false;
+    for(var i=scopes.length-1;i>=0;i--){ if(scopes[i] && Object.prototype.hasOwnProperty.call(scopes[i],head)){ base=scopes[i][head]; found=true; break; } }
+    if(!found) return undefined;
+    for(var j=1;j<parts.length;j++){ if(base==null) return undefined; base=base[parts[j]]; }
+    return base;
+  }
+  function subst(str, scopes){
+    return str.replace(/\{\{([^}]+)\}\}/g, function(_,e){ var v=resolve(scopes,e); return v==null?'':String(v); });
+  }
+  function firstExpr(str){ var m=str.match(/\{\{([^}]+)\}\}/); return m?m[1].trim():null; }
+  function processNode(node, scopes, out){
+    if(node.nodeType===3){ // text
+      var t=node.nodeValue;
+      if(t.indexOf('{{')>=0) out.push(document.createTextNode(subst(t,scopes)));
+      else out.push(document.createTextNode(t));
+      return;
+    }
+    if(node.nodeType!==1){ return; }
+    var tag=node.tagName.toLowerCase();
+    if(tag==='sc-for'){
+      var listExpr=firstExpr(node.getAttribute('list')||'');
+      var as=node.getAttribute('as');
+      var arr=listExpr?resolve(scopes,listExpr):null;
+      if(Array.isArray(arr)){
+        for(var k=0;k<arr.length;k++){
+          var sc=scopes.concat([{__k:as, [as]:arr[k]}]);
+          for(var c=0;c<node.childNodes.length;c++) processNode(node.childNodes[c], sc, out);
+        }
+      }
+      return;
+    }
+    if(tag==='sc-if'){
+      var valExpr=firstExpr(node.getAttribute('value')||'');
+      var cond=valExpr?resolve(scopes,valExpr):false;
+      if(cond){ for(var c2=0;c2<node.childNodes.length;c2++) processNode(node.childNodes[c2], scopes, out); }
+      return;
+    }
+    var el=document.createElement(tag);
+    for(var a=0;a<node.attributes.length;a++){
+      var at=node.attributes[a], name=at.name, val=at.value;
+      if(name.indexOf('hint-')===0) continue;
+      if(name==='onclick'){ var h=firstExpr(val); (function(expr){ el.addEventListener('click', function(ev){ var fn=resolve(scopes,expr); if(typeof fn==='function') fn(ev); }); })(h); continue; }
+      if(name==='onchange'){ var h2=firstExpr(val); (function(expr){ el.addEventListener('input', function(ev){ var fn=resolve(scopes,expr); if(typeof fn==='function') fn(ev); }); })(h2); continue; }
+      var sv=val.indexOf('{{')>=0?subst(val,scopes):val;
+      if(name==='value' && (tag==='input'||tag==='textarea')){ el.value=sv; el.setAttribute('value',sv); }
+      else el.setAttribute(name, sv);
+    }
+    var kids=[];
+    for(var cc=0;cc<node.childNodes.length;cc++) processNode(node.childNodes[cc], scopes, kids);
+    for(var ki=0;ki<kids.length;ki++) el.appendChild(kids[ki]);
+    out.push(el);
+  }
+  window.__mountDC=function(templateHTML, ComponentClass){
+    var tplRoot=document.createElement('div'); tplRoot.innerHTML=templateHTML;
+    var mount=document.getElementById('app');
+    var comp=new ComponentClass({});
+    function doRender(){
+      var vals;
+      try{ vals=comp.renderVals(); }catch(e){ console.error('render error',e); return; }
+      var frag=document.createDocumentFragment();
+      var buf=[];
+      for(var i=0;i<tplRoot.childNodes.length;i++) processNode(tplRoot.childNodes[i], [vals], buf);
+      for(var b=0;b<buf.length;b++) frag.appendChild(buf[b]);
+      // preserve focus in search/textarea across re-render
+      var active=document.activeElement, sel=null, id=null;
+      mount.innerHTML=''; mount.appendChild(frag);
+    }
+    comp.setState=function(s){ Object.assign(comp.state, s); doRender(); };
+    doRender();
+  };
+  window.DCLogic=function(){};
+})();
+</script>
+<script>
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { step: 0, answer: null };
+  }
+  renderVals() {
+    const step = this.state.step;
+    const steps = [
+      { title: 'Test', file: 'test_login.py', kicker: 'step 1 · the test', head: 'The test states intent, nothing else.', body: 'It asks the LoginPage to log in and checks the result. No selectors, no waits, no browser details. Anyone can read it like a test case.', fileName: 'tests/test_login.py', code: 'def test_login_valid_user(page):\n    login = LoginPage(page)\n    login.open()\n    login.login("qa_user", "••••••")\n    expect(page).to_have_url("/dashboard")' },
+      { title: 'Page Object', file: 'login_page.py', kicker: 'step 2 · the page object', head: 'One class per page holds its actions.', body: 'LoginPage knows how to open the page and perform a login. Tests call these methods instead of touching elements directly.', fileName: 'pages/login_page.py', code: 'class LoginPage(BasePage):\n    URL = "/login"\n\n    def login(self, user, pwd):\n        self.username.fill(user)\n        self.password.fill(pwd)\n        self.submit.click()' },
+      { title: 'Locators', file: '__init__()', kicker: 'step 3 · the locators', head: 'Selectors live in exactly one place.', body: 'Locators are defined once when the page object is created. Prefer role and label based locators because they survive UI changes better.', fileName: 'pages/login_page.py', code: 'def __init__(self, page):\n    super().__init__(page)\n    self.username = page.get_by_label("Username")\n    self.password = page.get_by_label("Password")\n    self.submit = page.get_by_role(\n        "button", name="Sign in")' },
+      { title: 'Browser', file: 'conftest.py', kicker: 'step 4 · the browser', head: 'Playwright drives a real browser.', body: 'pytest-playwright gives each test a fresh page. Base URL and browser options come from config, so tests run the same everywhere.', fileName: 'pytest.ini', code: '[pytest]\naddopts = --base-url https://demo.example\n          --browser chromium\n          --screenshot only-on-failure\n          --tracing retain-on-failure' },
+      { title: 'Report', file: 'report.html', kicker: 'step 5 · the result', head: 'Pass or fail, you get evidence.', body: 'Failures keep a screenshot and a trace you can replay step by step. That evidence goes straight into the bug report.', fileName: 'terminal', code: '$ pytest --html=report.html\n\ntests/test_login.py::test_login_valid_user PASSED\n\n1 passed in 3.41s' }
+    ];
+    const last = steps.length - 1;
+    const nodes = steps.map((s, i) => {
+      const active = i === step;
+      const done = i < step;
+      const bg = active ? '#16181D' : done ? '#DCEFE3' : '#F4F1EA';
+      const fg = active ? '#F4F1EA' : done ? '#1F7A52' : '#4A4E57';
+      const border = active ? '#16181D' : done ? '#7FC8A0' : '#DDD7CB';
+      return {
+        num: String(i + 1),
+        title: s.title,
+        file: s.file,
+        arrow: i < last,
+        pick: () => this.setState({ step: i }),
+        style: 'flex-shrink:0;width:168px;min-height:120px;display:flex;flex-direction:column;align-items:flex-start;gap:8px;padding:16px;border-radius:16px;cursor:pointer;text-align:left;font-family:IBM Plex Sans,sans-serif;transition:all .2s;background:' + bg + ';color:' + fg + ';border:1.5px solid ' + border + ';' + (active ? 'transform:translateY(-4px);box-shadow:0 14px 28px -12px rgba(22,24,29,.5);' : ''),
+        numStyle: 'width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font:600 13px JetBrains Mono,monospace;' + (active ? 'background:#7EE2A8;color:#16181D;' : done ? 'background:#1F7A52;color:#FFFFFF;' : 'background:#E3DED3;color:#4A4E57;'),
+        lineStyle: 'flex-grow:1;height:3px;min-width:16px;border-radius:3px;background:' + (i < step ? '#1F7A52' : '#DDD7CB') + ';'
+      };
+    });
+
+    const choices = [
+      { id: 'test', label: 'In every test file' },
+      { id: 'page', label: 'In the page object' },
+      { id: 'ini', label: 'In pytest.ini' }
+    ];
+    const ans = this.state.answer;
+    const answers = choices.map((c) => {
+      const picked = ans === c.id;
+      const right = c.id === 'page';
+      let look = 'background:#22252D;color:#F4F1EA;border:1.5px solid #343843;';
+      if (picked && right) look = 'background:#1F7A52;color:#FFFFFF;border:1.5px solid #7EE2A8;';
+      if (picked && !right) look = 'background:#5A2718;color:#FFFFFF;border:1.5px solid #F08A62;';
+      return {
+        label: c.label,
+        pick: () => this.setState({ answer: c.id }),
+        style: 'min-height:56px;padding:14px 18px;border-radius:14px;cursor:pointer;text-align:left;font:500 16px IBM Plex Sans,sans-serif;' + look
+      };
+    });
+    const feedback = ans === 'page'
+      ? 'Correct. One edit in the page object, and every test using that button is fixed.'
+      : 'Not quite. Tests never hold selectors in this pattern. Try again.';
+
+    const pct = Math.round(((step + 1) / steps.length) * 100);
+    return {
+      nodes,
+      cur: steps[step],
+      stepLabel: (step + 1) + ' / ' + steps.length,
+      prev: () => this.setState({ step: Math.max(0, step - 1) }),
+      next: () => this.setState({ step: Math.min(last, step + 1) }),
+      answers,
+      answered: ans !== null,
+      feedback,
+      progressStyle: 'height:100%;background:#1F7A52;border-radius:999px;transition:width .3s;width:' + pct + '%;',
+      progressLabel: pct + '% through the walkthrough'
+    };
+  }
+}
+
+var __TPL=`<div style="width: 1440px; height: 2500px; box-sizing: border-box; display: flex; flex-direction: column; background: #F4F1EA; font-family: 'IBM Plex Sans', system-ui, sans-serif; color: #16181D;">
+
+<!-- TOP BAR -->
+<div style="display: flex; flex-grow: 1;">
+
+<!-- SIDEBAR -->
+<aside style="width: 280px; flex-shrink: 0; border-right: 1px solid #DDD7CB; padding: 36px 28px; box-sizing: border-box; display: flex; flex-direction: column; gap: 28px;">
+<div style="display: flex; flex-direction: column; gap: 6px;">
+<a href="PWHub.html" style="text-decoration: none; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #1F7A52; text-transform: uppercase; letter-spacing: 0.08em; padding: 0 12px 6px;">Playwright path ↗</a>
+<a href="PyPW.html" style="text-decoration: none; padding: 11px 12px; border-radius: 10px; font-size: 15px;">01 · Python for Playwright</a>
+<a href="OOPPW.html" style="text-decoration: none; padding: 11px 12px; border-radius: 10px; font-size: 15px;">02 · OOP for Playwright</a>
+<a href="Assert.html" style="text-decoration: none; padding: 11px 12px; border-radius: 10px; font-size: 15px;">05 · Assertions</a>
+<a href="Reports.html" style="text-decoration: none; padding: 11px 12px; border-radius: 10px; font-size: 15px;">08 · Reporting &amp; Allure</a>
+<a href="#top" style="text-decoration: none; padding: 11px 12px; border-radius: 10px; background: #16181D; color: #F4F1EA; font-weight: 600; font-size: 15px;">09 · Page Object Model</a>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #6A6E77; text-transform: uppercase; letter-spacing: 0.08em; padding: 0 12px 6px;">Manual testing</span>
+<a href="#top" style="text-decoration: none; padding: 11px 12px; border-radius: 10px; font-size: 15px;">Writing test cases</a>
+<a href="#top" style="text-decoration: none; padding: 11px 12px; border-radius: 10px; font-size: 15px;">Bug reports that work</a>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #6A6E77; text-transform: uppercase; letter-spacing: 0.08em; padding: 0 12px 6px;">Tools</span>
+<a href="#top" style="text-decoration: none; padding: 11px 12px; border-radius: 10px; font-size: 15px;">Excel with openpyxl</a>
+<a href="#top" style="text-decoration: none; padding: 11px 12px; border-radius: 10px; font-size: 15px;">Git for testers</a>
+</div>
+</aside>
+
+<!-- CONTENT -->
+<main id="top" style="flex-grow: 1; padding: 56px 64px 80px; display: flex; flex-direction: column; gap: 40px; min-width: 0;">
+<div style="display: flex; flex-direction: column; gap: 16px;">
+<div style="display: flex; gap: 10px; font-family: 'JetBrains Mono', monospace; font-size: 13px;">
+<a href="PWHub.html" style="text-decoration: none; padding: 6px 12px; border-radius: 999px; background: #DCEFE3; color: #1F7A52;">playwright / module 09</a>
+<span style="padding: 6px 12px; border-radius: 999px; background: #EAE5DA; color: #4A4E57;">12 min read</span>
+<span style="padding: 6px 12px; border-radius: 999px; background: #EAE5DA; color: #4A4E57;">Python · Playwright</span>
+</div>
+<h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 56px; letter-spacing: -0.025em; line-height: 1.02;">Page Object Model,<br>explained by clicking through it</h1>
+<p style="margin: 0; font-size: 19px; line-height: 1.65; color: #4A4E57; max-width: 760px;">A test shouldn't know where a button lives. It should just say "log in". Here's how one test call travels through the framework, step by step.</p>
+</div>
+
+<!-- INTERACTIVE FLOW VISUALIZATION -->
+<section style="background: #FFFFFF; border: 1px solid #DDD7CB; border-radius: 24px; padding: 36px; display: flex; flex-direction: column; gap: 32px;">
+<div style="display: flex; justify-content: space-between; align-items: center;">
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 24px;">How a test runs</span>
+<div style="display: flex; gap: 10px; align-items: center;">
+<button onClick="{{prev}}" aria-label="Previous step" style="width: 44px; height: 44px; border-radius: 12px; border: 1.5px solid #16181D; background: #FFFFFF; cursor: pointer; font-size: 18px;">←</button>
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; min-width: 64px; text-align: center;">{{stepLabel}}</span>
+<button onClick="{{next}}" aria-label="Next step" style="width: 44px; height: 44px; border-radius: 12px; border: none; background: #16181D; color: #F4F1EA; cursor: pointer; font-size: 18px;">→</button>
+</div>
+</div>
+
+<div style="display: flex; align-items: center; gap: 0;">
+<sc-for list="{{nodes}}" as="n" hint-placeholder-count="5">
+<div style="display: flex; align-items: center; flex-grow: 1;">
+<button onClick="{{n.pick}}" style="{{n.style}}">
+<span style="{{n.numStyle}}">{{n.num}}</span>
+<span style="font-weight: 600; font-size: 15px;">{{n.title}}</span>
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; opacity: 0.75;">{{n.file}}</span>
+</button>
+<sc-if value="{{n.arrow}}" hint-placeholder-val="{{ true }}">
+<div style="{{n.lineStyle}}"></div>
+</sc-if>
+</div>
+</sc-for>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px;">
+<div style="display: flex; flex-direction: column; gap: 14px; padding: 8px 4px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #1F7A52;">{{cur.kicker}}</span>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 28px; line-height: 1.15;">{{cur.head}}</span>
+<span style="font-size: 16px; line-height: 1.7; color: #4A4E57;">{{cur.body}}</span>
+</div>
+<div style="background: #16181D; border-radius: 16px; overflow: hidden;">
+<div style="padding: 12px 18px; border-bottom: 1px solid #2A2D35; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #8A8F9C;">{{cur.fileName}}</div>
+<pre style="margin: 0; padding: 20px 22px; font-family: 'JetBrains Mono', monospace; font-size: 14px; line-height: 1.75; color: #D8DAE0; white-space: pre; overflow-x: auto;">{{cur.code}}</pre>
+</div>
+</div>
+</section>
+
+<!-- CALLOUT -->
+<div style="display: flex; gap: 16px; background: #F6E7B8; border-radius: 16px; padding: 22px 24px; align-items: flex-start;">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8A5A00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"></path></svg>
+<div style="display: flex; flex-direction: column; gap: 4px;">
+<span style="font-weight: 600; font-size: 16px; color: #5E3E00;">Why it matters</span>
+<span style="font-size: 15px; line-height: 1.6; color: #5E3E00;">When the login button's ID changes, you fix one line in the page class. Every test that logs in keeps working.</span>
+</div>
+</div>
+
+<!-- STRUCTURE -->
+<section style="display: flex; flex-direction: column; gap: 18px;">
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 32px;">Folder structure</h2>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px;">
+<pre style="margin: 0; background: #FFFFFF; border: 1px solid #DDD7CB; border-radius: 16px; padding: 24px; font-family: 'JetBrains Mono', monospace; font-size: 14px; line-height: 1.9; color: #16181D;">playwright-demo/
+├── pages/
+│   ├── base_page.py
+│   └── login_page.py
+├── tests/
+│   └── test_login.py
+├── conftest.py
+├── pytest.ini
+└── requirements.txt</pre>
+<div style="display: flex; flex-direction: column; gap: 12px;">
+<div style="background: #FFFFFF; border: 1px solid #DDD7CB; border-radius: 14px; padding: 18px 20px; display: flex; gap: 14px; align-items: center;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; padding: 6px 10px; background: #DCEFE3; color: #1F7A52; border-radius: 8px;">pages/</span><span style="font-size: 15px; color: #4A4E57;">Where elements live and what you can do on each page.</span></div>
+<div style="background: #FFFFFF; border: 1px solid #DDD7CB; border-radius: 14px; padding: 18px 20px; display: flex; gap: 14px; align-items: center;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; padding: 6px 10px; background: #FCE7DD; color: #C4502A; border-radius: 8px;">tests/</span><span style="font-size: 15px; color: #4A4E57;">Only intent and assertions. No selectors here.</span></div>
+<div style="background: #FFFFFF; border: 1px solid #DDD7CB; border-radius: 14px; padding: 18px 20px; display: flex; gap: 14px; align-items: center;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; padding: 6px 10px; background: #E3E1F5; color: #4B45A1; border-radius: 8px;">conftest.py</span><span style="font-size: 15px; color: #4A4E57;">Shared fixtures: browser, base URL, test users.</span></div>
+</div>
+</div>
+</section>
+
+<!-- QUIZ -->
+<section style="background: #16181D; color: #F4F1EA; border-radius: 24px; padding: 36px; display: flex; flex-direction: column; gap: 20px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #7EE2A8;">check yourself</span>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 26px;">The "Submit" button's selector changed. Where do you fix it?</span>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px;">
+<sc-for list="{{answers}}" as="a" hint-placeholder-count="3">
+<button onClick="{{a.pick}}" style="{{a.style}}">{{a.label}}</button>
+</sc-for>
+</div>
+<sc-if value="{{answered}}" hint-placeholder-val="{{ false }}">
+<span style="font-size: 16px; line-height: 1.6; color: #D8DAE0;">{{feedback}}</span>
+</sc-if>
+</section>
+
+<!-- PAGER -->
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px;">
+<a href="Reports.html" style="text-decoration: none; border: 1px solid #DDD7CB; border-radius: 16px; padding: 22px 24px; display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 13px; color: #6A6E77;">← Previous module</span><span style="font-weight: 600; font-size: 18px;">Reporting &amp; Allure</span></a>
+<a href="PWHub.html" style="text-decoration: none; border: 1px solid #DDD7CB; border-radius: 16px; padding: 22px 24px; display: flex; flex-direction: column; gap: 6px; align-items: flex-end;"><span style="font-size: 13px; color: #6A6E77;">Back to →</span><span style="font-weight: 600; font-size: 18px;">Playwright path</span></a>
+</div>
+</main>
+
+<!-- RIGHT TOC -->
+<aside style="width: 240px; flex-shrink: 0; padding: 56px 28px; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #6A6E77; text-transform: uppercase; letter-spacing: 0.08em;">On this page</span>
+<a href="#top" style="text-decoration: none; font-size: 14px; padding: 6px 0 6px 12px; border-left: 2px solid #1F7A52; color: #1F7A52; font-weight: 600;">How a test runs</a>
+<a href="#top" style="text-decoration: none; font-size: 14px; padding: 6px 0 6px 12px; border-left: 2px solid #DDD7CB; color: #4A4E57;">Why it matters</a>
+<a href="#top" style="text-decoration: none; font-size: 14px; padding: 6px 0 6px 12px; border-left: 2px solid #DDD7CB; color: #4A4E57;">Folder structure</a>
+<a href="#top" style="text-decoration: none; font-size: 14px; padding: 6px 0 6px 12px; border-left: 2px solid #DDD7CB; color: #4A4E57;">Check yourself</a>
+<div style="margin-top: 20px; display: flex; flex-direction: column; gap: 8px;">
+<span style="font-size: 13px; color: #6A6E77;">Reading progress</span>
+<div style="height: 6px; border-radius: 999px; background: #E3DED3; overflow: hidden;"><div style="{{progressStyle}}"></div></div>
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #1F7A52;">{{progressLabel}}</span>
+</div>
+</aside>
+</div>
+</div>`;
+window.__mountDC(__TPL, Component);
+</script>
+</body>
+</html>
