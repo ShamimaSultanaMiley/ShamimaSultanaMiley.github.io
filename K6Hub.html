@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440">
+<title>k6 — Performance Testing Path</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap">
+<style>
+body{margin:0;font-family:'IBM Plex Sans',system-ui,sans-serif;background:#F4F1EA;color:#16181D}
+a{color:#16181D}a:hover{color:#6C4DF5}
+</style>
+<style>html,body{margin:0} #app > div{margin:0 auto}</style>
+</head>
+<body>
+<div id="app"></div>
+<script>/* Minimal renderer: replaces Claude's canvas engine so pages run anywhere. */
+(function(){
+  function resolve(scopes, path){
+    path=path.trim();
+    var parts=path.split('.'), head=parts[0], base, found=false;
+    for(var i=scopes.length-1;i>=0;i--){ if(scopes[i] && Object.prototype.hasOwnProperty.call(scopes[i],head)){ base=scopes[i][head]; found=true; break; } }
+    if(!found) return undefined;
+    for(var j=1;j<parts.length;j++){ if(base==null) return undefined; base=base[parts[j]]; }
+    return base;
+  }
+  function subst(str, scopes){
+    return str.replace(/\{\{([^}]+)\}\}/g, function(_,e){ var v=resolve(scopes,e); return v==null?'':String(v); });
+  }
+  function firstExpr(str){ var m=str.match(/\{\{([^}]+)\}\}/); return m?m[1].trim():null; }
+  function processNode(node, scopes, out){
+    if(node.nodeType===3){ // text
+      var t=node.nodeValue;
+      if(t.indexOf('{{')>=0) out.push(document.createTextNode(subst(t,scopes)));
+      else out.push(document.createTextNode(t));
+      return;
+    }
+    if(node.nodeType!==1){ return; }
+    var tag=node.tagName.toLowerCase();
+    if(tag==='sc-for'){
+      var listExpr=firstExpr(node.getAttribute('list')||'');
+      var as=node.getAttribute('as');
+      var arr=listExpr?resolve(scopes,listExpr):null;
+      if(Array.isArray(arr)){
+        for(var k=0;k<arr.length;k++){
+          var sc=scopes.concat([{__k:as, [as]:arr[k]}]);
+          for(var c=0;c<node.childNodes.length;c++) processNode(node.childNodes[c], sc, out);
+        }
+      }
+      return;
+    }
+    if(tag==='sc-if'){
+      var valExpr=firstExpr(node.getAttribute('value')||'');
+      var cond=valExpr?resolve(scopes,valExpr):false;
+      if(cond){ for(var c2=0;c2<node.childNodes.length;c2++) processNode(node.childNodes[c2], scopes, out); }
+      return;
+    }
+    var el=document.createElement(tag);
+    for(var a=0;a<node.attributes.length;a++){
+      var at=node.attributes[a], name=at.name, val=at.value;
+      if(name.indexOf('hint-')===0) continue;
+      if(name==='onclick'){ var h=firstExpr(val); (function(expr){ el.addEventListener('click', function(ev){ var fn=resolve(scopes,expr); if(typeof fn==='function') fn(ev); }); })(h); continue; }
+      if(name==='onchange'){ var h2=firstExpr(val); (function(expr){ el.addEventListener('input', function(ev){ var fn=resolve(scopes,expr); if(typeof fn==='function') fn(ev); }); })(h2); continue; }
+      var sv=val.indexOf('{{')>=0?subst(val,scopes):val;
+      if(name==='value' && (tag==='input'||tag==='textarea')){ el.value=sv; el.setAttribute('value',sv); }
+      else el.setAttribute(name, sv);
+    }
+    var kids=[];
+    for(var cc=0;cc<node.childNodes.length;cc++) processNode(node.childNodes[cc], scopes, kids);
+    for(var ki=0;ki<kids.length;ki++) el.appendChild(kids[ki]);
+    out.push(el);
+  }
+  window.__mountDC=function(templateHTML, ComponentClass){
+    var tplRoot=document.createElement('div'); tplRoot.innerHTML=templateHTML;
+    var mount=document.getElementById('app');
+    var comp=new ComponentClass({});
+    function doRender(){
+      var vals;
+      try{ vals=comp.renderVals(); }catch(e){ console.error('render error',e); return; }
+      var frag=document.createDocumentFragment();
+      var buf=[];
+      for(var i=0;i<tplRoot.childNodes.length;i++) processNode(tplRoot.childNodes[i], [vals], buf);
+      for(var b=0;b<buf.length;b++) frag.appendChild(buf[b]);
+      // preserve focus in search/textarea across re-render
+      var active=document.activeElement, sel=null, id=null;
+      mount.innerHTML=''; mount.appendChild(frag);
+    }
+    comp.setState=function(s){ Object.assign(comp.state, s); doRender(); };
+    doRender();
+  };
+  window.DCLogic=function(){};
+})();
+</script>
+<script>
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { type: 1 };
+  }
+  renderVals() {
+    const planned = [
+      { num: '02', title: 'Getting started', desc: 'Install, what changed in k6 2.0, first script, lifecycle, the summary and CLI options.', count: '6 lessons' },
+      { num: '03', title: 'Load profiles & scenarios', desc: 'VUs, stages, think time, all six executors, multiple scenarios.', count: '8 lessons' },
+      { num: '04', title: 'Requests & test data', desc: 'Methods, headers, auth, correlation, groups, batch, data files, uploads.', count: '9 lessons' },
+      { num: '05', title: 'Checks, thresholds & metrics', desc: 'Checks, the new expect() assertions, tagged thresholds, timings, custom metrics, percentiles.', count: '8 lessons' },
+      { num: '06', title: 'Results & reporting', desc: 'Summary, HTML reports, web dashboard, Grafana, reading results, writing the report.', count: '6 lessons' },
+      { num: '07', title: 'Beyond HTTP & CI', desc: 'Project structure, browser tests, WebSockets, gRPC, extensions, GitHub Actions.', count: '6 lessons' },
+      { num: '08', title: 'Project: load test a public API', desc: 'Plan, smoke, average, stress and spike on QuickPizza, then a portfolio write-up.', count: '5 steps' }
+    ];
+    // y: 240 = 0 VUs, 140 = normal traffic
+    const types = [
+      { label: 'Smoke', name: 'Smoke test', span: 'a minute or two', question: 'Does the script even work?', desc: 'A handful of users for a short time. Run it first to catch script errors before sending real load.',
+        pts: [[0,240],[30,215],[570,215],[600,240]], code: "export const options = {\n  vus: 2,\n  duration: '1m',\n};" },
+      { label: 'Load', name: 'Average load test', span: 'minutes to an hour', question: 'Is it fine on a normal day?', desc: 'Ramp up to your usual traffic, hold it, then ramp down. This is the baseline you compare everything else against.',
+        pts: [[0,240],[120,140],[480,140],[600,240]], code: "export const options = {\n  stages: [\n    { duration: '5m', target: 100 },\n    { duration: '30m', target: 100 },\n    { duration: '5m', target: 0 },\n  ],\n};" },
+      { label: 'Stress', name: 'Stress test', span: 'minutes to an hour', question: 'What happens above normal?', desc: 'Push past average traffic and hold it, to see how response times and errors behave when the system is busier than usual.',
+        pts: [[0,240],[140,60],[460,60],[600,240]], code: "export const options = {\n  stages: [\n    { duration: '10m', target: 200 },\n    { duration: '30m', target: 200 },\n    { duration: '5m', target: 0 },\n  ],\n};" },
+      { label: 'Spike', name: 'Spike test', span: 'a few minutes', question: 'Can it survive a sudden rush?', desc: 'A very fast jump to heavy traffic, then straight back down. Think of a tender deadline where everyone submits at once.',
+        pts: [[0,240],[250,240],[290,30],[330,240],[600,240]], code: "export const options = {\n  stages: [\n    { duration: '2m', target: 2000 },\n    { duration: '1m', target: 0 },\n  ],\n};" },
+      { label: 'Soak', name: 'Soak test', span: 'hours', question: 'Does it stay healthy over time?', desc: 'Average load held for a long time, to catch slow problems like memory leaks that short tests never show.',
+        pts: [[0,240],[40,140],[560,140],[600,240]], code: "export const options = {\n  stages: [\n    { duration: '5m', target: 100 },\n    { duration: '8h', target: 100 },\n    { duration: '5m', target: 0 },\n  ],\n};" }
+    ];
+    const t = types[this.state.type];
+    const points = t.pts.map((p) => p.join(',')).join(' ');
+    const typeTabs = types.map((ty, i) => ({ label: ty.label, pick: () => this.setState({ type: i }),
+      style: 'min-height:44px;padding:10px 16px;border-radius:10px;border:none;cursor:pointer;font:600 15px IBM Plex Sans,sans-serif;' + (i === this.state.type ? 'background:#6C4DF5;color:#fff;' : 'background:transparent;color:#4A4E57;') }));
+    return { planned, typeTabs, cur: { ...t, points, area: points + ' 600,240 0,240' } };
+  }
+}
+
+var __TPL=`<div style="width: 1440px; height: 3000px; box-sizing: border-box; display: flex; flex-direction: column; background: #F4F1EA; font-family: 'IBM Plex Sans', system-ui, sans-serif; color: #16181D;">
+
+<header style="display: flex; align-items: center; justify-content: space-between; padding: 18px 48px; background: #16181D; color: #F4F1EA;">
+<a href="index.html" style="display: flex; align-items: center; gap: 12px; text-decoration: none; color: #F4F1EA;">
+<span style="width: 36px; height: 36px; border-radius: 9px; background: #7EE2A8; color: #16181D; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-weight: 600; font-size: 14px;">S✓</span>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 18px;">Shamima / articles</span>
+</a>
+<div style="display: flex; gap: 18px; font-size: 15px;">
+<a href="K6Hub.html" style="text-decoration: none; color: #B7A8FF; font-weight: 600;">k6</a>
+<a href="PWHub.html" style="text-decoration: none; color: #F4F1EA;">Playwright</a>
+<a href="SQLHub.html" style="text-decoration: none; color: #F4F1EA;">SQL</a>
+<a href="Manual.html" style="text-decoration: none; color: #F4F1EA;">Manual</a>
+<a href="API.html" style="text-decoration: none; color: #F4F1EA;">API</a>
+<a href="News.html" style="text-decoration: none; color: #F4F1EA;">News</a>
+<a href="Interview.html" style="text-decoration: none; color: #F4F1EA;">Interview</a>
+<a href="index.html" style="text-decoration: none; color: #F4F1EA;">← Portfolio</a>
+</div>
+</header>
+
+<!-- HERO -->
+<section style="background: #16181D; color: #F4F1EA; padding: 56px 80px 88px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 40px; align-items: center;">
+<div style="grid-column: span 6; display: flex; flex-direction: column; gap: 22px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #8A8F9C;"><a href="index.html" style="color: #8A8F9C; text-decoration: none;">articles</a> / <span style="color: #B7A8FF;">k6</span></span>
+<h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 180px; line-height: 0.85; letter-spacing: -0.05em; color: #B7A8FF;">k6</h1>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 34px; line-height: 1.15;">Performance testing, one step at a time.</span>
+<p style="margin: 0; font-size: 18px; line-height: 1.65; color: #A9AEBA; max-width: 540px;">k6 is an open-source load testing tool. You write the test in JavaScript, run it from the terminal, and it tells you how your system holds up under many users at once.</p>
+<div style="display: flex; gap: 12px;"><a href="K6.html" style="text-decoration: none; padding: 16px 26px; border-radius: 12px; background: #6C4DF5; color: #FFFFFF; font-weight: 600; font-size: 16px;">Start with JavaScript →</a><a href="K6Course.html" style="text-decoration: none; padding: 16px 26px; border-radius: 12px; border: 1.5px solid #B7A8FF; color: #FFFFFF; font-weight: 600; font-size: 16px;">Already know JS? Open the course</a></div>
+</div>
+<div style="grid-column: span 6; background: #1E2129; border: 1px solid #2E323C; border-radius: 24px; padding: 30px; display: flex; flex-direction: column; gap: 16px;">
+<div style="display: flex; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #8A8F9C;"><span>$ k6 run test.js</span><span style="color: #7EE2A8;">✓ running</span></div>
+<svg width="100%" height="220" viewBox="0 0 520 220" fill="none">
+<line x1="0" y1="200" x2="520" y2="200" stroke="#2E323C" stroke-width="1"></line>
+<line x1="0" y1="140" x2="520" y2="140" stroke="#2E323C" stroke-width="1" stroke-dasharray="4 6"></line>
+<line x1="0" y1="80" x2="520" y2="80" stroke="#2E323C" stroke-width="1" stroke-dasharray="4 6"></line>
+<polyline points="0,200 90,70 430,70 520,200" stroke="#B7A8FF" stroke-width="3" stroke-linejoin="round"></polyline>
+<polyline points="0,190 40,150 90,120 130,126 170,118 210,124 250,116 290,122 330,114 370,121 410,117 430,120 470,165 520,195" stroke="#7EE2A8" stroke-width="2" stroke-linejoin="round"></polyline>
+</svg>
+<div style="display: flex; gap: 22px; font-size: 13px; color: #A9AEBA;">
+<span style="display: flex; align-items: center; gap: 8px;"><span style="width: 14px; height: 3px; background: #B7A8FF;"></span>virtual users</span>
+<span style="display: flex; align-items: center; gap: 8px;"><span style="width: 14px; height: 3px; background: #7EE2A8;"></span>response time</span>
+</div>
+</div>
+</section>
+
+<!-- LEARNING PATH -->
+<section style="padding: 88px 80px 64px; display: flex; flex-direction: column; gap: 40px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-end;">
+<div style="display: flex; flex-direction: column; gap: 14px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #6C4DF5;">the path</span>
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 52px; letter-spacing: -0.02em;">Learn k6 in order</h2>
+</div>
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #4A4E57;">8 modules · 60 lessons · updated for k6 2.x</span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px;">
+<a href="K6.html" style="text-decoration: none; background: #6C4DF5; color: #FFFFFF; border-radius: 22px; padding: 30px; display: flex; flex-direction: column; gap: 14px; min-height: 260px; box-sizing: border-box; box-shadow: 0 20px 40px -20px rgba(108,77,245,0.7);">
+<div style="display: flex; justify-content: space-between; align-items: center;">
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 48px; font-weight: 800; line-height: 1; color: #D9D1FF;">01</span>
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; padding: 5px 10px; border-radius: 999px; background: #7EE2A8; color: #16181D; font-weight: 600;">LIVE</span>
+</div>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 26px; font-weight: 700; line-height: 1.15;">JavaScript for k6</span>
+<span style="font-size: 15px; line-height: 1.6; color: #E4DEFF;">12 interactive lessons on just the JavaScript you need, compared to Python.</span>
+<span style="margin-top: auto; font-weight: 600;">Start module →</span>
+</a>
+<sc-for list="{{planned}}" as="m" hint-placeholder-count="7">
+<a href="K6Course.html" style="text-decoration: none; background: #FFFFFF; border: 1px solid #DDD7CB; border-radius: 22px; padding: 30px; display: flex; flex-direction: column; gap: 14px; min-height: 240px; box-sizing: border-box;">
+<div style="display: flex; justify-content: space-between; align-items: center;">
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 48px; font-weight: 800; line-height: 1; color: #D9D1FF;">{{m.num}}</span>
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; padding: 5px 10px; border-radius: 999px; background: #ECE8FF; color: #4B2FD1; font-weight: 600;">{{m.count}}</span>
+</div>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 26px; font-weight: 700; line-height: 1.15;">{{m.title}}</span>
+<span style="font-size: 15px; line-height: 1.6; color: #5C606A;">{{m.desc}}</span>
+<span style="margin-top: auto; font-weight: 600; color: #6C4DF5;">Open module →</span>
+</a>
+</sc-for>
+</div>
+</section>
+
+<!-- TEST TYPES VISUAL -->
+<section style="margin: 0 80px; background: #FFFFFF; border: 1px solid #DDD7CB; border-radius: 28px; padding: 48px; display: flex; flex-direction: column; gap: 32px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 30px;">
+<div style="display: flex; flex-direction: column; gap: 12px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #6C4DF5;">visualize · types of load tests</span>
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 44px; letter-spacing: -0.02em;">Same tool, different questions</h2>
+</div>
+<div style="display: flex; gap: 6px; background: #F0ECE3; padding: 6px; border-radius: 14px;">
+<sc-for list="{{typeTabs}}" as="t" hint-placeholder-count="5">
+<button onClick="{{t.pick}}" style="{{t.style}}">{{t.label}}</button>
+</sc-for>
+</div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 32px;">
+<div style="grid-column: span 7; background: #16181D; border-radius: 20px; padding: 28px; display: flex; flex-direction: column; gap: 10px;">
+<div style="display: flex; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #8A8F9C;"><span>virtual users</span><span>{{cur.span}}</span></div>
+<svg width="100%" height="260" viewBox="0 0 600 260" fill="none">
+<line x1="0" y1="240" x2="600" y2="240" stroke="#3A3E48" stroke-width="1"></line>
+<line x1="0" y1="140" x2="600" y2="140" stroke="#3A3E48" stroke-width="1" stroke-dasharray="4 6"></line>
+<text x="4" y="132" fill="#8A8F9C" font-family="JetBrains Mono, monospace" font-size="11">normal traffic</text>
+<polygon points="{{cur.area}}" fill="#6C4DF5" fill-opacity="0.25"></polygon>
+<polyline points="{{cur.points}}" stroke="#B7A8FF" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"></polyline>
+</svg>
+<div style="display: flex; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #8A8F9C;"><span>start</span><span>time →</span><span>end</span></div>
+</div>
+<div style="grid-column: span 5; display: flex; flex-direction: column; gap: 18px;">
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 30px; font-weight: 800;">{{cur.name}}</span>
+<div style="background: #ECE8FF; border-radius: 14px; padding: 16px 18px; display: flex; flex-direction: column; gap: 4px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #4B2FD1;">the question it answers</span>
+<span style="font-size: 17px; font-weight: 600; color: #231660;">{{cur.question}}</span>
+</div>
+<span style="font-size: 16px; line-height: 1.65; color: #34373F;">{{cur.desc}}</span>
+<pre style="margin: 0; background: #16181D; color: #D8DAE0; border-radius: 14px; padding: 18px 20px; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; white-space: pre; overflow-x: auto;">{{cur.code}}</pre>
+</div>
+</div>
+</section>
+
+<!-- WHY K6 -->
+<section style="flex-grow: 1; padding: 88px 80px 100px; display: flex; flex-direction: column; gap: 32px;">
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 44px; letter-spacing: -0.02em;">Why testers like k6</h2>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px;">
+<div style="background: #DCEFE3; border-radius: 22px; padding: 30px; display: flex; flex-direction: column; gap: 12px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 26px; font-weight: 600; color: #1F7A52;">.js</span>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 24px; font-weight: 700;">Tests are code</span>
+<span style="font-size: 15px; line-height: 1.6; color: #34503F;">Scripts live in Git next to your other tests and get reviewed like any code.</span>
+</div>
+<div style="background: #F6E7B8; border-radius: 22px; padding: 30px; display: flex; flex-direction: column; gap: 12px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 26px; font-weight: 600; color: #8A5A00;">$_</span>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 24px; font-weight: 700;">Runs from the terminal</span>
+<span style="font-size: 15px; line-height: 1.6; color: #5E4513;">One command locally, and it fits straight into a CI pipeline.</span>
+</div>
+<div style="background: #FCE7DD; border-radius: 22px; padding: 30px; display: flex; flex-direction: column; gap: 12px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 26px; font-weight: 600; color: #C4502A;">p95</span>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 24px; font-weight: 700;">Pass / fail on speed</span>
+<span style="font-size: 15px; line-height: 1.6; color: #7A2E14;">Thresholds turn "is it fast enough?" into a test that can fail.</span>
+</div>
+<a href="JMeter.html" style="grid-column: span 3; text-decoration: none; background: #16181D; color: #F4F1EA; border-radius: 22px; padding: 26px 30px; display: flex; justify-content: space-between; align-items: center;"><span style="font-size: 16px;">Job post also asks for <strong style="color: #FF9E94;">JMeter</strong>? Same concepts, GUI tool: the JMeter course.</span><span style="color: #FF9E94; font-weight: 600;">JMeter →</span></a>
+</div>
+</section>
+</div>`;
+window.__mountDC(__TPL, Component);
+</script>
+</body>
+</html>

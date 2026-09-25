@@ -1,0 +1,689 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440">
+<title>Shamima Sultana — SQA Engineer</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap">
+<style>
+body{margin:0;font-family:'IBM Plex Sans',system-ui,sans-serif;background:#F4F1EA;color:#16181D}
+a{color:#16181D}a:hover{color:#1F7A52}
+</style>
+<style>html,body{margin:0} #app > div{margin:0 auto}</style>
+</head>
+<body>
+<div id="app"></div>
+<script>/* Minimal renderer: replaces Claude's canvas engine so pages run anywhere. */
+(function(){
+  function resolve(scopes, path){
+    path=path.trim();
+    var parts=path.split('.'), head=parts[0], base, found=false;
+    for(var i=scopes.length-1;i>=0;i--){ if(scopes[i] && Object.prototype.hasOwnProperty.call(scopes[i],head)){ base=scopes[i][head]; found=true; break; } }
+    if(!found) return undefined;
+    for(var j=1;j<parts.length;j++){ if(base==null) return undefined; base=base[parts[j]]; }
+    return base;
+  }
+  function subst(str, scopes){
+    return str.replace(/\{\{([^}]+)\}\}/g, function(_,e){ var v=resolve(scopes,e); return v==null?'':String(v); });
+  }
+  function firstExpr(str){ var m=str.match(/\{\{([^}]+)\}\}/); return m?m[1].trim():null; }
+  function processNode(node, scopes, out){
+    if(node.nodeType===3){ // text
+      var t=node.nodeValue;
+      if(t.indexOf('{{')>=0) out.push(document.createTextNode(subst(t,scopes)));
+      else out.push(document.createTextNode(t));
+      return;
+    }
+    if(node.nodeType!==1){ return; }
+    var tag=node.tagName.toLowerCase();
+    if(tag==='sc-for'){
+      var listExpr=firstExpr(node.getAttribute('list')||'');
+      var as=node.getAttribute('as');
+      var arr=listExpr?resolve(scopes,listExpr):null;
+      if(Array.isArray(arr)){
+        for(var k=0;k<arr.length;k++){
+          var sc=scopes.concat([{__k:as, [as]:arr[k]}]);
+          for(var c=0;c<node.childNodes.length;c++) processNode(node.childNodes[c], sc, out);
+        }
+      }
+      return;
+    }
+    if(tag==='sc-if'){
+      var valExpr=firstExpr(node.getAttribute('value')||'');
+      var cond=valExpr?resolve(scopes,valExpr):false;
+      if(cond){ for(var c2=0;c2<node.childNodes.length;c2++) processNode(node.childNodes[c2], scopes, out); }
+      return;
+    }
+    var el=document.createElement(tag);
+    for(var a=0;a<node.attributes.length;a++){
+      var at=node.attributes[a], name=at.name, val=at.value;
+      if(name.indexOf('hint-')===0) continue;
+      if(name==='onclick'){ var h=firstExpr(val); (function(expr){ el.addEventListener('click', function(ev){ var fn=resolve(scopes,expr); if(typeof fn==='function') fn(ev); }); })(h); continue; }
+      if(name==='onchange'){ var h2=firstExpr(val); (function(expr){ el.addEventListener('input', function(ev){ var fn=resolve(scopes,expr); if(typeof fn==='function') fn(ev); }); })(h2); continue; }
+      var sv=val.indexOf('{{')>=0?subst(val,scopes):val;
+      if(name==='value' && (tag==='input'||tag==='textarea')){ el.value=sv; el.setAttribute('value',sv); }
+      else el.setAttribute(name, sv);
+    }
+    var kids=[];
+    for(var cc=0;cc<node.childNodes.length;cc++) processNode(node.childNodes[cc], scopes, kids);
+    for(var ki=0;ki<kids.length;ki++) el.appendChild(kids[ki]);
+    out.push(el);
+  }
+  window.__mountDC=function(templateHTML, ComponentClass){
+    var tplRoot=document.createElement('div'); tplRoot.innerHTML=templateHTML;
+    var mount=document.getElementById('app');
+    var comp=new ComponentClass({});
+    function doRender(){
+      var vals;
+      try{ vals=comp.renderVals(); }catch(e){ console.error('render error',e); return; }
+      var frag=document.createDocumentFragment();
+      var buf=[];
+      for(var i=0;i<tplRoot.childNodes.length;i++) processNode(tplRoot.childNodes[i], [vals], buf);
+      for(var b=0;b<buf.length;b++) frag.appendChild(buf[b]);
+      // preserve focus in search/textarea across re-render
+      var active=document.activeElement, sel=null, id=null;
+      mount.innerHTML=''; mount.appendChild(frag);
+    }
+    comp.setState=function(s){ Object.assign(comp.state, s); doRender(); };
+    doRender();
+  };
+  window.DCLogic=function(){};
+})();
+</script>
+<script>
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { skillTab: 'Automation', certCat: 'All', job: 0, showEarly: false, paper: 0 };
+  }
+  renderVals() {
+    const st = this.state;
+
+    // journey
+    const jobs = [
+      { when: 'Nov 2024 — Present', role: 'SQA Engineer', org: 'BRAC IT', badge: 'Current', badgeStyle: 'padding:8px 14px;border-radius:999px;background:#DCEFE3;color:#1F7A52;font:600 13px JetBrains Mono,monospace;',
+        points: [
+          'Test two procurement and tendering management systems for different client organizations.',
+          'Lead QA for one project\u2019s ERP Procurement module: test planning, execution, defect tracking and release validation.',
+          'Test end-to-end workflows: supplier registration, tender creation, bid submission and evaluation, approvals, requisitions and purchase orders.',
+          'Introduced Playwright with Python and built automation scripts for regression and sanity testing.',
+          'Track defects in Jira and test execution in Zephyr, working closely with developers, BAs and product owners.'
+        ],
+        tags: ['Playwright', 'Python', 'Jira', 'Zephyr', 'Regression', 'UAT'] },
+      { when: 'May 2023 — Jul 2023', role: 'Trainee Software Engineer (AI)', org: 'ADN Diginet', badge: 'Internship', badgeStyle: 'padding:8px 14px;border-radius:999px;background:#E3E1F5;color:#4B45A1;font:600 13px JetBrains Mono,monospace;',
+        points: [
+          'Completed hands-on training in machine learning and AI, building practical projects in Python.',
+          'Worked on image processing and predictive model development.'
+        ],
+        tags: ['Python', 'Machine learning', 'Image processing'] },
+      { when: 'Sep 2018 — Jan 2023', role: 'B.Sc. in Computer Science & Engineering', org: 'East West University', badge: 'Education', badgeStyle: 'padding:8px 14px;border-radius:999px;background:#F6E7B8;color:#8A5A00;font:600 13px JetBrains Mono,monospace;',
+        points: [
+          'Major in Data Science and Artificial Intelligence.',
+          'Published two deep learning papers (IEEE CONIT 2022, Springer ICO 2023).',
+          'Competed in national and inter-university girls\u2019 programming contests.'
+        ],
+        tags: ['Data Science', 'AI', 'C++', 'Research'] }
+    ];
+    const journey = jobs.map((j, i) => {
+      const on = i === st.job;
+      return { ...j, pick: () => this.setState({ job: i }),
+        style: 'display:flex;flex-direction:column;align-items:flex-start;gap:6px;padding:22px 24px;border-radius:18px;cursor:pointer;text-align:left;font-family:IBM Plex Sans,sans-serif;transition:all .2s;' +
+          (on ? 'background:#16181D;color:#F4F1EA;border:1.5px solid #16181D;transform:translateX(8px);' : 'background:transparent;color:#16181D;border:1.5px solid #DDD7CB;') };
+    });
+
+    // skills
+    const tabLabels = ['Automation', 'Manual', 'Tools', 'Code'];
+    const skillTabs = tabLabels.map((label) => ({
+      label, pick: () => this.setState({ skillTab: label }),
+      style: 'min-height:44px;padding:10px 18px;border-radius:10px;border:none;cursor:pointer;font:600 15px IBM Plex Sans,sans-serif;' +
+        (label === st.skillTab ? 'background:#7EE2A8;color:#16181D;' : 'background:transparent;color:#A9AEBA;')
+    }));
+    const g = '#7EE2A8', o = '#F08A62', y = '#E8B64C', p = '#B7A8FF';
+    const skillSets = {
+      Automation: [
+        { kind: 'web · python', name: 'Playwright', note: 'Regression and sanity automation at work.', color: g },
+        { kind: 'web · java', name: 'Selenium WebDriver', note: 'Functional test scripts with TestNG suites.', color: g },
+        { kind: 'web · js', name: 'Cypress', note: 'End-to-end scenarios for login and booking flows.', color: g },
+        { kind: 'api', name: 'Postman + Newman', note: 'Request and response validation, automated collections.', color: g },
+        { kind: 'performance', name: 'k6', note: 'Load testing scripts in JavaScript.', color: g },
+        { kind: 'runner', name: 'pytest · TestNG', note: 'Organising and running test suites.', color: g }
+      ],
+      Manual: [
+        { kind: 'type', name: 'Functional & Regression', note: 'Protecting what already works release after release.', color: o },
+        { kind: 'type', name: 'Smoke & Sanity', note: 'Fast confidence checks on every build.', color: o },
+        { kind: 'type', name: 'Exploratory testing', note: 'Finding what the test cases missed.', color: o },
+        { kind: 'type', name: 'User Acceptance Testing', note: 'Validating flows with business users.', color: o },
+        { kind: 'artifact', name: 'Test plans & cases', note: 'Scenarios, mind maps, cases and metrics.', color: o },
+        { kind: 'domain', name: 'Procurement & tendering', note: 'Supplier management, bids, approvals, POs.', color: o }
+      ],
+      Tools: [
+        { kind: 'tracking', name: 'Jira', note: 'Defects, tasks and sprint work.', color: y },
+        { kind: 'test management', name: 'Zephyr', note: 'Test execution through the release cycle.', color: y },
+        { kind: 'docs', name: 'Confluence', note: 'Test documentation and team knowledge.', color: y },
+        { kind: 'version control', name: 'Git & GitHub', note: 'Versioned test code and reviews.', color: y },
+        { kind: 'process', name: 'Agile Scrum', note: 'Working inside sprints with the whole team.', color: y },
+        { kind: 'concepts', name: 'SDLC · STLC', note: 'Where testing fits at every stage.', color: y }
+      ],
+      Code: [
+        { kind: 'language', name: 'Python', note: 'Automation, data handling, ML projects.', color: p },
+        { kind: 'language', name: 'Java', note: 'Selenium and TestNG test code.', color: p },
+        { kind: 'language', name: 'JavaScript', note: 'k6 and Cypress scripts.', color: p },
+        { kind: 'language', name: 'SQL', note: 'Checking data behind the UI.', color: p },
+        { kind: 'language', name: 'C++', note: 'Competitive programming.', color: p },
+        { kind: 'concept', name: 'OOP', note: 'Page objects and reusable test code.', color: p }
+      ]
+    };
+
+    // certifications
+    const C = { mark: 'C', issuer: 'Coursera', logoStyle: 'width:40px;height:40px;border-radius:10px;background:#0056D2;color:#fff;display:flex;align-items:center;justify-content:center;font:700 18px Bricolage Grotesque,sans-serif;' };
+    const K = { mark: 'k', issuer: 'Kaggle', logoStyle: 'width:40px;height:40px;border-radius:10px;background:#20BEFF;color:#fff;display:flex;align-items:center;justify-content:center;font:700 20px Bricolage Grotesque,sans-serif;' };
+    const O = (mark, issuer) => ({ mark, issuer, logoStyle: 'width:40px;height:40px;border-radius:10px;background:#EAE5DA;color:#4A4E57;display:flex;align-items:center;justify-content:center;font:700 14px JetBrains Mono,monospace;' });
+    const all = [
+      { cat: 'Testing', name: 'Black-box and White-box Testing', date: 'Dec 2023', link: 'https://www.coursera.org/account/accomplishments/certificate/Z46QRK9GJ63K', ...C },
+      { cat: 'Testing', name: 'Web and Mobile Testing with Selenium', date: 'Oct 2023', link: 'https://www.coursera.org/account/accomplishments/certificate/DFVLF3BTDE5F', ...C },
+      { cat: 'Tools & Agile', name: 'Agile with Atlassian Jira', date: 'Oct 2023', link: 'https://www.coursera.org/account/accomplishments/certificate/GMTNYUREHEJJ', ...C },
+      { cat: 'Events & more', name: 'CONIT 2022 — 2nd International Conference on Intelligent Technologies', date: 'Jun 2022', link: 'https://drive.google.com/file/d/1_sZGMVXJ3FPSDIHFtZG8dG6xznBsDjIv/view', ...O('IEEE', 'IEEE Bangalore Section') },
+      { cat: 'Events & more', name: 'IEEE CS BDC Summer Symposium 2022 — Participation', date: 'Jun 2022', link: 'https://drive.google.com/file/d/1DOOYEAe9H1rWF9PAl6RGkcWkhVam_Wj8/view', ...O('IEEE', 'IEEE CS Bangladesh Chapter') },
+      { cat: 'Events & more', name: 'NDF BD Career and Debate Schooling', date: 'May 2016', link: 'https://drive.google.com/file/d/13HmwNp06tVbGs0amzm1rqpamuOZPkucC/view', ...O('NDF', 'National Debate Federation Bangladesh') },
+      { cat: 'Events & more', name: 'Basic Disaster Risk Management', date: 'Dec 2013', link: 'https://drive.google.com/file/d/13BDOSP49YxhAQwOK7x1RItP0DYZDqv-x/view', ...O('RC', 'Bangladesh Red Crescent Society') }
+    ];
+    const cats = ['All', 'Testing', 'Tools & Agile', 'Events & more'];
+    const certChips = cats.map((label) => {
+      const on = label === st.certCat;
+      const count = label === 'All' ? all.length + 1 : all.filter((c) => c.cat === label).length + (label === 'Testing' ? 1 : 0);
+      return { label, count: String(count), pick: () => this.setState({ certCat: label }),
+        style: 'min-height:44px;padding:10px 16px;border-radius:999px;cursor:pointer;font:600 15px IBM Plex Sans,sans-serif;border:1.5px solid #16181D;display:flex;align-items:center;gap:8px;' + (on ? 'background:#16181D;color:#F4F1EA;' : 'background:transparent;color:#16181D;'),
+        countStyle: 'font:600 12px JetBrains Mono,monospace;padding:2px 8px;border-radius:999px;' + (on ? 'background:#7EE2A8;color:#16181D;' : 'background:#E3DED3;color:#4A4E57;') };
+    });
+    const certs = all.filter((c) => st.certCat === 'All' || c.cat === st.certCat);
+
+    // research
+    const bar = (v, color) => 'height:100%;border-radius:999px;background:' + color + ';width:' + v + '%;';
+    const papers = [
+      { label: 'Crop disease · 2022', title: 'Disease Detection of Bangladeshi Crops Using Image Processing and Deep Learning: A Comparative Analysis',
+        tags: ['IEEE CONIT 2022', 'Deep learning', 'Computer vision'],
+        authorsA: 'Nafisha Binte Moin, Nabila Islam, ', authorsB: ', Lubaba Alam Chhoa, S. M. Ruhul Kabir Howlader, Shamim H. Ripon',
+        summary: 'Crop diseases cut food supply in an agriculture-driven country like Bangladesh. We built a dataset of four major crops with 15 classes and compared six CNN models on both colour and grayscale images.',
+        points: [
+          'Compared Xception, VGG16, ResNet152V2, InceptionResNetV2, DenseNet201 and MobileNetV2 on corn, potato, rice and wheat.',
+          'Grayscale conversion did not give a notable improvement over colour images.',
+          'A ResNet50 modified with Sharpness Aware Minimization (SAM) beat all six models on every crop.'
+        ],
+        link: 'https://ieeexplore.ieee.org/document/9847715', publisher: 'IEEE Xplore',
+        chartTitle: 'Best accuracy by crop',
+        bars: [
+          { label: 'Potato', value: '98.55%', note: 'DenseNet201', style: bar(98.55, '#7EE2A8') },
+          { label: 'Wheat', value: '98.28%', note: 'MobileNetV2', style: bar(98.28, '#7EE2A8') },
+          { label: 'Corn', value: '95.52%', note: 'DenseNet201', style: bar(95.52, '#B7A8FF') },
+          { label: 'Rice', value: '64.30%', note: 'Hardest crop to classify', style: bar(64.3, '#F08A62') }
+        ],
+        chartNote: 'Figures from the paper\u2019s abstract, before the SAM-modified model.' },
+      { label: 'COVID-19 · 2023', title: 'COVID-19 Detection from Chest X-Ray Images Using CNN Models and Deep Learning',
+        tags: ['Springer ICO 2023', 'Transfer learning', 'Medical imaging'],
+        authorsA: 'Nafisha Binte Moin, ', authorsB: ', Abdullah Al Munem, Omar Tawhid Imam, Ahmed Wasif Reza, Mohammad Shamsul Arefin',
+        summary: 'Chest X-rays are a low-cost, fast way to screen for COVID-19. We tested eleven pre-trained Keras CNNs plus our own multi-layer model to find which detects COVID-19 most reliably.',
+        points: [
+          'Used ImageNet weights for transfer learning across VGG16, VGG19, Xception, ResNet101, ResNet152, Inception, InceptionResNet, MobileNetV2, DenseNet201, NASNetLarge and EfficientNetB3.',
+          'MobileNetV2, Inception, ResNet101 and VGG16 all passed 99% accuracy; EfficientNetB3 reached only about 50%.',
+          'Our self-designed model reached 97.22% training and 96.42% validation accuracy.'
+        ],
+        link: 'https://link.springer.com/chapter/10.1007/978-3-031-50158-6_29', publisher: 'Springer',
+        chartTitle: 'Accuracy by model',
+        bars: [
+          { label: 'MobileNetV2 · Inception · ResNet101 · VGG16', value: '> 99%', note: 'Top four pre-trained models', style: bar(99.3, '#7EE2A8') },
+          { label: 'Self-designed CNN (training)', value: '97.22%', note: 'Our proposed model', style: bar(97.22, '#B7A8FF') },
+          { label: 'Self-designed CNN (validation)', value: '96.42%', note: 'Our proposed model', style: bar(96.42, '#B7A8FF') },
+          { label: 'EfficientNetB3', value: '~ 50%', note: 'Lowest result', style: bar(50, '#F08A62') }
+        ],
+        chartNote: 'Figures from the paper\u2019s abstract.' }
+    ];
+    const paperTabs = papers.map((pp, i) => ({ label: pp.label, pick: () => this.setState({ paper: i }),
+      style: 'min-height:44px;padding:10px 18px;border-radius:10px;border:none;cursor:pointer;font:600 15px IBM Plex Sans,sans-serif;' + (st.paper === i ? 'background:#4B45A1;color:#fff;' : 'background:transparent;color:#4B45A1;') }));
+
+    const early = [
+      { name: 'Manual Testing Project (Daraz)', tool: 'Manual' },
+      { name: 'Web Automation with Selenium (eBay)', tool: 'Selenium' },
+      { name: 'API Testing with Postman', tool: 'Postman' },
+      { name: 'Web Automation with Cypress (CURA)', tool: 'Cypress' },
+      { name: 'Daraz Tests with Selenium & TestNG', tool: 'TestNG' }
+    ];
+
+    return {
+      journey, cur: jobs[st.job],
+      skillTabs, skills: skillSets[st.skillTab],
+      certChips, certs, paperTabs, paper: papers[st.paper],
+      early, showEarly: st.showEarly,
+      earlyLabel: st.showEarly ? 'Hide early projects' : 'Show early projects (2023) ↓',
+      toggleEarly: () => this.setState({ showEarly: !st.showEarly })
+    };
+  }
+}
+
+var __TPL=`<div style="width: 1440px; height: 8940px; box-sizing: border-box; display: flex; flex-direction: column; background: #F4F1EA; font-family: 'IBM Plex Sans', system-ui, sans-serif; color: #16181D;">
+
+<!-- NAV -->
+<nav style="display: flex; align-items: center; justify-content: space-between; padding: 22px 80px; border-bottom: 1px solid #DDD7CB;">
+<a href="#top" style="display: flex; align-items: center; gap: 12px; text-decoration: none;">
+<span style="width: 40px; height: 40px; border-radius: 10px; background: #16181D; color: #7EE2A8; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-weight: 600; font-size: 15px;">S✓</span>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 20px;">Shamima Sultana</span>
+</a>
+<div style="display: flex; align-items: center; gap: 30px; font-size: 15px; font-weight: 500;">
+<a href="#about" style="text-decoration: none;">About</a>
+<a href="#projects" style="text-decoration: none;">Projects</a>
+<a href="#research" style="text-decoration: none;">Research</a>
+<a href="K6Hub.html" style="text-decoration: none;">Articles</a>
+<a href="Interview.html" style="text-decoration: none;">Interview</a>
+<a href="ISTQB.html" style="text-decoration: none;">ISTQB</a>
+<a href="SQLHub.html" style="text-decoration: none;">Learn</a>
+<a href="Manual.html" style="text-decoration: none;">Manual</a>
+<a href="API.html" style="text-decoration: none;">API</a>
+<a href="News.html" style="text-decoration: none;">News</a>
+<a href="https://github.com/ShamimaSultanaMiley" style="text-decoration: none; padding: 12px 20px; border-radius: 999px; background: #16181D; color: #F4F1EA;">GitHub ↗</a>
+</div>
+</nav>
+
+<!-- HERO -->
+<section id="top" style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 32px; padding: 88px 80px 110px; align-items: center;">
+<div style="grid-column: span 7; display: flex; flex-direction: column; gap: 26px;">
+<div style="display: flex; align-items: center; gap: 10px; font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #1F7A52;">
+<span style="width: 10px; height: 10px; border-radius: 50%; background: #2BB673;"></span>
+<span>SQA Engineer @ BRAC IT · Dhaka, Bangladesh</span>
+</div>
+<h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 80px; line-height: 0.97; letter-spacing: -0.03em;">Hi, I'm Shamima.<br>I break software so users <span style="color: #1F7A52; font-style: italic;">don't</span> have to.</h1>
+<p style="margin: 0; font-size: 19px; line-height: 1.65; color: #4A4E57; max-width: 620px;">SQA Engineer with nearly two years in manual and automation testing of web applications. I test procurement and tendering systems end to end, lead QA for an ERP procurement module, and automate regression with Playwright and Python.</p>
+<div style="display: flex; gap: 14px;">
+<a href="#projects" style="text-decoration: none; padding: 16px 26px; border-radius: 12px; background: #1F7A52; color: #FFFFFF; font-weight: 600; font-size: 16px;">See my work</a>
+<a href="K6Hub.html" style="text-decoration: none; padding: 16px 26px; border-radius: 12px; border: 1.5px solid #16181D; font-weight: 600; font-size: 16px;">Read my articles</a>
+</div>
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; margin-top: 18px; border-top: 1.5px solid #16181D;">
+<div style="display: flex; flex-direction: column; gap: 4px; padding: 18px 0;"><span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 40px;">~2 yrs</span><span style="font-size: 14px; color: #5C606A;">QA experience</span></div>
+<div style="display: flex; flex-direction: column; gap: 4px; padding: 18px 0;"><span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 40px;">8</span><span style="font-size: 14px; color: #5C606A;">certifications</span></div>
+<div style="display: flex; flex-direction: column; gap: 4px; padding: 18px 0;"><span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 40px;">2</span><span style="font-size: 14px; color: #5C606A;">research papers</span></div>
+<div style="display: flex; flex-direction: column; gap: 4px; padding: 18px 0;"><span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 40px;">6+</span><span style="font-size: 14px; color: #5C606A;">contests competed</span></div>
+</div>
+</div>
+
+<div style="grid-column: span 5; position: relative; height: 660px;">
+<div style="position: absolute; left: 0; right: 0; bottom: 0; height: 560px; border-radius: 999px 999px 36px 36px; background: #CFE6D6; overflow: hidden;">
+<svg width="100%" height="100%" viewBox="0 0 500 560" preserveAspectRatio="xMidYMid slice" fill="none" stroke="#1F7A52" stroke-opacity="0.18" stroke-width="1.5"><circle cx="250" cy="260" r="120"></circle><circle cx="250" cy="260" r="180"></circle><circle cx="250" cy="260" r="240"></circle><circle cx="250" cy="260" r="300"></circle></svg>
+</div>
+<div style="position: absolute; left: 0; right: 0; bottom: 0; height: 660px; border-radius: 0 0 36px 36px; overflow: hidden; display: flex; justify-content: center; align-items: flex-end;">
+<img src="assets/shamima-cutout.png" alt="Shamima Sultana, SQA Engineer" style="height: 640px; width: auto; display: block;">
+</div>
+<div style="position: absolute; left: -40px; bottom: 70px; background: #16181D; color: #D8DAE0; border-radius: 16px; padding: 14px 18px; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.8; box-shadow: 0 16px 30px -12px rgba(22,24,29,0.5);">
+<div><span style="color: #7EE2A8;">$</span> pytest --headed</div>
+<div>regression_suite <span style="color: #7EE2A8;">PASSED</span></div>
+</div>
+<div style="position: absolute; right: -16px; top: 190px; background: #FFFFFF; border: 1px solid #DDD7CB; border-radius: 14px; padding: 12px 16px; display: flex; flex-direction: column; gap: 2px; box-shadow: 0 12px 26px -12px rgba(22,24,29,0.3); transform: rotate(3deg);">
+<span style="font-weight: 600; font-size: 14px;">Playwright · Selenium</span>
+<span style="font-size: 12px; color: #5C606A;">Postman · k6 · Jira</span>
+</div>
+</div>
+</section>
+
+<!-- JOURNEY (interactive) -->
+<section id="about" style="padding: 20px 80px 110px; display: flex; flex-direction: column; gap: 44px;">
+<div style="display: flex; flex-direction: column; gap: 14px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #1F7A52;">01 / journey</span>
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 52px; letter-spacing: -0.02em;">From AI research to quality engineering</h2>
+</div>
+<div style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 32px;">
+<div style="grid-column: span 5; display: flex; flex-direction: column; gap: 12px;">
+<sc-for list="{{journey}}" as="j" hint-placeholder-count="3">
+<button onClick="{{j.pick}}" style="{{j.style}}">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; opacity: 0.8;">{{j.when}}</span>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 22px; font-weight: 700;">{{j.role}}</span>
+<span style="font-size: 15px; opacity: 0.85;">{{j.org}}</span>
+</button>
+</sc-for>
+</div>
+<div style="grid-column: span 7; background: #FFFFFF; border: 1px solid #DDD7CB; border-radius: 24px; padding: 40px; display: flex; flex-direction: column; gap: 22px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 20px;">
+<div style="display: flex; flex-direction: column; gap: 6px;">
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 30px; font-weight: 800;">{{cur.role}}</span>
+<span style="font-size: 17px; color: #4A4E57;">{{cur.org}} · {{cur.when}}</span>
+</div>
+<span style="{{cur.badgeStyle}}">{{cur.badge}}</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 14px;">
+<sc-for list="{{cur.points}}" as="pt" hint-placeholder-count="4">
+<div style="display: flex; gap: 14px; align-items: flex-start;">
+<span style="flex-shrink: 0; margin-top: 3px; width: 20px; height: 20px; border-radius: 6px; background: #DCEFE3; color: #1F7A52; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700;">✓</span>
+<span style="font-size: 16px; line-height: 1.6; color: #34373F;">{{pt}}</span>
+</div>
+</sc-for>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto;">
+<sc-for list="{{cur.tags}}" as="tg" hint-placeholder-count="4">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; padding: 6px 10px; border-radius: 8px; background: #F0ECE3; color: #4A4E57;">{{tg}}</span>
+</sc-for>
+</div>
+</div>
+</div>
+</section>
+
+<!-- SKILLS (dark, tabs) -->
+<section id="skills" style="background: #16181D; color: #F4F1EA; padding: 100px 80px; display: flex; flex-direction: column; gap: 48px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 40px;">
+<div style="display: flex; flex-direction: column; gap: 14px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #7EE2A8;">02 / toolkit</span>
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 52px; letter-spacing: -0.02em;">What I work with</h2>
+</div>
+<div style="display: flex; gap: 8px; background: #22252D; padding: 6px; border-radius: 14px;">
+<sc-for list="{{skillTabs}}" as="t" hint-placeholder-count="4">
+<button onClick="{{t.pick}}" style="{{t.style}}">{{t.label}}</button>
+</sc-for>
+</div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px;">
+<sc-for list="{{skills}}" as="s" hint-placeholder-count="6">
+<div style="background: #1E2129; border: 1px solid #2E323C; border-radius: 18px; padding: 28px; display: flex; flex-direction: column; gap: 12px; min-height: 140px; box-sizing: border-box;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: {{s.color}};">{{s.kind}}</span>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 26px; font-weight: 700;">{{s.name}}</span>
+<span style="font-size: 15px; line-height: 1.55; color: #A9AEBA;">{{s.note}}</span>
+</div>
+</sc-for>
+</div>
+</section>
+
+<!-- CERTIFICATIONS (filterable) -->
+<section id="certs" style="padding: 110px 80px 80px; display: flex; flex-direction: column; gap: 40px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 40px;">
+<div style="display: flex; flex-direction: column; gap: 14px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #1F7A52;">03 / certifications</span>
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 52px; letter-spacing: -0.02em;">Always learning, with receipts</h2>
+</div>
+<div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end;">
+<sc-for list="{{certChips}}" as="c" hint-placeholder-count="4">
+<button onClick="{{c.pick}}" style="{{c.style}}">{{c.label}} <span style="{{c.countStyle}}">{{c.count}}</span></button>
+</sc-for>
+</div>
+</div>
+
+<!-- featured -->
+<div style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 24px; background: #0056D2; color: #FFFFFF; border-radius: 26px; padding: 40px 44px; align-items: center;">
+<div style="grid-column: span 8; display: flex; flex-direction: column; gap: 12px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #BFD6FF;">featured · Coursera · Dec 2023</span>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 36px; font-weight: 800; line-height: 1.1;">Software Testing and Automation Specialization</span>
+<span style="font-size: 16px; line-height: 1.6; color: #DCE7FF;">A multi-course track covering black-box and white-box testing, automated analysis and test automation fundamentals.</span>
+</div>
+<div style="grid-column: span 4; display: flex; justify-content: flex-end;">
+<a href="https://www.coursera.org/account/accomplishments/specialization/certificate/WRE87E24Q9BE" style="text-decoration: none; padding: 16px 24px; border-radius: 12px; background: #FFFFFF; color: #0056D2; font-weight: 600;">View credential ↗</a>
+</div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px;">
+<sc-for list="{{certs}}" as="ct" hint-placeholder-count="7">
+<div style="background: #FFFFFF; border: 1px solid #DDD7CB; border-radius: 18px; padding: 22px; display: flex; flex-direction: column; gap: 14px; min-height: 180px; box-sizing: border-box;">
+<div style="display: flex; justify-content: space-between; align-items: center;">
+<span style="{{ct.logoStyle}}">{{ct.mark}}</span>
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #6A6E77;">{{ct.date}}</span>
+</div>
+<span style="font-weight: 600; font-size: 16px; line-height: 1.35;">{{ct.name}}</span>
+<div style="display: flex; justify-content: space-between; align-items: center; margin-top: auto;">
+<span style="font-size: 13px; color: #5C606A;">{{ct.issuer}}</span>
+<a href="{{ct.link}}" style="font-size: 13px; font-weight: 600; color: #1F7A52; text-decoration: none;">Credential ↗</a>
+</div>
+</div>
+</sc-for>
+</div>
+</section>
+
+<!-- ACHIEVEMENTS -->
+<section style="margin: 0 80px; background: #F6E7B8; border-radius: 28px; padding: 56px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 40px;">
+<div style="grid-column: span 4; display: flex; flex-direction: column; gap: 16px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #8A5A00;">04 / achievements</span>
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 44px; letter-spacing: -0.02em; line-height: 1.05; color: #3E2A00;">Competing, learning, showing up</h2>
+<p style="margin: 0; font-size: 16px; line-height: 1.6; color: #5E4513;">Programming contests taught me to read problems carefully, think about edge cases and debug under pressure. That's most of testing.</p>
+<div style="margin-top: 8px; background: #FFFDF6; border-radius: 18px; padding: 24px; display: flex; flex-direction: column; gap: 14px;">
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 40px; line-height: 0.6; color: #C99A2E;">“</span>
+<span style="font-size: 16px; line-height: 1.6; color: #3E2A00;">She was sincere and regular in class, did very well in lab classes, and is very hardworking. I strongly recommend her.</span>
+<span style="font-size: 13px; color: #6B5320;">Linta Islam · former CSE instructor, East West University</span>
+</div>
+</div>
+<div style="grid-column: span 8; display: flex; flex-direction: column; gap: 22px;">
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px;">
+<div style="background: #16181D; color: #F4F1EA; border-radius: 20px; padding: 26px; display: flex; flex-direction: column; gap: 10px;">
+<span style="align-self: flex-start; font-family: 'JetBrains Mono', monospace; font-size: 12px; padding: 5px 10px; border-radius: 999px; background: #E8B64C; color: #16181D; font-weight: 600;">WINNER</span>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 24px; font-weight: 700; line-height: 1.2;">Road to 2030 Daily Pillar Challenge</span>
+<span style="font-size: 14px; color: #A9AEBA;">One of the winners · BRAC IT</span>
+</div>
+<div style="background: #FFFDF6; border-radius: 20px; padding: 26px; display: flex; flex-direction: column; gap: 10px;">
+<span style="align-self: flex-start; font-family: 'JetBrains Mono', monospace; font-size: 12px; padding: 5px 10px; border-radius: 999px; background: #C99A2E; color: #FFFFFF; font-weight: 600;">RANKED 36TH</span>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 24px; font-weight: 700; line-height: 1.2; color: #2A1D00;">NSU Inter-University Girls' Programming Contest</span>
+<span style="font-size: 14px; color: #6B5320;">2019 · team EWU_Girls</span>
+</div>
+</div>
+
+<div style="background: #FFFDF6; border-radius: 20px; padding: 26px; display: flex; flex-direction: column; gap: 18px;">
+<div style="display: flex; justify-content: space-between; align-items: baseline;">
+<span style="font-weight: 600; font-size: 16px; color: #2A1D00;">Contests I competed in</span>
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #8A5A00;">2019 → 2022</span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; border-top: 2px solid #E7D49A;">
+<div style="display: flex; flex-direction: column; gap: 10px; padding: 16px 16px 0 0;">
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 28px; font-weight: 800; color: #C99A2E;">2019</span>
+<span style="font-size: 14px; line-height: 1.4; color: #3E2A00;">National Girls' Programming Contest</span>
+<span style="font-size: 14px; line-height: 1.4; color: #3E2A00;">UITS Inter Private University Programming Contest</span>
+<span style="font-size: 14px; line-height: 1.4; color: #3E2A00;">IUB Inwed Tech Fest</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 10px; padding: 16px 16px 0; border-left: 1px dashed #E7D49A;">
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 28px; font-weight: 800; color: #C99A2E;">2021</span>
+<span style="font-size: 14px; line-height: 1.4; color: #3E2A00;">Ada Lovelace National Girls' Programming Contest</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 10px; padding: 16px 0 0 16px; border-left: 1px dashed #E7D49A;">
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 28px; font-weight: 800; color: #C99A2E;">2022</span>
+<span style="font-size: 14px; line-height: 1.4; color: #3E2A00;">National Girls' Programming Contest</span>
+<span style="font-size: 14px; line-height: 1.4; color: #3E2A00;">Ada Lovelace National Girls' Programming Contest · team EWU_Rookies</span>
+</div>
+</div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px;">
+<div style="background: #FFFDF6; border-radius: 16px; padding: 18px 20px; display: flex; gap: 14px; align-items: center;">
+<span style="flex-shrink: 0; width: 44px; height: 44px; border-radius: 12px; background: #FCE7DD; color: #C4502A; display: flex; align-items: center; justify-content: center; font: 700 20px 'JetBrains Mono', monospace;">+</span>
+<div style="display: flex; flex-direction: column; gap: 3px;"><span style="font-weight: 600; font-size: 15px; color: #2A1D00;">Volunteer</span><span style="font-size: 13px; color: #6B5320;">Bangladesh Red Crescent Society</span></div>
+</div>
+<div style="background: #FFFDF6; border-radius: 16px; padding: 18px 20px; display: flex; gap: 14px; align-items: center;">
+<span style="flex-shrink: 0; width: 44px; height: 44px; border-radius: 12px; background: #E3E1F5; color: #4B45A1; display: flex; align-items: center; justify-content: center; font: 700 18px 'JetBrains Mono', monospace;">“”</span>
+<div style="display: flex; flex-direction: column; gap: 3px;"><span style="font-weight: 600; font-size: 15px; color: #2A1D00;">Member</span><span style="font-size: 13px; color: #6B5320;">National Debate Federation Bangladesh</span></div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- RESEARCH (interactive) -->
+<section id="research" style="padding: 110px 80px 40px; display: flex; flex-direction: column; gap: 36px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 40px;">
+<div style="display: flex; flex-direction: column; gap: 14px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #4B45A1;">05 / research</span>
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 52px; letter-spacing: -0.02em;">Published research</h2>
+</div>
+<div style="display: flex; gap: 6px; background: #E3E1F5; padding: 6px; border-radius: 14px;">
+<sc-for list="{{paperTabs}}" as="pt" hint-placeholder-count="2">
+<button onClick="{{pt.pick}}" style="{{pt.style}}">{{pt.label}}</button>
+</sc-for>
+</div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 24px;">
+<div style="grid-column: span 7; background: #E3E1F5; border-radius: 26px; padding: 40px; display: flex; flex-direction: column; gap: 20px;">
+<div style="display: flex; gap: 8px; flex-wrap: wrap;">
+<sc-for list="{{paper.tags}}" as="tg" hint-placeholder-count="3">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; padding: 6px 10px; border-radius: 8px; background: #FFFFFF; color: #4B45A1;">{{tg}}</span>
+</sc-for>
+</div>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 30px; font-weight: 800; line-height: 1.15; color: #1D1A4A;">{{paper.title}}</span>
+<span style="font-size: 14px; line-height: 1.6; color: #45417A;">{{paper.authorsA}}<strong style="color: #1D1A4A;">Shamima Sultana</strong>{{paper.authorsB}}</span>
+<span style="font-size: 16px; line-height: 1.7; color: #2E2A5E;">{{paper.summary}}</span>
+<div style="display: flex; flex-direction: column; gap: 10px;">
+<sc-for list="{{paper.points}}" as="k" hint-placeholder-count="3">
+<div style="display: flex; gap: 12px; align-items: flex-start;"><span style="flex-shrink: 0; margin-top: 8px; width: 8px; height: 8px; border-radius: 50%; background: #4B45A1;"></span><span style="font-size: 15px; line-height: 1.6; color: #2E2A5E;">{{k}}</span></div>
+</sc-for>
+</div>
+<a href="{{paper.link}}" style="align-self: flex-start; margin-top: 4px; text-decoration: none; padding: 14px 22px; border-radius: 12px; background: #4B45A1; color: #FFFFFF; font-weight: 600;">Read paper on {{paper.publisher}} ↗</a>
+</div>
+<div style="grid-column: span 5; background: #16181D; color: #F4F1EA; border-radius: 26px; padding: 36px; display: flex; flex-direction: column; gap: 22px;">
+<div style="display: flex; flex-direction: column; gap: 6px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #C9C5FF;">results</span>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 24px; font-weight: 700;">{{paper.chartTitle}}</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 16px;">
+<sc-for list="{{paper.bars}}" as="bar" hint-placeholder-count="5">
+<div style="display: flex; flex-direction: column; gap: 6px;">
+<div style="display: flex; justify-content: space-between; font-size: 14px;"><span>{{bar.label}}</span><span style="font-family: 'JetBrains Mono', monospace; color: #C9C5FF;">{{bar.value}}</span></div>
+<div style="height: 12px; border-radius: 999px; background: #2A2D35; overflow: hidden;"><div style="{{bar.style}}"></div></div>
+<span style="font-size: 12px; color: #8A8F9C;">{{bar.note}}</span>
+</div>
+</sc-for>
+</div>
+<span style="margin-top: auto; font-size: 12px; line-height: 1.5; color: #8A8F9C;">{{paper.chartNote}}</span>
+</div>
+</div>
+</section>
+
+<!-- ARTICLES -->
+<section style="padding: 80px 80px 40px; display: flex; flex-direction: column; gap: 36px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-end;">
+<div style="display: flex; flex-direction: column; gap: 14px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #1F7A52;">06 / articles</span>
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 52px; letter-spacing: -0.02em;">Tutorials you can click through</h2>
+</div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 24px;">
+<a href="K6Hub.html" style="grid-column: span 7; text-decoration: none; background: #6C4DF5; border-radius: 26px; padding: 40px; display: flex; flex-direction: column; gap: 18px; color: #FFFFFF; min-height: 320px; box-sizing: border-box;">
+<div style="display: flex; gap: 8px;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; padding: 6px 10px; border-radius: 8px; background: rgba(255,255,255,0.18);">Performance testing</span><span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; padding: 6px 10px; border-radius: 8px; background: rgba(255,255,255,0.18);">Learning path</span></div>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 56px; font-weight: 800; line-height: 1;">k6</span>
+<span style="font-size: 17px; line-height: 1.6; color: #E4DEFF; max-width: 520px;">Load testing from zero. Start with JavaScript for k6, then work through the rest of the path.</span>
+<span style="margin-top: auto; font-family: 'JetBrains Mono', monospace; font-size: 15px; color: #FFFFFF;">open the k6 path →</span>
+</a>
+<a href="PWHub.html" style="grid-column: span 5; text-decoration: none; background: #16181D; border-radius: 26px; padding: 40px; display: flex; flex-direction: column; gap: 18px; color: #F4F1EA; min-height: 320px; box-sizing: border-box;">
+<div style="display: flex; gap: 8px;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; padding: 6px 10px; border-radius: 8px; background: #2A2D35; color: #7EE2A8;">Automation</span><span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; padding: 6px 10px; border-radius: 8px; background: #2A2D35; color: #7EE2A8;">Learning path</span></div>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 48px; font-weight: 800; line-height: 1;">Playwright</span>
+<span style="font-size: 16px; line-height: 1.6; color: #A9AEBA;">A 13-module path from Python basics to assertions, Allure reporting, AI test agents, framework design and CI.</span>
+<span style="margin-top: auto; font-weight: 600; color: #7EE2A8;">open the Playwright path →</span>
+</a>
+<a href="SQLHub.html" style="grid-column: span 12; text-decoration: none; background: #FBE9D5; border-radius: 26px; padding: 36px 40px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 24px; align-items: center; color: #2E1503; box-sizing: border-box;">
+<span style="grid-column: span 2; font-family: 'Bricolage Grotesque', sans-serif; font-size: 72px; font-weight: 800; line-height: 1; color: #A8550E; letter-spacing: -0.04em;">SQL</span>
+<div style="grid-column: span 7; display: flex; flex-direction: column; gap: 8px;">
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 28px; font-weight: 800;">SQL for testers</span>
+<span style="font-size: 16px; line-height: 1.6; color: #6B3A10;">9 modules: from the first SELECT to joins, data validation, and database checks inside automated tests.</span>
+</div>
+<span style="grid-column: span 3; justify-self: end; font-weight: 600; color: #A8550E;">open the SQL path →</span>
+</a>
+<a href="Manual.html" style="grid-column: span 6; text-decoration: none; background: #F9E1EE; border-radius: 26px; padding: 34px 36px; display: flex; flex-direction: column; gap: 12px; color: #4A0D2E; min-height: 230px; box-sizing: border-box;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #B83280;">9 modules · 46 lessons</span>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 34px; font-weight: 800; line-height: 1.05;">Manual testing, basic to advanced</span>
+<span style="font-size: 16px; line-height: 1.6; color: #7A2C55;">Principles, test design techniques, "Verify that…" test cases, bug reports, risk-based and exploratory testing, interviews.</span>
+<span style="margin-top: auto; font-weight: 600; color: #B83280;">start manual testing →</span>
+</a>
+<a href="API.html" style="grid-column: span 6; text-decoration: none; background: #DCEEF8; border-radius: 26px; padding: 34px 36px; display: flex; flex-direction: column; gap: 12px; color: #0A2F45; min-height: 230px; box-sizing: border-box;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #0B6FA4;">9 modules · 37 lessons</span>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 34px; font-weight: 800; line-height: 1.05;">API testing, zero to automation</span>
+<span style="font-size: 16px; line-height: 1.6; color: #25597A;">HTTP, Postman and Newman, what to test, auth, Python + pytest, security basics and CI, on the Restful Booker practice API.</span>
+<span style="margin-top: auto; font-weight: 600; color: #0B6FA4;">start API testing →</span>
+</a>
+<a href="AITest.html" style="grid-column: span 12; text-decoration: none; background: #0C1E55; border-radius: 26px; padding: 36px 40px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 24px; align-items: center; color: #FFFFFF; box-sizing: border-box;">
+<div style="grid-column: span 8; display: flex; flex-direction: column; gap: 10px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #9DB5FF;">new · 8 modules · 34 lessons</span>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 38px; font-weight: 800; line-height: 1.05;">Testing AI &amp; LLM features</span>
+<span style="font-size: 16px; line-height: 1.6; color: #C9D6FF;">Evaluation sets, hallucinations and RAG, bias and Bangla quality, prompt injection and the OWASP LLM Top 10, promptfoo and DeepEval.</span>
+</div>
+<span style="grid-column: span 4; justify-self: end; font-weight: 600; color: #9DB5FF;">start AI testing →</span>
+</a>
+<a href="JMeter.html" style="grid-column: span 12; text-decoration: none; background: #FBE3E0; border-radius: 26px; padding: 30px 40px; display: flex; justify-content: space-between; align-items: center; gap: 24px; color: #410B07;">
+<div style="display: flex; align-items: center; gap: 24px;"><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 40px; font-weight: 800; letter-spacing: -0.03em; color: #B3261E;">JMeter</span><span style="font-size: 16px; line-height: 1.6; color: #7A2A22; max-width: 700px;">7 modules · 28 lessons: test plans, correlation, assertions, non-GUI runs, the HTML dashboard, Groovy, plugins and CI, plus JMeter vs k6.</span></div>
+<span style="font-weight: 600; color: #B3261E;">start JMeter →</span>
+</a>
+<a href="Selenium.html" style="grid-column: span 12; text-decoration: none; background: #E3F1E4; border-radius: 26px; padding: 30px 40px; display: flex; justify-content: space-between; align-items: center; gap: 24px; color: #10331A;">
+<div style="display: flex; align-items: center; gap: 24px;"><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 36px; font-weight: 800; letter-spacing: -0.03em; color: #2E7D32;">Selenium + Java</span><span style="font-size: 16px; line-height: 1.6; color: #2E5A36; max-width: 680px;">7 modules · 26 lessons: locators, waits, TestNG, page objects, ThreadLocal drivers, Selenium Grid, CI, and Selenium vs Playwright.</span></div>
+<span style="font-weight: 600; color: #2E7D32;">start Selenium →</span>
+</a>
+<a href="MobileTest.html" style="grid-column: span 12; text-decoration: none; background: #DDF0EE; border-radius: 26px; padding: 30px 40px; display: flex; justify-content: space-between; align-items: center; gap: 24px; color: #06302B;">
+<div style="display: flex; align-items: center; gap: 24px;"><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 36px; font-weight: 800; letter-spacing: -0.03em; color: #00796B;">Mobile testing</span><span style="font-size: 16px; line-height: 1.6; color: #1F5A53; max-width: 700px;">6 modules · 27 lessons: interruptions, networks, permissions, ADB and logcat, TalkBack, mobile bug reports, and Appium automation in Python.</span></div>
+<span style="font-weight: 600; color: #00796B;">start mobile →</span>
+</a>
+<a href="A11y.html" style="grid-column: span 12; text-decoration: none; background: #F0E4F8; border-radius: 26px; padding: 30px 40px; display: flex; justify-content: space-between; align-items: center; gap: 24px; color: #2A0A3E;">
+<div style="display: flex; align-items: center; gap: 24px;"><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 36px; font-weight: 800; letter-spacing: -0.03em; color: #6A1B9A;">Accessibility</span><span style="font-size: 16px; line-height: 1.6; color: #553071; max-width: 700px;">7 modules · 25 lessons on WCAG 2.2: contrast, keyboard and focus, forms and errors, ARIA, NVDA screen-reader testing, axe automation and a11y bug reports.</span></div>
+<span style="font-weight: 600; color: #6A1B9A;">start accessibility →</span>
+</a>
+<a href="Security.html" style="grid-column: span 12; text-decoration: none; background: #FBE7D8; border-radius: 26px; padding: 30px 40px; display: flex; justify-content: space-between; align-items: center; gap: 24px; color: #3A1607;">
+<div style="display: flex; align-items: center; gap: 24px;"><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 36px; font-weight: 800; letter-spacing: -0.03em; color: #C2410C;">Security testing</span><span style="font-size: 16px; line-height: 1.6; color: #6E351A; max-width: 700px;">7 modules · 27 lessons: the OWASP Top 10 (2025), access-control and injection testing, OWASP ZAP, Burp Suite, API and dependency security, all on legal practice targets.</span></div>
+<span style="font-weight: 600; color: #C2410C;">start security →</span>
+</a>
+<a href="DevTools.html" style="grid-column: span 6; text-decoration: none; background: #F7E3DA; border-radius: 26px; padding: 34px 36px; display: flex; flex-direction: column; gap: 12px; color: #3F130A; min-height: 220px; box-sizing: border-box;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #B4432F;">8 modules · 25 lessons</span>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 34px; font-weight: 800; line-height: 1.05;">Browser DevTools for testers</span>
+<span style="font-size: 16px; line-height: 1.6; color: #6E3322;">Find the real cause behind vague errors: Console, Network, cookies, device mode, Lighthouse and bug evidence.</span>
+<span style="margin-top: auto; font-weight: 600; color: #B4432F;">start DevTools →</span>
+</a>
+<a href="Git.html" style="grid-column: span 6; text-decoration: none; background: #E3E8EF; border-radius: 26px; padding: 34px 36px; display: flex; flex-direction: column; gap: 12px; color: #141C27; min-height: 220px; box-sizing: border-box;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #3D4A5C;">8 modules · 23 lessons</span>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 34px; font-weight: 800; line-height: 1.05;">Git &amp; GitHub for testers</span>
+<span style="font-size: 16px; line-height: 1.6; color: #3D4A5C;">Branches, pull requests, reviewing test code, fixing mistakes, and hosting your portfolio on GitHub Pages.</span>
+<span style="margin-top: auto; font-weight: 600; color: #3D4A5C;">start Git →</span>
+</a>
+<a href="News.html" style="grid-column: span 12; text-decoration: none; background: #16181D; border-radius: 26px; padding: 30px 40px; display: flex; justify-content: space-between; align-items: center; gap: 24px; color: #F4F1EA;">
+<div style="display: flex; align-items: center; gap: 24px;"><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 44px; font-weight: 800; letter-spacing: -0.03em;">News<span style="color: #F08A62;">.</span></span><span style="font-size: 16px; line-height: 1.6; color: #A9AEBA; max-width: 640px;">What's new in QA tools, performance testing and AI: Playwright, Selenium, k6 and the AI coding tools testers use.</span></div>
+<span style="font-weight: 600; color: #F08A62;">read the latest →</span>
+</a>
+<a href="Interview.html" style="grid-column: span 12; text-decoration: none; background: #F6E7B8; border-radius: 26px; padding: 30px 40px; display: flex; justify-content: space-between; align-items: center; gap: 24px; color: #2A1D00;">
+<div style="display: flex; align-items: center; gap: 24px;"><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 40px; font-weight: 800; letter-spacing: -0.03em;">Interview prep</span><span style="font-size: 16px; line-height: 1.6; color: #5E4513; max-width: 640px;">53 flashcards across 8 topics, a STAR story planner and a day-before checklist.</span></div>
+<span style="font-weight: 600; color: #8A5A00;">practise now →</span>
+</a>
+<a href="ISTQB.html" style="grid-column: span 12; text-decoration: none; background: #DCEBF2; border-radius: 26px; padding: 30px 40px; display: flex; justify-content: space-between; align-items: center; gap: 24px; color: #0B2E3D;">
+<div style="display: flex; align-items: center; gap: 24px;"><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 40px; font-weight: 800; letter-spacing: -0.03em; color: #1B5E7E;">ISTQB prep</span><span style="font-size: 16px; line-height: 1.6; color: #23596E; max-width: 640px;">A chapter guide and a 28-question practice exam with worked explanations, plus the official free sample papers.</span></div>
+<span style="font-weight: 600; color: #1B5E7E;">start practising →</span>
+</a>
+</div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects" style="padding: 80px 80px 60px; display: flex; flex-direction: column; gap: 36px;">
+<div style="display: flex; flex-direction: column; gap: 14px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #C4502A;">07 / projects</span>
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 52px; letter-spacing: -0.02em;">Projects</h2>
+</div>
+<div style="border: 2px dashed #C9C1B1; border-radius: 24px; padding: 36px 40px; display: flex; justify-content: space-between; align-items: center; gap: 30px;">
+<div style="display: flex; flex-direction: column; gap: 10px; max-width: 760px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #C4502A;">● new projects on the way</span>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 28px; font-weight: 800;">Fresh automation, performance and data-testing projects are being built.</span>
+<span style="font-size: 16px; line-height: 1.6; color: #5C606A;">Each one will get its own case study here. Follow along on GitHub in the meantime.</span>
+</div>
+<a href="https://github.com/ShamimaSultanaMiley" style="flex-shrink: 0; text-decoration: none; padding: 16px 24px; border-radius: 12px; background: #16181D; color: #F4F1EA; font-weight: 600;">Follow on GitHub ↗</a>
+</div>
+<div style="display: flex; flex-direction: column; gap: 14px;">
+<button onClick="{{toggleEarly}}" style="align-self: flex-start; min-height: 44px; padding: 10px 18px; border-radius: 999px; border: 1.5px solid #16181D; background: transparent; cursor: pointer; font: 600 15px 'IBM Plex Sans', sans-serif; color: #16181D;">{{earlyLabel}}</button>
+<sc-if value="{{showEarly}}" hint-placeholder-val="{{ false }}">
+<div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px;">
+<sc-for list="{{early}}" as="e" hint-placeholder-count="5">
+<a href="https://github.com/ShamimaSultanaMiley" style="text-decoration: none; background: #FFFFFF; border: 1px solid #DDD7CB; border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 6px;">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #6A6E77;">{{e.tool}} · 2023</span>
+<span style="font-weight: 600; font-size: 14px; line-height: 1.35;">{{e.name}}</span>
+</a>
+</sc-for>
+</div>
+</sc-if>
+</div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" style="flex-grow: 1; background: #16181D; color: #F4F1EA; padding: 110px 80px 56px; display: flex; flex-direction: column; gap: 56px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 40px;">
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 88px; letter-spacing: -0.035em; line-height: 0.95;">Let's ship<br>something <span style="color: #F08A62;">bug-free.</span></h2>
+<div style="display: flex; flex-direction: column; gap: 6px; min-width: 380px;">
+<a href="mailto:shamimasultanamiley605@gmail.com" style="text-decoration: none; color: #F4F1EA; display: flex; justify-content: space-between; padding: 18px 0; border-bottom: 1px solid #3A3E48; font-size: 18px;"><span>Email</span><span>↗</span></a>
+<a href="https://www.linkedin.com/in/shamima-sultana-17a3a420a/" style="text-decoration: none; color: #F4F1EA; display: flex; justify-content: space-between; padding: 18px 0; border-bottom: 1px solid #3A3E48; font-size: 18px;"><span>LinkedIn</span><span>↗</span></a>
+<a href="https://github.com/ShamimaSultanaMiley" style="text-decoration: none; color: #F4F1EA; display: flex; justify-content: space-between; padding: 18px 0; border-bottom: 1px solid #3A3E48; font-size: 18px;"><span>GitHub</span><span>↗</span></a>
+</div>
+</div>
+<div style="margin-top: auto; display: flex; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #8A8F9C;">
+<span>© Shamima Sultana · Dhaka, Bangladesh</span>
+<span>all tests passing ✓</span>
+</div>
+</section>
+</div>`;
+window.__mountDC(__TPL, Component);
+</script>
+</body>
+</html>
